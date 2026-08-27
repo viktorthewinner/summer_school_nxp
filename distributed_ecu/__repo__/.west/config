@@ -1,0 +1,7 @@
+[manifest]
+path = manifests
+file = west.yml
+
+[commands]
+allow_extensions = true
+

@@ -1,0 +1,2 @@
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:346:20:GPIO_PinWrite	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/led_blinky/hardware_init.c:18:6:BOARD_InitHardware	8	static

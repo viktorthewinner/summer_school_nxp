@@ -1,0 +1,636 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2100 1800" width="2100" height="1800" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0B7A75"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B26B00"/></marker>
+<marker id="a-blue2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FB2"/></marker>
+<marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B03A3E"/></marker>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#12305B"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B3FA0"/></marker>
+<marker id="a-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#41546B"/></marker>
+</defs>
+<rect width="2100" height="1800" fill="#ffffff"/>
+<text x="1050.0" y="46" font-size="25" fill="#12305B" text-anchor="middle" font-weight="bold">Distributed ECU Car &#8212; Full Schema</text>
+<text x="1050.0" y="72" font-size="13" fill="#5A6472" text-anchor="middle">4 nodes &#183; 2 &#215; UART @ 38400 point-to-point &#183; 1 &#215; I&#178;C multi-drop &#183; WiFi AP &#8212; sheet 1 of 2, signals.  Power on SCHEMA_POWER.svg</text>
+<text x="1050.0" y="92" font-size="11.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">Built only from parts in the box. Anything drawn with a dashed red border is NOT in the box and has to be bought.</text>
+<line x1="400" y1="120" x2="424" y2="120" stroke="#0B7A75" stroke-width="2.6"/>
+<text x="431" y="124" font-size="11" fill="#5A6472">UART link</text>
+<line x1="620" y1="120" x2="644" y2="120" stroke="#6B3FA0" stroke-width="2.6"/>
+<text x="651" y="124" font-size="11" fill="#5A6472">I&#178;C</text>
+<line x1="840" y1="120" x2="864" y2="120" stroke="#B26B00" stroke-width="2.6"/>
+<text x="871" y="124" font-size="11" fill="#5A6472">analog</text>
+<line x1="1060" y1="120" x2="1084" y2="120" stroke="#2F6FB2" stroke-width="2.6"/>
+<text x="1091" y="124" font-size="11" fill="#5A6472">digital sense</text>
+<line x1="1280" y1="120" x2="1304" y2="120" stroke="#B03A3E" stroke-width="2.6"/>
+<text x="1311" y="124" font-size="11" fill="#5A6472">actuator / motor</text>
+<line x1="1500" y1="120" x2="1524" y2="120" stroke="#41546B" stroke-width="2.6" stroke-dasharray="5 4"/>
+<text x="1531" y="124" font-size="11" fill="#5A6472">USB / VCOM</text>
+<circle cx="1720" cy="120" r="3.4" fill="#12305B"/>
+<text x="1732" y="124" font-size="11" fill="#5A6472">= junction (crossing lines without a dot are NOT connected)</text>
+<rect x="40" y="262" width="270" height="178" fill="#ffffff" stroke="#2F6FB2" stroke-width="2.2" rx="6"/>
+<rect x="40" y="262" width="270" height="40" fill="#2F6FB2" rx="6"/>
+<rect x="40" y="294" width="270" height="8" fill="#2F6FB2"/>
+<text x="175.0" y="282" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">Scanning head</text>
+<text x="175.0" y="296" font-size="10.5" fill="#D6E0EC" text-anchor="middle">HC-SR04P + 2 &#215; MG90S</text>
+<line x1="310" y1="318" x2="324" y2="318" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="310" cy="318" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="297" y="321.6" font-size="11.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">TRIG</text>
+<line x1="310" y1="342" x2="324" y2="342" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="310" cy="342" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="297" y="345.6" font-size="11.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">ECHO</text>
+<line x1="310" y1="366" x2="324" y2="366" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="310" cy="366" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="297" y="369.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">PAN</text>
+<line x1="310" y1="390" x2="324" y2="390" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="310" cy="390" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="297" y="393.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">TILT</text>
+<text x="54" y="412" font-size="9" fill="#5A6472">One ultrasonic, swept. Left/centre/right</text>
+<text x="54" y="426" font-size="9" fill="#5A6472">from the only range sensor you have.</text>
+<rect x="40" y="460" width="270" height="86" fill="#ffffff" stroke="#2F6FB2" stroke-width="2.2" rx="6"/>
+<rect x="40" y="460" width="270" height="40" fill="#2F6FB2" rx="6"/>
+<rect x="40" y="492" width="270" height="8" fill="#2F6FB2"/>
+<text x="175.0" y="480" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">HC-SR501 PIR</text>
+<text x="175.0" y="494" font-size="10.5" fill="#D6E0EC" text-anchor="middle">motion, digital</text>
+<line x1="310" y1="516" x2="324" y2="516" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="310" cy="516" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="297" y="519.6" font-size="11.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">OUT</text>
+<text x="54" y="538" font-size="9" fill="#5A6472">~1 min warm-up &#183; 2&#8211;60 s hold &#183; 3.3 V out</text>
+<rect x="40" y="550" width="270" height="110" fill="#ffffff" stroke="#B26B00" stroke-width="2.2" rx="6"/>
+<rect x="40" y="550" width="270" height="40" fill="#B26B00" rx="6"/>
+<rect x="40" y="582" width="270" height="8" fill="#B26B00"/>
+<text x="175.0" y="570" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">SFM-27</text>
+<text x="175.0" y="584" font-size="10.5" fill="#D6E0EC" text-anchor="middle">UNIDENTIFIED &#8212; read the silkscreen</text>
+<line x1="310" y1="606" x2="324" y2="606" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="310" cy="606" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="297" y="609.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">A / OUT</text>
+<line x1="310" y1="630" x2="324" y2="630" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="310" cy="630" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="297" y="633.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D / OUT</text>
+<text x="54" y="652" font-size="9" fill="#B03A3E">A0 + A1 held for it. Identify before wiring.</text>
+<rect x="40" y="670" width="270" height="130" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2" rx="6"/>
+<rect x="40" y="670" width="270" height="40" fill="#6B3FA0" rx="6"/>
+<rect x="40" y="702" width="270" height="8" fill="#6B3FA0"/>
+<text x="175.0" y="690" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">8 &#215; 8 LED matrix</text>
+<text x="175.0" y="704" font-size="10.5" fill="#D6E0EC" text-anchor="middle">assumed MAX7219 module</text>
+<line x1="310" y1="726" x2="324" y2="726" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="310" cy="726" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="297" y="729.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">DIN</text>
+<line x1="310" y1="750" x2="324" y2="750" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="310" cy="750" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="297" y="753.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">CLK</text>
+<line x1="310" y1="774" x2="324" y2="774" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="310" cy="774" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="297" y="777.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">CS</text>
+<text x="54" y="792" font-size="9" fill="#B03A3E">If it is a bare 1088AS it needs 16 pins &#8212; check.</text>
+<rect x="400" y="150" width="300" height="860" fill="#ffffff" stroke="#0B7A75" stroke-width="2.2" rx="6"/>
+<rect x="400" y="150" width="300" height="40" fill="#0B7A75" rx="6"/>
+<rect x="400" y="182" width="300" height="8" fill="#0B7A75"/>
+<text x="550.0" y="170" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">Arduino 1</text>
+<text x="550.0" y="184" font-size="10.5" fill="#D6E0EC" text-anchor="middle">PERC &#183; perception + display</text>
+<text x="550.0" y="208" font-size="10.5" fill="#5A6472" text-anchor="middle">5 V &#183; ATmega328P &#183; CH340</text>
+<text x="550.0" y="226" font-size="9" fill="#5A6472" text-anchor="middle" font-style="italic">Servo library owns Timer1 &#8212; so the motors live on Arduino 2</text>
+<text x="686" y="306" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">SCANNING HEAD</text>
+<line x1="400" y1="318" x2="386" y2="318" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="400" cy="318" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="413" y="321.6" font-size="11.5" fill="#2F6FB2" font-weight="bold">D8</text>
+<text x="448" y="321.6" font-size="9.5" fill="#5A6472">trig</text>
+<line x1="400" y1="342" x2="386" y2="342" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="400" cy="342" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="413" y="345.6" font-size="11.5" fill="#2F6FB2" font-weight="bold">D2</text>
+<text x="448" y="345.6" font-size="9.5" fill="#5A6472">echo &#183; INT0</text>
+<line x1="400" y1="366" x2="386" y2="366" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="400" cy="366" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="413" y="369.6" font-size="11.5" fill="#B03A3E" font-weight="bold">D6</text>
+<text x="448" y="369.6" font-size="9.5" fill="#5A6472">servo pan</text>
+<line x1="400" y1="390" x2="386" y2="390" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="400" cy="390" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="413" y="393.6" font-size="11.5" fill="#B03A3E" font-weight="bold">D7</text>
+<text x="448" y="393.6" font-size="9.5" fill="#5A6472">servo tilt</text>
+<text x="686" y="504" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">PIR</text>
+<line x1="400" y1="516" x2="386" y2="516" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="400" cy="516" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="413" y="519.6" font-size="11.5" fill="#2F6FB2" font-weight="bold">D3</text>
+<text x="448" y="519.6" font-size="9.5" fill="#5A6472">motion &#183; INT1</text>
+<text x="686" y="594" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">SFM-27</text>
+<line x1="400" y1="606" x2="386" y2="606" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="400" cy="606" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="413" y="609.6" font-size="11.5" fill="#B26B00" font-weight="bold">A0</text>
+<text x="448" y="609.6" font-size="9.5" fill="#5A6472">analog</text>
+<line x1="400" y1="630" x2="386" y2="630" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="400" cy="630" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="413" y="633.6" font-size="11.5" fill="#B26B00" font-weight="bold">A1</text>
+<text x="448" y="633.6" font-size="9.5" fill="#5A6472">digital</text>
+<text x="686" y="714" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">8 &#215; 8 MATRIX</text>
+<line x1="400" y1="726" x2="386" y2="726" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="400" cy="726" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="413" y="729.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">D11</text>
+<text x="448" y="729.6" font-size="9.5" fill="#5A6472">MOSI</text>
+<line x1="400" y1="750" x2="386" y2="750" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="400" cy="750" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="413" y="753.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">D13</text>
+<text x="448" y="753.6" font-size="9.5" fill="#5A6472">SCK</text>
+<line x1="400" y1="774" x2="386" y2="774" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="400" cy="774" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="413" y="777.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">D10</text>
+<text x="448" y="777.6" font-size="9.5" fill="#5A6472">CS</text>
+<text x="686" y="782" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">LINK &#8594; VCU</text>
+<line x1="700" y1="800" x2="714" y2="800" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="700" cy="800" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="687" y="803.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D4</text>
+<text x="648" y="803.6" font-size="9.5" fill="#5A6472" text-anchor="end">RX &#8592; MCX</text>
+<line x1="700" y1="840" x2="714" y2="840" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="700" cy="840" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="687" y="843.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D5</text>
+<text x="648" y="843.6" font-size="9.5" fill="#5A6472" text-anchor="end">TX &#8594; MCX</text>
+<line x1="700" y1="880" x2="714" y2="880" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="700" cy="880" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="687" y="883.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">GND</text>
+<text x="648" y="883.6" font-size="9.5" fill="#5A6472" text-anchor="end">common</text>
+<text x="550.0" y="948" font-size="9.5" fill="#5A6472" text-anchor="middle">D0 / D1 free (bootloader) &#183; D9, D12, A2&#8211;A5 spare</text>
+<text x="550.0" y="966" font-size="9.5" fill="#5A6472" text-anchor="middle">5 V + GND &#8212; see power sheet</text>
+<rect x="800" y="150" width="340" height="860" fill="#ffffff" stroke="#12305B" stroke-width="2.2" rx="6"/>
+<rect x="800" y="150" width="340" height="40" fill="#12305B" rx="6"/>
+<rect x="800" y="182" width="340" height="8" fill="#12305B"/>
+<text x="970.0" y="170" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">FRDM-MCXA153</text>
+<text x="970.0" y="184" font-size="10.5" fill="#D6E0EC" text-anchor="middle">VCU &#183; hub &#183; Cortex-M33</text>
+<text x="970.0" y="210" font-size="10.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">3.3 V I/O &#8212; only P3_27 and P3_28 are 5 V tolerant</text>
+<rect x="820" y="240" width="300" height="182" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1" rx="5"/>
+<text x="834" y="262" font-size="9.5" fill="#12305B" font-weight="bold">ON-BOARD &#8212; NOTHING TO WIRE</text>
+<text x="834" y="286" font-size="10.5" fill="#12305B" font-weight="bold">P3_12</text>
+<text x="918" y="286" font-size="9.5" fill="#5A6472">LED red &#183; FAULT</text>
+<text x="834" y="310" font-size="10.5" fill="#12305B" font-weight="bold">P3_13</text>
+<text x="918" y="310" font-size="9.5" fill="#5A6472">LED green &#183; ARMED</text>
+<text x="834" y="334" font-size="10.5" fill="#12305B" font-weight="bold">P3_0</text>
+<text x="918" y="334" font-size="9.5" fill="#5A6472">LED blue &#183; link activity</text>
+<text x="834" y="358" font-size="10.5" fill="#12305B" font-weight="bold">P3_29</text>
+<text x="918" y="358" font-size="9.5" fill="#5A6472">SW2 &#183; ARM / DISARM</text>
+<text x="834" y="382" font-size="10.5" fill="#12305B" font-weight="bold">P1_7</text>
+<text x="918" y="382" font-size="9.5" fill="#5A6472">SW3 &#183; soft stop</text>
+<text x="834" y="406" font-size="10.5" fill="#12305B" font-weight="bold">P0_2 / P0_3</text>
+<text x="918" y="406" font-size="9.5" fill="#5A6472">LPUART0 &#183; VCOM</text>
+<rect x="820" y="442" width="300" height="110" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1" rx="5"/>
+<text x="834" y="464" font-size="9.5" fill="#B03A3E" font-weight="bold">POWER &#8212; SEE POWER SHEET</text>
+<text x="834" y="488" font-size="10.5" fill="#12305B" font-weight="bold">USB</text>
+<text x="930" y="488" font-size="9.5" fill="#5A6472">MCU-Link, during bring-up</text>
+<text x="834" y="512" font-size="10.5" fill="#12305B" font-weight="bold">J3-8</text>
+<text x="930" y="512" font-size="9.5" fill="#5A6472">LDO_3V3 &#8594; HW-123</text>
+<text x="834" y="536" font-size="10.5" fill="#12305B" font-weight="bold">J3-12 / 14</text>
+<text x="930" y="536" font-size="9.5" fill="#5A6472">GND &#8594; star point</text>
+<text x="970.0" y="592" font-size="10" fill="#5A6472" text-anchor="middle">Fusion &#183; state machine &#183; arbitration</text>
+<text x="970.0" y="611" font-size="10" fill="#5A6472" text-anchor="middle">Safety supervision &#8212; link timeout &#8594; safe state</text>
+<text x="970.0" y="630" font-size="10" fill="#5A6472" text-anchor="middle">Relays every message. The two Arduinos</text>
+<text x="970.0" y="649" font-size="10" fill="#5A6472" text-anchor="middle">are leaves; they never talk to each other.</text>
+<rect x="820" y="684" width="300" height="68" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1" rx="5"/>
+<text x="834" y="706" font-size="9.5" fill="#6B3FA0" font-weight="bold">LPI2C0 CARRIES TWO SLAVES</text>
+<text x="834" y="726" font-size="10" fill="#5A6472">ESP32 gateway 0x42  +  HW-123 IMU 0x68</text>
+<text x="834" y="742" font-size="9" fill="#5A6472">Both 3.3 V. No pull-ups to add &#8212; see below.</text>
+<text x="814" y="782" font-size="9.5" fill="#0B7A75" font-weight="bold">LPUART2 &#8594; PERC</text>
+<line x1="800" y1="800" x2="786" y2="800" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="800" cy="800" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="813" y="803.6" font-size="11.5" fill="#0B7A75" font-weight="bold">P3_15</text>
+<text x="862" y="803.6" font-size="9.5" fill="#5A6472">TXD &#183; J2-2</text>
+<line x1="800" y1="840" x2="786" y2="840" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="800" cy="840" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="813" y="843.6" font-size="11.5" fill="#0B7A75" font-weight="bold">P3_14</text>
+<text x="862" y="843.6" font-size="9.5" fill="#5A6472">RXD &#183; J2-4</text>
+<line x1="800" y1="880" x2="786" y2="880" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="800" cy="880" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="813" y="883.6" font-size="11.5" fill="#0B7A75" font-weight="bold">GND</text>
+<text x="862" y="883.6" font-size="9.5" fill="#5A6472">J3-12</text>
+<text x="1126" y="782" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">LPUART1 &#8594; ACT</text>
+<line x1="1140" y1="800" x2="1154" y2="800" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1140" cy="800" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1127" y="803.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">P1_9</text>
+<text x="1086" y="803.6" font-size="9.5" fill="#5A6472" text-anchor="end">TXD &#183; J2-20</text>
+<line x1="1140" y1="840" x2="1154" y2="840" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1140" cy="840" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1127" y="843.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">P1_8</text>
+<text x="1086" y="843.6" font-size="9.5" fill="#5A6472" text-anchor="end">RXD &#183; J2-18</text>
+<line x1="1140" y1="880" x2="1154" y2="880" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1140" cy="880" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1127" y="883.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">GND</text>
+<text x="1086" y="883.6" font-size="9.5" fill="#5A6472" text-anchor="end">J3-14</text>
+<text x="920" y="962" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">LPI2C0 &#183; mikroBUS J6</text>
+<line x1="900" y1="1010" x2="900" y2="1024" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="900" cy="1010" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="900" y="990" font-size="9" fill="#6B3FA0" text-anchor="middle" font-weight="bold">P3_27 SCL</text>
+<line x1="960" y1="1010" x2="960" y2="1024" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="960" cy="1010" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="960" y="990" font-size="9" fill="#6B3FA0" text-anchor="middle" font-weight="bold">P3_28 SDA</text>
+<line x1="1020" y1="1010" x2="1020" y2="1024" stroke="#12305B" stroke-width="1.6"/>
+<circle cx="1020" cy="1010" r="2.8" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<text x="1020" y="990" font-size="9" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<line x1="1100" y1="1010" x2="1100" y2="1024" stroke="#41546B" stroke-width="1.6"/>
+<circle cx="1100" cy="1010" r="2.8" fill="#ffffff" stroke="#41546B" stroke-width="1.4"/>
+<text x="1100" y="990" font-size="9" fill="#41546B" text-anchor="middle" font-weight="bold">USB</text>
+<rect x="1240" y="150" width="300" height="860" fill="#ffffff" stroke="#0B7A75" stroke-width="2.2" rx="6"/>
+<rect x="1240" y="150" width="300" height="40" fill="#0B7A75" rx="6"/>
+<rect x="1240" y="182" width="300" height="8" fill="#0B7A75"/>
+<text x="1390.0" y="170" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">Arduino 2</text>
+<text x="1390.0" y="184" font-size="10.5" fill="#D6E0EC" text-anchor="middle">ACT &#183; actuation + status</text>
+<text x="1390.0" y="208" font-size="10.5" fill="#5A6472" text-anchor="middle">5 V &#183; ATmega328P &#183; CH340</text>
+<text x="1390.0" y="226" font-size="9" fill="#5A6472" text-anchor="middle" font-style="italic">No Servo library here, so Timer1 is free for 20 kHz motor PWM</text>
+<text x="1526" y="306" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">MOTOR DRIVER</text>
+<line x1="1540" y1="318" x2="1554" y2="318" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="318" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="321.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D9</text>
+<text x="1492" y="321.6" font-size="9.5" fill="#5A6472" text-anchor="end">ENA &#183; PWM left</text>
+<line x1="1540" y1="342" x2="1554" y2="342" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="342" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="345.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D6</text>
+<text x="1492" y="345.6" font-size="9.5" fill="#5A6472" text-anchor="end">IN1</text>
+<line x1="1540" y1="366" x2="1554" y2="366" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="366" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="369.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D7</text>
+<text x="1492" y="369.6" font-size="9.5" fill="#5A6472" text-anchor="end">IN2</text>
+<line x1="1540" y1="390" x2="1554" y2="390" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="390" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="393.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D10</text>
+<text x="1492" y="393.6" font-size="9.5" fill="#5A6472" text-anchor="end">ENB &#183; PWM right</text>
+<line x1="1540" y1="414" x2="1554" y2="414" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="414" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="417.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D8</text>
+<text x="1492" y="417.6" font-size="9.5" fill="#5A6472" text-anchor="end">IN3</text>
+<line x1="1540" y1="438" x2="1554" y2="438" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1540" cy="438" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1527" y="441.6" font-size="11.5" fill="#B03A3E" text-anchor="end" font-weight="bold">D12</text>
+<text x="1492" y="441.6" font-size="9.5" fill="#5A6472" text-anchor="end">IN4</text>
+<text x="1526" y="628" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">ENCODERS</text>
+<line x1="1540" y1="640" x2="1554" y2="640" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="1540" cy="640" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="1527" y="643.6" font-size="11.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">D2</text>
+<text x="1492" y="643.6" font-size="9.5" fill="#5A6472" text-anchor="end">left &#183; INT0</text>
+<line x1="1540" y1="664" x2="1554" y2="664" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="1540" cy="664" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="1527" y="667.6" font-size="11.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">D3</text>
+<text x="1492" y="667.6" font-size="9.5" fill="#5A6472" text-anchor="end">right &#183; INT1</text>
+<text x="1526" y="733" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">7-SEGMENT</text>
+<line x1="1540" y1="745" x2="1554" y2="745" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1540" cy="745" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1527" y="748.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">A0</text>
+<text x="1492" y="748.6" font-size="9.5" fill="#5A6472" text-anchor="end">CLK</text>
+<line x1="1540" y1="769" x2="1554" y2="769" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1540" cy="769" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1527" y="772.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">A1</text>
+<text x="1492" y="772.6" font-size="9.5" fill="#5A6472" text-anchor="end">DIO</text>
+<text x="1526" y="838" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">16 &#215; 2 LCD</text>
+<line x1="1540" y1="850" x2="1554" y2="850" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1540" cy="850" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1527" y="853.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">A4</text>
+<text x="1492" y="853.6" font-size="9.5" fill="#5A6472" text-anchor="end">SDA</text>
+<line x1="1540" y1="874" x2="1554" y2="874" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1540" cy="874" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1527" y="877.6" font-size="11.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">A5</text>
+<text x="1492" y="877.6" font-size="9.5" fill="#5A6472" text-anchor="end">SCL</text>
+<text x="1254" y="782" font-size="9.5" fill="#0B7A75" font-weight="bold">LINK &#8594; VCU</text>
+<line x1="1240" y1="800" x2="1226" y2="800" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1240" cy="800" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1253" y="803.6" font-size="11.5" fill="#0B7A75" font-weight="bold">D4</text>
+<text x="1288" y="803.6" font-size="9.5" fill="#5A6472">RX &#8592; MCX</text>
+<line x1="1240" y1="840" x2="1226" y2="840" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1240" cy="840" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1253" y="843.6" font-size="11.5" fill="#0B7A75" font-weight="bold">D5</text>
+<text x="1288" y="843.6" font-size="9.5" fill="#5A6472">TX &#8594; MCX</text>
+<line x1="1240" y1="880" x2="1226" y2="880" stroke="#0B7A75" stroke-width="1.6"/>
+<circle cx="1240" cy="880" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1253" y="883.6" font-size="11.5" fill="#0B7A75" font-weight="bold">GND</text>
+<text x="1288" y="883.6" font-size="9.5" fill="#5A6472">common</text>
+<text x="1256" y="948" font-size="9.5" fill="#5A6472">D0 / D1 free (bootloader) &#183; D11, D13, A2, A3 spare</text>
+<text x="1256" y="966" font-size="9.5" fill="#5A6472">5 V + GND &#8212; see power sheet</text>
+<rect x="1640" y="262" width="330" height="203" fill="#FDF4F4" stroke="#B03A3E" stroke-width="2.2" rx="6" stroke-dasharray="7 5"/>
+<text x="1805.0" y="286" font-size="15" fill="#B03A3E" text-anchor="middle" font-weight="bold">Dual H-bridge</text>
+<text x="1805.0" y="302" font-size="10.5" fill="#B03A3E" text-anchor="middle">L298N or TB6612FNG</text>
+<rect x="1731.0" y="312" width="148" height="17" fill="#B03A3E" rx="3"/>
+<text x="1805.0" y="324" font-size="9.5" fill="#ffffff" text-anchor="middle" font-weight="bold">NOT IN YOUR BOX</text>
+<line x1="1640" y1="318" x2="1626" y2="318" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="318" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="321.6" font-size="11.5" fill="#B03A3E" font-weight="bold">ENA</text>
+<line x1="1640" y1="342" x2="1626" y2="342" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="342" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="345.6" font-size="11.5" fill="#B03A3E" font-weight="bold">IN1</text>
+<line x1="1640" y1="366" x2="1626" y2="366" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="366" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="369.6" font-size="11.5" fill="#B03A3E" font-weight="bold">IN2</text>
+<line x1="1640" y1="390" x2="1626" y2="390" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="390" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="393.6" font-size="11.5" fill="#B03A3E" font-weight="bold">ENB</text>
+<line x1="1640" y1="414" x2="1626" y2="414" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="414" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="417.6" font-size="11.5" fill="#B03A3E" font-weight="bold">IN3</text>
+<line x1="1640" y1="438" x2="1626" y2="438" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1640" cy="438" r="2.8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1653" y="441.6" font-size="11.5" fill="#B03A3E" font-weight="bold">IN4</text>
+<text x="1654" y="456" font-size="9" fill="#B03A3E">OUT1&#8211;4 &#8594; motors &#183; VM &#8592; 6 V pack &#183; VCC &#8592; 5 V</text>
+<rect x="1640" y="485" width="330" height="100" fill="#ffffff" stroke="#B03A3E" stroke-width="2.2" rx="6"/>
+<rect x="1640" y="485" width="330" height="40" fill="#B03A3E" rx="6"/>
+<rect x="1640" y="517" width="330" height="8" fill="#B03A3E"/>
+<text x="1805.0" y="505" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">4 &#215; DC gear motor</text>
+<text x="1805.0" y="519" font-size="10.5" fill="#D6E0EC" text-anchor="middle">left pair and right pair, in parallel</text>
+<polyline points="1700,465 1700,485" fill="none" stroke="#B03A3E" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="1760,465 1760,485" fill="none" stroke="#B03A3E" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="1850,465 1850,485" fill="none" stroke="#B03A3E" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="1910,465 1910,485" fill="none" stroke="#B03A3E" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="1654" y="560" font-size="9" fill="#5A6472">Skid steer: 4 motors, 2 channels, 2 encoders</text>
+<rect x="1640" y="605" width="330" height="90" fill="#FDF4F4" stroke="#B03A3E" stroke-width="2.2" rx="6" stroke-dasharray="7 5"/>
+<text x="1805.0" y="629" font-size="15" fill="#B03A3E" text-anchor="middle" font-weight="bold">2 &#215; slot optocoupler</text>
+<text x="1805.0" y="645" font-size="10.5" fill="#B03A3E" text-anchor="middle">LM393 IR speed sensor</text>
+<rect x="1731.0" y="655" width="148" height="17" fill="#B03A3E" rx="3"/>
+<text x="1805.0" y="667" font-size="9.5" fill="#ffffff" text-anchor="middle" font-weight="bold">NOT IN YOUR BOX</text>
+<line x1="1640" y1="640" x2="1626" y2="640" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="1640" cy="640" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="1653" y="643.6" font-size="11.5" fill="#2F6FB2" font-weight="bold">OUT L</text>
+<line x1="1640" y1="664" x2="1626" y2="664" stroke="#2F6FB2" stroke-width="1.6"/>
+<circle cx="1640" cy="664" r="2.8" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="1653" y="667.6" font-size="11.5" fill="#2F6FB2" font-weight="bold">OUT R</text>
+<rect x="1640" y="710" width="330" height="90" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2" rx="6"/>
+<rect x="1640" y="710" width="330" height="40" fill="#6B3FA0" rx="6"/>
+<rect x="1640" y="742" width="330" height="8" fill="#6B3FA0"/>
+<text x="1805.0" y="730" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">7-segment display</text>
+<text x="1805.0" y="744" font-size="10.5" fill="#D6E0EC" text-anchor="middle">assumed TM1637 module</text>
+<line x1="1640" y1="745" x2="1626" y2="745" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1640" cy="745" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1653" y="748.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">CLK</text>
+<line x1="1640" y1="769" x2="1626" y2="769" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1640" cy="769" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1653" y="772.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">DIO</text>
+<rect x="1640" y="815" width="330" height="90" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2" rx="6"/>
+<rect x="1640" y="815" width="330" height="40" fill="#6B3FA0" rx="6"/>
+<rect x="1640" y="847" width="330" height="8" fill="#6B3FA0"/>
+<text x="1805.0" y="835" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">16 &#215; 2 LCD</text>
+<text x="1805.0" y="849" font-size="10.5" fill="#D6E0EC" text-anchor="middle">assumed PCF8574 backpack &#183; 0x27</text>
+<line x1="1640" y1="850" x2="1626" y2="850" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1640" cy="850" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1653" y="853.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">SDA</text>
+<line x1="1640" y1="874" x2="1626" y2="874" stroke="#6B3FA0" stroke-width="1.6"/>
+<circle cx="1640" cy="874" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1653" y="877.6" font-size="11.5" fill="#6B3FA0" font-weight="bold">SCL</text>
+<text x="1654" y="898" font-size="9" fill="#B03A3E">5 V bus, ACT-local. Never join it to LPI2C0.</text>
+<text x="1805.0" y="928" font-size="9.5" fill="#B03A3E" text-anchor="middle">Your 4 encoder DISKS are chopper wheels only &#8212;</text>
+<text x="1805.0" y="942" font-size="9.5" fill="#B03A3E" text-anchor="middle">they produce nothing without the optocouplers above.</text>
+<polyline points="386,318 324,318" fill="none" stroke="#2F6FB2" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="324,342 386,342" fill="none" stroke="#2F6FB2" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="386,366 324,366" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="386,390 324,390" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="324,516 386,516" fill="none" stroke="#2F6FB2" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="324,606 386,606" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="324,630 386,630" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="386,726 324,726" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="386,750 324,750" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="386,774 324,774" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="786,800 714,800" fill="none" stroke="#0B7A75" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<text x="750.0" y="793" font-size="9" fill="#5A6472" text-anchor="middle">direct</text>
+<polyline points="714,840 786,840" fill="none" stroke="#0B7A75" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<rect x="731.0" y="835.5" width="22" height="9" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4" rx="1.5"/>
+<text x="742" y="831" font-size="9.5" fill="#0B7A75" text-anchor="middle" font-weight="bold">1 k&#8486;</text>
+<circle cx="766" cy="840" r="3.2" fill="#0B7A75"/>
+<line x1="766" y1="840" x2="766" y2="868" stroke="#0B7A75" stroke-width="1.6"/>
+<rect x="761.5" y="868.0" width="9" height="22" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4" rx="1.5"/>
+<text x="775" y="882.5" font-size="9.5" fill="#0B7A75" font-weight="bold">2 k&#8486;</text>
+<line x1="766" y1="890" x2="766" y2="898" stroke="#0B7A75" stroke-width="1.6"/>
+<line x1="766" y1="898" x2="766" y2="906" stroke="#0B7A75" stroke-width="1.6"/>
+<line x1="757" y1="906" x2="775" y2="906" stroke="#0B7A75" stroke-width="2"/>
+<line x1="760.5" y1="910" x2="771.5" y2="910" stroke="#0B7A75" stroke-width="2"/>
+<line x1="763.5" y1="914" x2="768.5" y2="914" stroke="#0B7A75" stroke-width="2"/>
+<polyline points="714,880 786,880" fill="none" stroke="#12305B" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="1154,800 1226,800" fill="none" stroke="#0B7A75" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<text x="1190.0" y="793" font-size="9" fill="#5A6472" text-anchor="middle">direct</text>
+<polyline points="1226,840 1154,840" fill="none" stroke="#0B7A75" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-teal)"/>
+<rect x="1187.0" y="835.5" width="22" height="9" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4" rx="1.5"/>
+<text x="1198" y="831" font-size="9.5" fill="#0B7A75" text-anchor="middle" font-weight="bold">1 k&#8486;</text>
+<circle cx="1174" cy="840" r="3.2" fill="#0B7A75"/>
+<line x1="1174" y1="840" x2="1174" y2="868" stroke="#0B7A75" stroke-width="1.6"/>
+<rect x="1169.5" y="868.0" width="9" height="22" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4" rx="1.5"/>
+<text x="1165" y="882.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">2 k&#8486;</text>
+<line x1="1174" y1="890" x2="1174" y2="898" stroke="#0B7A75" stroke-width="1.6"/>
+<line x1="1174" y1="898" x2="1174" y2="906" stroke="#0B7A75" stroke-width="1.6"/>
+<line x1="1165" y1="906" x2="1183" y2="906" stroke="#0B7A75" stroke-width="2"/>
+<line x1="1168.5" y1="910" x2="1179.5" y2="910" stroke="#0B7A75" stroke-width="2"/>
+<line x1="1171.5" y1="914" x2="1176.5" y2="914" stroke="#0B7A75" stroke-width="2"/>
+<polyline points="1154,880 1226,880" fill="none" stroke="#12305B" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="1554,318 1626,318" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1554,342 1626,342" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1554,366 1626,366" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1554,390 1626,390" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1554,414 1626,414" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1554,438 1626,438" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-red)"/>
+<polyline points="1626,640 1554,640" fill="none" stroke="#2F6FB2" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="1626,664 1554,664" fill="none" stroke="#2F6FB2" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="1554,745 1626,745" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1554,769 1626,769" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1554,850 1626,850" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="1554,874 1626,874" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="880" y1="1048" x2="1400" y2="1048" stroke="#6B3FA0" stroke-width="2.4"/>
+<line x1="880" y1="1064" x2="1400" y2="1064" stroke="#6B3FA0" stroke-width="2.4"/>
+<line x1="900" y1="1024" x2="900" y2="1048" stroke="#6B3FA0" stroke-width="1.8"/>
+<circle cx="900" cy="1048" r="3.4" fill="#6B3FA0"/>
+<line x1="960" y1="1024" x2="960" y2="1064" stroke="#6B3FA0" stroke-width="1.8"/>
+<circle cx="960" cy="1064" r="3.4" fill="#6B3FA0"/>
+<circle cx="1000" cy="1048" r="3.4" fill="#6B3FA0"/>
+<line x1="1000" y1="1048" x2="1000" y2="1100" stroke="#6B3FA0" stroke-width="1.8"/>
+<circle cx="1300" cy="1048" r="3.4" fill="#6B3FA0"/>
+<line x1="1300" y1="1048" x2="1300" y2="1100" stroke="#6B3FA0" stroke-width="1.8"/>
+<circle cx="1040" cy="1064" r="3.4" fill="#6B3FA0"/>
+<line x1="1040" y1="1064" x2="1040" y2="1100" stroke="#6B3FA0" stroke-width="1.8"/>
+<circle cx="1360" cy="1064" r="3.4" fill="#6B3FA0"/>
+<line x1="1360" y1="1064" x2="1360" y2="1100" stroke="#6B3FA0" stroke-width="1.8"/>
+<text x="1412" y="1046" font-size="10" fill="#6B3FA0" font-weight="bold">LPI2C0 &#183; 400 kHz &#8212; SCL (upper) and SDA (lower)</text>
+<text x="1412" y="1062" font-size="9.5" fill="#5A6472">Pull-ups: the HW-123 already has 2.2 k&#8486; to 3.3 V on board. Add none.</text>
+<text x="1412" y="1078" font-size="9.5" fill="#5A6472">GND runs with the pair &#8212; it is the same star net as everything else.</text>
+<polyline points="1100,1024 1100,1024 1600,1024 1600,1372 1490,1372" fill="none" stroke="#41546B" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5 4" marker-end="url(#a-slate)"/>
+<text x="1340" y="1018" font-size="9" fill="#5A6472" text-anchor="middle">MCU-Link USB &#183; VCOM + debug + power</text>
+<rect x="340" y="1100" width="340" height="370" fill="#ffffff" stroke="#B26B00" stroke-width="2.2" rx="6"/>
+<rect x="340" y="1100" width="340" height="40" fill="#B26B00" rx="6"/>
+<rect x="340" y="1132" width="340" height="8" fill="#B26B00"/>
+<text x="510.0" y="1120" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">OV7670</text>
+<text x="510.0" y="1134" font-size="10.5" fill="#D6E0EC" text-anchor="middle">parallel DVP &#183; 3.3 V ONLY</text>
+<line x1="680" y1="1160" x2="694" y2="1160" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1160" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1163.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D0</text>
+<line x1="680" y1="1180" x2="694" y2="1180" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1180" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1183.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D1</text>
+<line x1="680" y1="1200" x2="694" y2="1200" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1200" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1203.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D2</text>
+<line x1="680" y1="1220" x2="694" y2="1220" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1220" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1223.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D3</text>
+<line x1="680" y1="1240" x2="694" y2="1240" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1240" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1243.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D4</text>
+<line x1="680" y1="1260" x2="694" y2="1260" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1260" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1263.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D5</text>
+<line x1="680" y1="1280" x2="694" y2="1280" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1280" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1283.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D6</text>
+<line x1="680" y1="1300" x2="694" y2="1300" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1300" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1303.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">D7</text>
+<line x1="680" y1="1320" x2="694" y2="1320" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1320" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1323.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">XCLK</text>
+<line x1="680" y1="1340" x2="694" y2="1340" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1340" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1343.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">PCLK</text>
+<line x1="680" y1="1360" x2="694" y2="1360" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1360" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1363.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">HREF</text>
+<line x1="680" y1="1380" x2="694" y2="1380" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1380" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1383.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">VSYNC</text>
+<line x1="680" y1="1400" x2="694" y2="1400" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1400" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1403.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">SIOC</text>
+<line x1="680" y1="1420" x2="694" y2="1420" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="680" cy="1420" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="667" y="1423.6" font-size="11.5" fill="#B26B00" text-anchor="end" font-weight="bold">SIOD</text>
+<text x="354" y="1444" font-size="9" fill="#B03A3E">RESET &#8594; 3.3 V &#183; PWDN &#8594; GND &#183; no frame buffer</text>
+<text x="354" y="1458" font-size="9" fill="#B03A3E">Highest-risk part. Build the car so it works without it.</text>
+<rect x="800" y="1100" width="340" height="370" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2" rx="6"/>
+<rect x="800" y="1100" width="340" height="40" fill="#6B3FA0" rx="6"/>
+<rect x="800" y="1132" width="340" height="8" fill="#6B3FA0"/>
+<text x="970.0" y="1120" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">ESP32</text>
+<text x="970.0" y="1134" font-size="10.5" fill="#D6E0EC" text-anchor="middle">VIS &#183; vision + WiFi gateway</text>
+<line x1="800" y1="1160" x2="786" y2="1160" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1160" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1163.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO5</text>
+<line x1="800" y1="1180" x2="786" y2="1180" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1180" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1183.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO18</text>
+<line x1="800" y1="1200" x2="786" y2="1200" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1200" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1203.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO19</text>
+<line x1="800" y1="1220" x2="786" y2="1220" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1220" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1223.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO23</text>
+<line x1="800" y1="1240" x2="786" y2="1240" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1240" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1243.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO36</text>
+<text x="856" y="1243.6" font-size="9.5" fill="#5A6472">in only</text>
+<line x1="800" y1="1260" x2="786" y2="1260" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1260" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1263.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO39</text>
+<text x="856" y="1263.6" font-size="9.5" fill="#5A6472">in only</text>
+<line x1="800" y1="1280" x2="786" y2="1280" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1280" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1283.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO34</text>
+<text x="856" y="1283.6" font-size="9.5" fill="#5A6472">in only</text>
+<line x1="800" y1="1300" x2="786" y2="1300" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1300" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1303.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO35</text>
+<text x="856" y="1303.6" font-size="9.5" fill="#5A6472">in only</text>
+<line x1="800" y1="1320" x2="786" y2="1320" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1320" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1323.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO0</text>
+<text x="856" y="1323.6" font-size="9.5" fill="#5A6472">strapping</text>
+<line x1="800" y1="1340" x2="786" y2="1340" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1340" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1343.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO25</text>
+<line x1="800" y1="1360" x2="786" y2="1360" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1360" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1363.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO26</text>
+<line x1="800" y1="1380" x2="786" y2="1380" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1380" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1383.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO27</text>
+<line x1="800" y1="1400" x2="786" y2="1400" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1400" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1403.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO32</text>
+<text x="856" y="1403.6" font-size="9.5" fill="#5A6472">SCCB</text>
+<line x1="800" y1="1420" x2="786" y2="1420" stroke="#B26B00" stroke-width="1.6"/>
+<circle cx="800" cy="1420" r="2.8" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<text x="813" y="1423.6" font-size="11.5" fill="#B26B00" font-weight="bold">GPIO33</text>
+<text x="856" y="1423.6" font-size="9.5" fill="#5A6472">SCCB</text>
+<circle cx="1000" cy="1100" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<circle cx="1040" cy="1100" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="992" y="1094" font-size="9" fill="#6B3FA0" text-anchor="end" font-weight="bold">GPIO22 SCL</text>
+<text x="1048" y="1094" font-size="9" fill="#6B3FA0" font-weight="bold">GPIO21 SDA</text>
+<text x="814" y="1444" font-size="9" fill="#5A6472">I&#178;C slave 0x42 &#183; AP NXP-AV &#183; 192.168.4.1 &#183; WS :81</text>
+<text x="814" y="1458" font-size="9" fill="#5A6472">QQVGA grayscale &#8776; 19 KB &#8212; fits without PSRAM. GPIO6&#8211;11 unusable.</text>
+<polyline points="694,1160 786,1160" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1180 786,1180" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1200 786,1200" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1220 786,1220" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1240 786,1240" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1260 786,1260" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1280 786,1280" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1300 786,1300" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="786,1320 694,1320" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1340 786,1340" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1360 786,1360" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1380 786,1380" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="786,1400 694,1400" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<polyline points="694,1420 786,1420" fill="none" stroke="#B26B00" stroke-width="1.8" stroke-linejoin="round"/>
+<rect x="1240" y="1100" width="250" height="118" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2" rx="6"/>
+<rect x="1240" y="1100" width="250" height="40" fill="#6B3FA0" rx="6"/>
+<rect x="1240" y="1132" width="250" height="8" fill="#6B3FA0"/>
+<text x="1365.0" y="1120" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">HW-123 IMU</text>
+<text x="1365.0" y="1134" font-size="10.5" fill="#D6E0EC" text-anchor="middle">6-axis &#183; 3.3 V &#183; 0x68</text>
+<circle cx="1300" cy="1100" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<circle cx="1360" cy="1100" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1292" y="1094" font-size="9" fill="#6B3FA0" text-anchor="end" font-weight="bold">SCL</text>
+<text x="1368" y="1094" font-size="9" fill="#6B3FA0" font-weight="bold">SDA</text>
+<text x="1254" y="1176" font-size="9" fill="#5A6472">Power from J3-8 LDO_3V3, not 5 V.</text>
+<text x="1254" y="1192" font-size="9" fill="#B03A3E">Read WHO_AM_I: 0x68 = MPU6050, 0x70 = MPU6500.</text>
+<rect x="1240" y="1270" width="250" height="200" fill="#ffffff" stroke="#41546B" stroke-width="2.2" rx="6"/>
+<rect x="1240" y="1270" width="250" height="40" fill="#41546B" rx="6"/>
+<rect x="1240" y="1302" width="250" height="8" fill="#41546B"/>
+<text x="1365.0" y="1290" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">Laptop</text>
+<text x="1365.0" y="1304" font-size="10.5" fill="#D6E0EC" text-anchor="middle">driver station</text>
+<circle cx="1490" cy="1372" r="2.8" fill="#ffffff" stroke="#41546B" stroke-width="1.4"/>
+<text x="1365" y="1338" font-size="10" fill="#5A6472" text-anchor="middle">browser &#8594; 192.168.4.1</text>
+<text x="1365" y="1357" font-size="10" fill="#5A6472" text-anchor="middle">WebSocket :81 &#183; telemetry</text>
+<text x="1365" y="1376" font-size="10" fill="#5A6472" text-anchor="middle">MCU-Link VCOM &#183; 115200</text>
+<text x="1365" y="1395" font-size="10" fill="#5A6472" text-anchor="middle">FreeMASTER / console</text>
+<text x="1365" y="1414" font-size="10" fill="#5A6472" text-anchor="middle">and 5 V for every board</text>
+<text x="1365" y="1433" font-size="10" fill="#5A6472" text-anchor="middle">during bring-up</text>
+<polyline points="1140,1330 1240,1330" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<text x="1190" y="1322" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">WiFi</text>
+<rect x="1640" y="1100" width="400" height="370" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
+<rect x="1640" y="1100" width="4" height="370" fill="#B03A3E"/>
+<text x="1658" y="1125" font-size="13" fill="#B03A3E" font-weight="bold">SHOPPING LIST</text>
+<text x="1658" y="1147" font-size="11" fill="#B03A3E" font-weight="bold">1.</text>
+<text x="1678" y="1147" font-size="11" fill="#B03A3E" font-weight="bold">Dual H-bridge motor driver</text>
+<text x="1678" y="1163" font-size="9.5" fill="#5A6472">L298N or TB6612FNG. You have four</text>
+<text x="1678" y="1177" font-size="9.5" fill="#5A6472">motors and nothing to drive them.</text>
+<text x="1678" y="1191" font-size="9.5" fill="#5A6472">Hard blocker &#8212; the car cannot move.</text>
+<text x="1658" y="1221" font-size="11" fill="#B03A3E" font-weight="bold">2.</text>
+<text x="1678" y="1221" font-size="11" fill="#B03A3E" font-weight="bold">2 &#215; slot optocoupler module</text>
+<text x="1678" y="1237" font-size="9.5" fill="#5A6472">LM393 IR speed sensor. The encoder</text>
+<text x="1678" y="1251" font-size="9.5" fill="#5A6472">disks are chopper wheels only.</text>
+<text x="1678" y="1265" font-size="9.5" fill="#5A6472">No sensor &#8594; no odometry, no speed PID.</text>
+<text x="1658" y="1295" font-size="11" fill="#B03A3E" font-weight="bold">3.</text>
+<text x="1678" y="1295" font-size="11" fill="#B03A3E" font-weight="bold">Resistors: 2 &#215; 1 k&#8486;, 2 &#215; 2 k&#8486;</text>
+<text x="1678" y="1311" font-size="9.5" fill="#5A6472">The two level dividers. Without them</text>
+<text x="1678" y="1325" font-size="9.5" fill="#5A6472">the 5 V Arduino TX lines destroy</text>
+<text x="1678" y="1339" font-size="9.5" fill="#5A6472">P3_14 and P1_8. Add 2 &#215; 10 k&#8486; too.</text>
+<line x1="1658" y1="1361" x2="2022" y2="1361" stroke="#C3CEDC" stroke-width="1"/>
+<text x="1658" y="1381" font-size="9.5" fill="#5A6472">Everything else on this sheet is already in</text>
+<text x="1658" y="1395" font-size="9.5" fill="#5A6472">your box. The 10 k&#8486; pair pulls the driver's</text>
+<text x="1658" y="1409" font-size="9.5" fill="#5A6472">ENA / ENB low so the wheels cannot twitch</text>
+<text x="1658" y="1423" font-size="9.5" fill="#5A6472">while the Arduino is in reset.</text>
+<rect x="40" y="1500" width="2000" height="48" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
+<rect x="40" y="1500" width="4" height="48" fill="#B03A3E"/>
+<text x="60" y="1520" font-size="13" fill="#B03A3E" font-weight="bold">COMMON GROUND &#8212; ALL FOUR BOARDS, THE MOTOR PACK AND EVERY COMPONENT</text>
+<text x="60" y="1538" font-size="10.5" fill="#5A6472">One star point. Motor return and logic return meet there and nowhere else. Full distribution on SCHEMA_POWER.svg.</text>
+<rect x="40" y="1570" width="2000" height="200" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
+<rect x="40" y="1570" width="4" height="200" fill="#12305B"/>
+<text x="58" y="1595" font-size="13" fill="#12305B" font-weight="bold">CHECK BEFORE APPLYING POWER</text>
+<text x="62" y="1619" font-size="10.5" fill="#5A6472">1.  Only P3_27 / P3_28 are 5 V tolerant on the MCX. Both Arduino TX lines reach it through</text>
+<text x="62" y="1639" font-size="10.5" fill="#5A6472">     a 1 k&#8486; / 2 k&#8486; divider; the two MCX TX lines are plain wire (3.3 V clears the AVR's 3.0 V).</text>
+<text x="62" y="1659" font-size="10.5" fill="#5A6472">2.  TX and RX cross. An MCX TX pin always lands on an Arduino D4. Never TX to TX.</text>
+<text x="62" y="1679" font-size="10.5" fill="#5A6472">3.  Power the HC-SR04P from the Arduino's 5 V. It is on a 5 V node, so the P variant's</text>
+<text x="62" y="1699" font-size="10.5" fill="#5A6472">     3.3&#8211;5 V range buys you nothing here &#8212; it matters only if you ever move it to the MCX.</text>
+<text x="62" y="1719" font-size="10.5" fill="#5A6472">4.  Two separate I&#178;C buses. LPI2C0 is 3.3 V (ESP32 + IMU). The LCD is on ACT's own 5 V bus.</text>
+<text x="62" y="1739" font-size="10.5" fill="#5A6472">     Joining them puts 5 V pull-ups on P3_27 / P3_28 and kills the MCX.</text>
+<text x="62" y="1759" font-size="10.5" fill="#5A6472">5.  MG90S servos draw far more than an Arduino pin header can supply &#8212; V+ comes from the</text>
+<text x="62" y="1779" font-size="10.5" fill="#5A6472">     battery pack, signal from D6 / D7, grounds common. See the power sheet.</text>
+<text x="1050" y="1619" font-size="10.5" fill="#5A6472">6.   Servo library on PERC owns Timer1. Motor PWM on ACT owns Timer1. That is why they are</text>
+<text x="1050" y="1639" font-size="10.5" fill="#5A6472">      on different boards &#8212; one Uno cannot do both.</text>
+<text x="1050" y="1659" font-size="10.5" fill="#5A6472">7.   ESP32 GPIO6&#8211;11 are wired to its flash and must stay unused. GPIO34&#8211;39 are input-only,</text>
+<text x="1050" y="1679" font-size="10.5" fill="#5A6472">      which is exactly what the camera data lines need. GPIO0 is a strapping pin: if the</text>
+<text x="1050" y="1699" font-size="10.5" fill="#5A6472">      camera holds it low at boot the ESP32 will not start &#8212; unplug the camera to flash.</text>
+<text x="1050" y="1719" font-size="10.5" fill="#5A6472">8.   D0 / D1 stay free on both Arduinos &#8212; shared with the CH340 bootloader.</text>
+<text x="1050" y="1739" font-size="10.5" fill="#5A6472">9.   Wheels off the floor for every reset until the 10 k&#8486; pull-downs are on ENA / ENB.</text>
+<text x="1050" y="1759" font-size="10.5" fill="#5A6472">10. The ESP32's native CAN is real but unusable here: TWAI still needs a transceiver, and</text>
+<text x="1050" y="1779" font-size="10.5" fill="#5A6472">      the MCX has no CAN peripheral at all. Two of four nodes could never join the bus.</text>
+</svg>

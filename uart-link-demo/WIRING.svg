@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 790" width="1040" height="790" font-family="Helvetica, Arial, sans-serif">
+
+  <rect width="1040" height="790" fill="#ffffff"/>
+
+  <!-- ================= title ================= -->
+  <text x="520" y="42" text-anchor="middle" font-size="23" font-weight="bold" fill="#12305B">FRDM-MCXA153 &#8596; Arduino UNO / Nano &#8212; UART Link</text>
+  <text x="520" y="68" text-anchor="middle" font-size="13" fill="#5A6472">LPUART2 &#183; 38400 baud &#183; 8N1 &#183; 3 wires total &#183; each board powered by its own USB</text>
+
+  <!-- ================= FRDM board ================= -->
+  <rect x="60" y="110" width="250" height="440" rx="6" fill="#ffffff" stroke="#12305B" stroke-width="2.2"/>
+  <rect x="60" y="110" width="250" height="38" rx="6" fill="#12305B"/>
+  <rect x="60" y="140" width="250" height="8" fill="#12305B"/>
+  <text x="185" y="136" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">FRDM-MCXA153</text>
+  <text x="185" y="171" text-anchor="middle" font-size="11.5" fill="#5A6472">3.3 V logic &#183; NOT 5 V tolerant</text>
+
+  <text x="296" y="222" text-anchor="end" font-size="13.5" font-weight="bold" fill="#12305B">P1_5 / LPUART2_TXD</text>
+  <text x="296" y="240" text-anchor="end" font-size="11.5" fill="#5A6472">J1 pin 4 (ARD_D1)</text>
+
+  <text x="296" y="352" text-anchor="end" font-size="13.5" font-weight="bold" fill="#12305B">P1_4 / LPUART2_RXD</text>
+  <text x="296" y="370" text-anchor="end" font-size="11.5" fill="#5A6472">J1 pin 2 (ARD_D0)</text>
+
+  <text x="296" y="492" text-anchor="end" font-size="13.5" font-weight="bold" fill="#12305B">GND</text>
+  <text x="296" y="510" text-anchor="end" font-size="11.5" fill="#5A6472">J3 pin 12 or J3 pin 14</text>
+
+  <!-- ================= Arduino board ================= -->
+  <rect x="730" y="110" width="250" height="440" rx="6" fill="#ffffff" stroke="#0B7A75" stroke-width="2.2"/>
+  <rect x="730" y="110" width="250" height="38" rx="6" fill="#0B7A75"/>
+  <rect x="730" y="140" width="250" height="8" fill="#0B7A75"/>
+  <text x="855" y="136" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">Arduino UNO / Nano</text>
+  <text x="855" y="171" text-anchor="middle" font-size="11.5" fill="#5A6472">5 V logic &#183; ATmega328P @ 16 MHz</text>
+
+  <text x="744" y="222" font-size="13.5" font-weight="bold" fill="#0B7A75">D4</text>
+  <text x="744" y="240" font-size="11.5" fill="#5A6472">SoftwareSerial RX</text>
+
+  <text x="744" y="352" font-size="13.5" font-weight="bold" fill="#0B7A75">D5</text>
+  <text x="744" y="370" font-size="11.5" fill="#5A6472">SoftwareSerial TX</text>
+
+  <text x="744" y="492" font-size="13.5" font-weight="bold" fill="#0B7A75">GND</text>
+  <text x="744" y="510" font-size="11.5" fill="#5A6472">any GND pin</text>
+
+  <!-- ================= WIRE 1 : MCX TX to Arduino RX ================= -->
+  <line x1="310" y1="215" x2="716" y2="215" stroke="#1B7F3B" stroke-width="3"/>
+  <polygon points="726,215 712,208 712,222" fill="#1B7F3B"/>
+  <circle cx="310" cy="215" r="4.5" fill="#1B7F3B"/>
+  <rect x="437" y="180" width="166" height="24" rx="4" fill="#E8F4EC" stroke="#1B7F3B" stroke-width="1"/>
+  <text x="520" y="197" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1B7F3B">3.3 V &#8212; DIRECT WIRE</text>
+  <text x="520" y="240" text-anchor="middle" font-size="11" fill="#5A6472">3.3 V clears the AVR high threshold (3.0 V at 5 V VCC)</text>
+
+  <!-- ================= WIRE 2 : Arduino TX to divider to MCX RX ================= -->
+  <line x1="722" y1="345" x2="690" y2="345" stroke="#C0392B" stroke-width="3"/>
+  <circle cx="722" cy="345" r="4.5" fill="#C0392B"/>
+
+  <rect x="612" y="331" width="78" height="28" rx="3" fill="#FFFFFF" stroke="#C0392B" stroke-width="2.2"/>
+  <text x="651" y="350" text-anchor="middle" font-size="13" font-weight="bold" fill="#C0392B">1 k&#8486;</text>
+  <text x="651" y="322" text-anchor="middle" font-size="11" fill="#5A6472">R1</text>
+
+  <line x1="612" y1="345" x2="500" y2="345" stroke="#C0392B" stroke-width="3"/>
+  <circle cx="500" cy="345" r="6" fill="#12305B"/>
+
+  <line x1="500" y1="345" x2="324" y2="345" stroke="#1B7F3B" stroke-width="3"/>
+  <polygon points="314,345 328,338 328,352" fill="#1B7F3B"/>
+
+  <line x1="500" y1="345" x2="500" y2="398" stroke="#1B7F3B" stroke-width="3"/>
+  <rect x="486" y="398" width="28" height="72" rx="3" fill="#FFFFFF" stroke="#1B7F3B" stroke-width="2.2"/>
+  <text x="528" y="436" font-size="13" font-weight="bold" fill="#1B7F3B">2 k&#8486;</text>
+  <text x="528" y="452" font-size="11" fill="#5A6472">R2 to GND</text>
+  <line x1="500" y1="470" x2="500" y2="495" stroke="#1B7F3B" stroke-width="3"/>
+
+  <text x="706" y="334" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#C0392B">5 V</text>
+  <text x="405" y="330" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1B7F3B">3.33 V</text>
+  <text x="405" y="378" text-anchor="middle" font-size="11" fill="#5A6472">5 V &#215; 2 / (1 + 2) = 3.33 V</text>
+
+  <!-- ================= WIRE 3 : GND ================= -->
+  <line x1="310" y1="495" x2="730" y2="495" stroke="#333333" stroke-width="3.4"/>
+  <circle cx="310" cy="495" r="4.5" fill="#333333"/>
+  <circle cx="730" cy="495" r="4.5" fill="#333333"/>
+  <circle cx="500" cy="495" r="6" fill="#333333"/>
+  <line x1="500" y1="495" x2="500" y2="520" stroke="#333333" stroke-width="3"/>
+  <line x1="482" y1="520" x2="518" y2="520" stroke="#333333" stroke-width="3"/>
+  <line x1="488" y1="527" x2="512" y2="527" stroke="#333333" stroke-width="3"/>
+  <line x1="494" y1="534" x2="506" y2="534" stroke="#333333" stroke-width="3"/>
+  <rect x="524" y="473" width="204" height="19" fill="#ffffff"/>
+  <text x="626" y="487" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#333333">COMMON GROUND &#8212; MANDATORY</text>
+
+  <!-- ================= notes ================= -->
+  <rect x="60" y="588" width="920" height="180" rx="6" fill="#F7F9FC" stroke="#C3CEDC" stroke-width="1"/>
+  <rect x="60" y="588" width="4" height="180" fill="#C7761B"/>
+
+  <text x="84" y="614" font-size="13" font-weight="bold" fill="#12305B">Check before applying power</text>
+  <text x="84" y="638" font-size="11.8" fill="#1B1B1B">1.  TX and RX are CROSSED.  MCX P1_5 goes to Arduino D4, Arduino D5 goes to MCX P1_4.  Never TX to TX.</text>
+  <text x="84" y="659" font-size="11.8" fill="#1B1B1B">2.  The divider goes on the Arduino D5 line ONLY.  The MCX P1_5 line is a plain wire &#8212; a divider there would</text>
+  <text x="101" y="677" font-size="11.8" fill="#1B1B1B">drop 3.3 V to 2.2 V and the Arduino would miss it.</text>
+  <text x="84" y="698" font-size="11.8" fill="#1B1B1B">3.  Do NOT connect 5 V or 3.3 V between the boards.  Each board is powered by its own USB cable.</text>
+  <text x="84" y="719" font-size="11.8" fill="#1B1B1B">4.  Verify with a multimeter: continuity between the two GNDs (near 0 &#8486;), and NO continuity between</text>
+  <text x="101" y="737" font-size="11.8" fill="#1B1B1B">Arduino 5 V and any MCX pin.  With D5 driven high, the R1/R2 junction must read 3.2 &#8211; 3.4 V.</text>
+  <text x="84" y="758" font-size="11.8" font-weight="bold" fill="#C0392B">5.  P1_4 is NOT 5 V tolerant.  Wiring D5 to it directly will damage the MCU.</text>
+
+</svg>

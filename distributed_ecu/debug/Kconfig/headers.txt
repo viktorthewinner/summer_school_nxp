@@ -1,0 +1,1 @@
+C:\Users\victo\Desktop\nxp project\distributed_ecu\debug\mcux_config.h

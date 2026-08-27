@@ -1,0 +1,19 @@
+led_blinky_peripheral:
+  boards:
+    frdmmcxa153: []
+  contents:
+    document:
+      brief: The LED Blinky demo application provides a sanity check for the new SDK
+        build environments and board bring up. The LED Blinky demo uses the systick
+        interrupt to realize the function of timing delay. The example takes turns
+        to shine the LED. The purpose of this demo is to provide a simple project
+        for debugging and further development.
+      category: demo_apps
+      example_readme:
+      - examples/demo_apps/led_blinky_peripheral/readme.md
+      - ${board_root}/${board}/demo_apps/led_blinky/example_board_readme.md
+      - ${board_root}/${board}/examples_shared_readme.md
+      name: led_blinky_peripheral${core_id_suffix_name}
+    meta_path: examples/demo_apps/led_blinky_peripheral
+    project-root-path: boards/${board}/demo_apps/led_blinky/${multicore_foldername}
+  section-type: freestanding_application

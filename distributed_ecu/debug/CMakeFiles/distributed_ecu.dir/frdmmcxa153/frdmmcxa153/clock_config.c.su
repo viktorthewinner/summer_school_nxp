@@ -1,0 +1,6 @@
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:53:6:BOARD_InitBootClocks	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:87:6:BOARD_BootClockFRO12M	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:165:6:BOARD_BootClockFRO24M	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:245:6:BOARD_BootClockFRO48M	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:330:6:BOARD_BootClockFRO64M	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/frdmmcxa153/frdmmcxa153/clock_config.c:417:6:BOARD_BootClockFRO96M	24	static

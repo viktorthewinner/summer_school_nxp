@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1250" width="1400" height="1250" font-family="Helvetica, Arial, sans-serif">
+<rect width="1400" height="1250" fill="#ffffff"/>
+<text x="700" y="46" text-anchor="middle" font-size="25" font-weight="bold" fill="#12305B">Distributed ECU Vehicle &#8212; 4 Nodes, No CAN</text>
+<text x="700" y="74" text-anchor="middle" font-size="13" fill="#5A6472">2 &#215; UART @ 38400 (point-to-point) &#183; 1 &#215; I2C @ 400 kHz (multi-drop) &#183; WiFi access point for the laptop</text>
+<rect x="60" y="150" width="260" height="800" rx="6" fill="#ffffff" stroke="#12305B" stroke-width="2.2"/>
+<rect x="60" y="150" width="260" height="40" rx="6" fill="#12305B"/>
+<rect x="60" y="182" width="260" height="8" fill="#12305B"/>
+<text x="190" y="170" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">FRDM-MCXA153</text>
+<text x="190" y="184" text-anchor="middle" font-size="10.5" fill="#D6E0EC">VCU  &#183;  hub</text>
+<text x="190" y="210" text-anchor="middle" font-size="11" fill="#5A6472">3.3 V &#183; NOT 5 V tolerant</text>
+<rect x="800" y="150" width="250" height="250" rx="6" fill="#ffffff" stroke="#0B7A75" stroke-width="2.2"/>
+<rect x="800" y="150" width="250" height="40" rx="6" fill="#0B7A75"/>
+<rect x="800" y="182" width="250" height="8" fill="#0B7A75"/>
+<text x="925" y="170" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">Arduino 1</text>
+<text x="925" y="184" text-anchor="middle" font-size="10.5" fill="#D6E0EC">PERC  &#183;  sensors</text>
+<text x="925" y="210" text-anchor="middle" font-size="11" fill="#5A6472">5 V &#183; ATmega328P</text>
+<rect x="800" y="425" width="250" height="240" rx="6" fill="#ffffff" stroke="#0B7A75" stroke-width="2.2"/>
+<rect x="800" y="425" width="250" height="40" rx="6" fill="#0B7A75"/>
+<rect x="800" y="457" width="250" height="8" fill="#0B7A75"/>
+<text x="925" y="445" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">Arduino 2</text>
+<text x="925" y="459" text-anchor="middle" font-size="10.5" fill="#D6E0EC">ACT  &#183;  motors + HMI</text>
+<text x="925" y="485" text-anchor="middle" font-size="11" fill="#5A6472">5 V &#183; ATmega328P</text>
+<rect x="800" y="690" width="250" height="210" rx="6" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2"/>
+<rect x="800" y="690" width="250" height="40" rx="6" fill="#6B3FA0"/>
+<rect x="800" y="722" width="250" height="8" fill="#6B3FA0"/>
+<text x="925" y="710" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">ESP32</text>
+<text x="925" y="724" text-anchor="middle" font-size="10.5" fill="#D6E0EC">GATEWAY  &#183;  WiFi</text>
+<text x="925" y="750" text-anchor="middle" font-size="11" fill="#5A6472">3.3 V &#183; NOT 5 V tolerant</text>
+<rect x="1180" y="690" width="180" height="210" rx="6" fill="#ffffff" stroke="#41546B" stroke-width="2.2"/>
+<rect x="1180" y="690" width="180" height="40" rx="6" fill="#41546B"/>
+<rect x="1180" y="722" width="180" height="8" fill="#41546B"/>
+<text x="1270" y="710" text-anchor="middle" font-size="15" font-weight="bold" fill="#ffffff">Laptop</text>
+<text x="1270" y="724" text-anchor="middle" font-size="10.5" fill="#D6E0EC">driver station</text>
+<text x="1270" y="750" text-anchor="middle" font-size="11" fill="#5A6472">browser</text>
+<text x="310" y="240" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_15 / LPUART2_TXD</text>
+<text x="310" y="257" text-anchor="end" font-size="10.5" fill="#5A6472">J2 pin 2</text>
+<text x="310" y="330" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_14 / LPUART2_RXD</text>
+<text x="310" y="347" text-anchor="end" font-size="10.5" fill="#5A6472">J2 pin 4</text>
+<text x="310" y="505" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P1_9 / LPUART1_TXD</text>
+<text x="310" y="522" text-anchor="end" font-size="10.5" fill="#5A6472">J2 pin 20</text>
+<text x="310" y="595" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P1_8 / LPUART1_RXD</text>
+<text x="310" y="612" text-anchor="end" font-size="10.5" fill="#5A6472">J2 pin 18</text>
+<text x="310" y="710" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">LDO_3V3</text>
+<text x="310" y="727" text-anchor="end" font-size="10.5" fill="#5A6472">J3 pin 8</text>
+<text x="310" y="785" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_27 / LPI2C0_SCL</text>
+<text x="310" y="802" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J6</text>
+<text x="310" y="845" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_28 / LPI2C0_SDA</text>
+<text x="310" y="862" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J6</text>
+<text x="310" y="915" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">GND</text>
+<text x="310" y="932" text-anchor="end" font-size="10.5" fill="#5A6472">J3 pin 12 or 14</text>
+<line x1="80" y1="445" x2="300" y2="445" stroke="#C3CEDC" stroke-width="1"/>
+<line x1="80" y1="685" x2="300" y2="685" stroke="#C3CEDC" stroke-width="1"/>
+<text x="190" y="437" text-anchor="middle" font-size="11" font-weight="bold" fill="#12305B">LPUART2 &#8594; Arduino 1</text>
+<text x="190" y="677" text-anchor="middle" font-size="11" font-weight="bold" fill="#12305B">LPUART1 &#8594; Arduino 2</text>
+<text x="812" y="240" font-size="12.5" font-weight="bold" fill="#0B7A75">D4</text>
+<text x="812" y="257" font-size="10.5" fill="#5A6472">SoftwareSerial RX</text>
+<text x="812" y="330" font-size="12.5" font-weight="bold" fill="#0B7A75">D5</text>
+<text x="812" y="347" font-size="10.5" fill="#5A6472">SoftwareSerial TX</text>
+<text x="812" y="388" font-size="12.5" font-weight="bold" fill="#0B7A75">GND</text>
+<text x="812" y="505" font-size="12.5" font-weight="bold" fill="#0B7A75">D4</text>
+<text x="812" y="522" font-size="10.5" fill="#5A6472">SoftwareSerial RX</text>
+<text x="812" y="595" font-size="12.5" font-weight="bold" fill="#0B7A75">D5</text>
+<text x="812" y="612" font-size="10.5" fill="#5A6472">SoftwareSerial TX</text>
+<text x="812" y="650" font-size="12.5" font-weight="bold" fill="#0B7A75">GND</text>
+<text x="812" y="785" font-size="12.5" font-weight="bold" fill="#6B3FA0">GPIO22</text>
+<text x="812" y="802" font-size="10.5" fill="#5A6472">I2C SCL</text>
+<text x="812" y="845" font-size="12.5" font-weight="bold" fill="#6B3FA0">GPIO21</text>
+<text x="812" y="862" font-size="10.5" fill="#5A6472">I2C SDA</text>
+<text x="812" y="890" font-size="12.5" font-weight="bold" fill="#6B3FA0">GND</text>
+<line x1="320" y1="245" x2="786" y2="245" stroke="#1B7F3B" stroke-width="3"/>
+<polygon points="796,245 782,238 782,252" fill="#1B7F3B"/>
+<circle cx="320" cy="245" r="4.5" fill="#1B7F3B"/>
+<rect x="470" y="212" width="166" height="22" rx="4" fill="#E8F4EC" stroke="#1B7F3B" stroke-width="1"/>
+<text x="553" y="228" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1B7F3B">3.3 V &#8212; DIRECT WIRE</text>
+<line x1="792" y1="335" x2="756" y2="335" stroke="#C0392B" stroke-width="3"/>
+<circle cx="792" cy="335" r="4.5" fill="#C0392B"/>
+<rect x="676" y="321" width="80" height="28" rx="3" fill="#ffffff" stroke="#C0392B" stroke-width="2.2"/>
+<text x="716" y="340" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#C0392B">1 k&#8486;</text>
+<text x="716" y="314" text-anchor="middle" font-size="10" fill="#5A6472">R1</text>
+<text x="774" y="324" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#C0392B">5 V</text>
+<line x1="676" y1="335" x2="560" y2="335" stroke="#C0392B" stroke-width="3"/>
+<circle cx="560" cy="335" r="6" fill="#12305B"/>
+<line x1="560" y1="335" x2="334" y2="335" stroke="#1B7F3B" stroke-width="3"/>
+<polygon points="324,335 338,328 338,342" fill="#1B7F3B"/>
+<text x="440" y="324" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1B7F3B">3.33 V</text>
+<line x1="560" y1="335" x2="560" y2="355" stroke="#1B7F3B" stroke-width="3"/>
+<rect x="546" y="355" width="28" height="52" rx="3" fill="#ffffff" stroke="#1B7F3B" stroke-width="2.2"/>
+<text x="588" y="379" font-size="12.5" font-weight="bold" fill="#1B7F3B">2 k&#8486;</text>
+<line x1="560" y1="407" x2="560" y2="423" stroke="#333333" stroke-width="3"/>
+<line x1="543" y1="423" x2="577" y2="423" stroke="#333333" stroke-width="3"/>
+<line x1="549" y1="429" x2="571" y2="429" stroke="#333333" stroke-width="3"/>
+<line x1="555" y1="435" x2="565" y2="435" stroke="#333333" stroke-width="3"/>
+<line x1="320" y1="510" x2="786" y2="510" stroke="#1B7F3B" stroke-width="3"/>
+<polygon points="796,510 782,503 782,517" fill="#1B7F3B"/>
+<circle cx="320" cy="510" r="4.5" fill="#1B7F3B"/>
+<rect x="470" y="477" width="166" height="22" rx="4" fill="#E8F4EC" stroke="#1B7F3B" stroke-width="1"/>
+<text x="553" y="493" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1B7F3B">3.3 V &#8212; DIRECT WIRE</text>
+<line x1="792" y1="600" x2="756" y2="600" stroke="#C0392B" stroke-width="3"/>
+<circle cx="792" cy="600" r="4.5" fill="#C0392B"/>
+<rect x="676" y="586" width="80" height="28" rx="3" fill="#ffffff" stroke="#C0392B" stroke-width="2.2"/>
+<text x="716" y="605" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#C0392B">1 k&#8486;</text>
+<text x="716" y="579" text-anchor="middle" font-size="10" fill="#5A6472">R1</text>
+<text x="774" y="589" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#C0392B">5 V</text>
+<line x1="676" y1="600" x2="560" y2="600" stroke="#C0392B" stroke-width="3"/>
+<circle cx="560" cy="600" r="6" fill="#12305B"/>
+<line x1="560" y1="600" x2="334" y2="600" stroke="#1B7F3B" stroke-width="3"/>
+<polygon points="324,600 338,593 338,607" fill="#1B7F3B"/>
+<text x="440" y="589" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#1B7F3B">3.33 V</text>
+<line x1="560" y1="600" x2="560" y2="620" stroke="#1B7F3B" stroke-width="3"/>
+<rect x="546" y="620" width="28" height="52" rx="3" fill="#ffffff" stroke="#1B7F3B" stroke-width="2.2"/>
+<text x="588" y="644" font-size="12.5" font-weight="bold" fill="#1B7F3B">2 k&#8486;</text>
+<line x1="560" y1="672" x2="560" y2="688" stroke="#333333" stroke-width="3"/>
+<line x1="543" y1="688" x2="577" y2="688" stroke="#333333" stroke-width="3"/>
+<line x1="549" y1="694" x2="571" y2="694" stroke="#333333" stroke-width="3"/>
+<line x1="555" y1="700" x2="565" y2="700" stroke="#333333" stroke-width="3"/>
+<line x1="320" y1="790" x2="792" y2="790" stroke="#6B3FA0" stroke-width="3"/>
+<circle cx="320" cy="790" r="4.5" fill="#6B3FA0"/>
+<circle cx="792" cy="790" r="4.5" fill="#6B3FA0"/>
+<text x="620" y="781" text-anchor="middle" font-size="12" font-weight="bold" fill="#6B3FA0">SCL</text>
+<line x1="320" y1="850" x2="792" y2="850" stroke="#6B3FA0" stroke-width="3"/>
+<circle cx="320" cy="850" r="4.5" fill="#6B3FA0"/>
+<circle cx="792" cy="850" r="4.5" fill="#6B3FA0"/>
+<text x="620" y="841" text-anchor="middle" font-size="12" font-weight="bold" fill="#6B3FA0">SDA</text>
+<circle cx="320" cy="715" r="4.5" fill="#6B3FA0"/>
+<line x1="320" y1="715" x2="500" y2="715" stroke="#6B3FA0" stroke-width="3"/>
+<text x="410" y="707" text-anchor="middle" font-size="11" font-weight="bold" fill="#6B3FA0">3.3 V</text>
+<line x1="420" y1="715" x2="420" y2="756" stroke="#6B3FA0" stroke-width="3"/>
+<rect x="407" y="756" width="26" height="34" rx="3" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2"/>
+<line x1="420" y1="790" x2="420" y2="790" stroke="#6B3FA0" stroke-width="3"/>
+<circle cx="420" cy="790" r="6" fill="#6B3FA0"/>
+<text x="464" y="778" text-anchor="middle" font-size="10.5" fill="#5A6472">4.7 k&#8486;</text>
+<line x1="500" y1="715" x2="500" y2="816" stroke="#6B3FA0" stroke-width="3"/>
+<rect x="487" y="816" width="26" height="34" rx="3" fill="#ffffff" stroke="#6B3FA0" stroke-width="2.2"/>
+<line x1="500" y1="850" x2="500" y2="850" stroke="#6B3FA0" stroke-width="3"/>
+<circle cx="500" cy="850" r="6" fill="#6B3FA0"/>
+<text x="544" y="838" text-anchor="middle" font-size="10.5" fill="#5A6472">4.7 k&#8486;</text>
+<text x="620" y="900" text-anchor="middle" font-size="10.5" fill="#5A6472">open-drain &#8212; 3.3 V and 5 V nodes coexist, no level shifters</text>
+<line x1="1050" y1="770" x2="1180" y2="770" stroke="#41546B" stroke-width="3" stroke-dasharray="9,7"/>
+<rect x="1069" y="748" width="60" height="17" fill="#ffffff"/>
+<text x="1098" y="761" text-anchor="middle" font-size="11" font-weight="bold" fill="#41546B">WiFi</text>
+<rect x="1055" y="782" width="88" height="32" fill="#ffffff"/>
+<text x="1098" y="795" text-anchor="middle" font-size="10" fill="#5A6472">AP mode</text>
+<text x="1098" y="809" text-anchor="middle" font-size="10" fill="#5A6472">192.168.4.1</text>
+<text x="1270" y="836" text-anchor="middle" font-size="10.5" fill="#5A6472">WebSocket control</text>
+<text x="1270" y="852" text-anchor="middle" font-size="10.5" fill="#5A6472">+ live telemetry</text>
+<circle cx="320" cy="920" r="4.5" fill="#333333"/>
+<line x1="320" y1="920" x2="380" y2="920" stroke="#333333" stroke-width="3.4"/>
+<line x1="380" y1="920" x2="380" y2="1015" stroke="#333333" stroke-width="3.4"/>
+<line x1="380" y1="1015" x2="1140" y2="1015" stroke="#333333" stroke-width="3.4"/>
+<circle cx="1050" cy="383" r="4.5" fill="#333333"/>
+<line x1="1050" y1="383" x2="1140" y2="383" stroke="#333333" stroke-width="3.4"/>
+<circle cx="1050" cy="645" r="4.5" fill="#333333"/>
+<line x1="1050" y1="645" x2="1140" y2="645" stroke="#333333" stroke-width="3.4"/>
+<circle cx="1050" cy="885" r="4.5" fill="#333333"/>
+<line x1="1050" y1="885" x2="1140" y2="885" stroke="#333333" stroke-width="3.4"/>
+<line x1="1140" y1="383" x2="1140" y2="1015" stroke="#333333" stroke-width="3.4"/>
+<circle cx="1140" cy="645" r="6" fill="#333333"/>
+<circle cx="1140" cy="885" r="6" fill="#333333"/>
+<circle cx="380" cy="1015" r="6" fill="#333333"/>
+<text x="740" y="1002" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#333333">COMMON GROUND &#8212; ALL FOUR BOARDS</text>
+<rect x="60" y="1050" width="1300" height="176" rx="6" fill="#F7F9FC" stroke="#C3CEDC" stroke-width="1"/>
+<rect x="60" y="1050" width="4" height="176" fill="#C7761B"/>
+<text x="84" y="1076" font-size="13" font-weight="bold" fill="#12305B">Check before applying power</text>
+<text x="84" y="1100" font-size="11.6" fill="#1B1B1B">1.  Every ground symbol is the same net as the GND rail.  Both R2 resistors and all four boards return to it.</text>
+<text x="84" y="1119" font-size="11.6" fill="#1B1B1B">2.  TX and RX are CROSSED on both UART links.  An MCX TX pin always goes to an Arduino D4.  Never TX to TX.</text>
+<text x="84" y="1138" font-size="11.6" fill="#1B1B1B">3.  BOTH Arduinos need their own 1 k&#8486; / 2 k&#8486; divider on D5.  The two MCX TX lines are plain wires.</text>
+<text x="84" y="1157" font-size="11.6" fill="#1B1B1B">4.  I2C pull-ups go to 3.3 V ONLY.  Remove any 5 V pull-ups from I2C breakout boards first.</text>
+<text x="84" y="1176" font-size="11.6" fill="#1B1B1B">5.  The 16&#215;2 LCD goes on Arduino 2 (5 V native), NOT on this I2C bus &#8212; its backpack pulls up to 5 V.</text>
+<text x="84" y="1195" font-size="11.6" fill="#1B1B1B">6.  Each board on its own USB during bring-up.  Motors run from the AA pack, never from a 9 V PP3.</text>
+<text x="84" y="1214" font-size="11.6" font-weight="bold" fill="#C0392B">7.  P3_14, P1_8 and EVERY ESP32 pin are NOT 5 V tolerant.  5 V on any of them destroys the chip.</text>
+</svg>
