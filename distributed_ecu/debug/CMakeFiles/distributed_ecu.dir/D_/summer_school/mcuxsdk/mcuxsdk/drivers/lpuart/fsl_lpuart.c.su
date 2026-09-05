@@ -14,7 +14,7 @@ D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:294:13:LPUART_Write
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:308:13:LPUART_ReadNonBlocking	40	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:338:13:LPUART_ReadNonBlocking16bit	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:375:10:LPUART_Init	56	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:645:10:LPUART_Deinit	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:645:10:LPUART_Deinit	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:730:6:LPUART_GetDefaultConfig	16	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:784:10:LPUART_SetBaudRate	56	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:888:6:LPUART_Enable9bitMode	24	static
@@ -24,9 +24,9 @@ D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:996:6:LPUART_Disabl
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1054:10:LPUART_GetEnabledInterrupts	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1092:10:LPUART_GetStatusFlags	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1125:10:LPUART_ClearStatusFlags	24	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1175:10:LPUART_WriteBlocking	32	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1236:10:LPUART_WriteBlocking16bit	32	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1285:17:LPUART_WaitForReadData	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1175:10:LPUART_WriteBlocking	40	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1236:10:LPUART_WriteBlocking16bit	40	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1285:17:LPUART_WaitForReadData	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1382:10:LPUART_ReadBlocking	40	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1442:10:LPUART_ReadBlocking16bit	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c:1486:6:LPUART_TransferCreateHandle	40	static

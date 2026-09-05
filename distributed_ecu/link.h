@@ -71,6 +71,27 @@ bool LINK_PollLine(link_id_t id, char *out, size_t outSize);
 uint32_t LINK_GetDroppedCount(link_id_t id);
 
 /*!
+ * @brief Framing, noise and parity errors seen on this channel.
+ *
+ * The number that separates the two silences. Zero with nothing arriving
+ * means no signal reaches the pin at all - a wire, a header pin, a ground.
+ * Climbing means a signal IS arriving and this UART cannot read it - a baud
+ * that does not match, a level that never reaches the threshold, a divider
+ * built the wrong way round. Those two faults have nothing in common and
+ * both report "SILENT" without this.
+ */
+uint32_t LINK_GetFrameErrorCount(link_id_t id);
+
+/*!
+ * @brief Transmits abandoned because the LPUART never accepted the byte.
+ *
+ * Should be zero forever. Anything else means that transmitter stalled - and
+ * before UART_RETRY_TIMES was set, that condition did not produce a count, it
+ * produced a frozen vehicle.
+ */
+uint32_t LINK_GetTxTimeoutCount(link_id_t id);
+
+/*!
  * @brief Take ONE raw byte from a UART channel, bypassing line assembly.
  *
  * For debugging only. LINK_PollLine() throws away anything that never
@@ -134,6 +155,20 @@ uint32_t LINK_GwRecoveries(void);
  * outside the normal poll must call this afterwards.
  */
 void LINK_GwResync(void);
+
+/*!
+ * @brief Free an I2C bus that a slave is holding low, then re-init.
+ *
+ * The answer to a gateway stuck on BUSY. That status means SDA or SCL read
+ * LOW before the START, and no amount of resetting the master changes it: the
+ * line is being held by a SLAVE that was interrupted part way through a byte
+ * and is still waiting for the clocks to finish it. The cure is older than
+ * the peripheral - clock SCL by hand until it lets go, then generate a STOP.
+ *
+ * Called automatically when a run of failures is BUSY, and available on the
+ * console as 'busfix'.
+ */
+void LINK_GwBusRecover(void);
 
 /*! @brief Short printable name of a channel, e.g. "ARD1". */
 const char *LINK_GetName(link_id_t id);

@@ -110,6 +110,7 @@ static volatile uint32_t s_echoRiseUs;
 static volatile uint32_t s_echoWidthUs;
 static volatile bool     s_echoDone;
 static volatile uint8_t  s_echoArmed;      /* 0 none, 1 front, 2 back */
+static volatile uint32_t s_echoInts;       /* every edge, armed or not      */
 
 static int      g_frontCm = -1;
 static int      g_backCm  = -1;
@@ -131,11 +132,22 @@ static uint32_t g_vcuAt;
 static int8_t   g_vcuUp = -1;      /* -1 never heard, 0 down, 1 up */
 static uint32_t g_statusAt;
 static uint32_t g_rxLines;
+static uint32_t g_rxBytes;         /* raw bytes, whatever they turned out to be */
+static uint32_t g_txLines;         /* P, lines handed to SoftwareSerial         */
+static uint32_t g_echoPrev;        /* s_echoInts at the last status print       */
 
 /* ---- ranging ------------------------------------------------------------ */
 
 static inline void echoEdge(uint8_t who, uint8_t pin)
 {
+  /* Counted BEFORE the gate below, deliberately. An echo pin with nothing
+   * driving it chatters, and every one of those edges costs an interrupt
+   * whether or not it was this sensor's turn. SoftwareSerial times its bits
+   * by counting CPU cycles, so a storm here is one of the very few things
+   * that can kill the link without anyone touching a wire. diagService()
+   * turns this counter into an answer. */
+  s_echoInts++;
+
   if (s_echoArmed != who) return;          /* not this sensor's turn */
 
   if (digitalRead(pin)) {
@@ -314,22 +326,69 @@ static void diagService(void)
   Serial.print(F(" cm   PIR "));
   Serial.print(g_pir ? F("MOTION") : F("still"));
   Serial.print(F("   horn "));
-  Serial.print(g_horn ? F("ON") : F("off"));
-  Serial.print(F("   VCU "));
-  if (g_vcuUp == 1) {
-    Serial.print(millis() - g_vcuAt);
-    Serial.print(F(" ms ago, "));
+  Serial.println(g_horn ? F("ON") : F("off"));
+
+  /* The link in numbers, because "SILENT" has three causes and they need
+   * three different things done about them.
+   *
+   * BYTES are counted apart from LINES on purpose. A line only exists if the
+   * byte stream was clean enough to contain a newline, so "no bytes at all"
+   * is a dead wire and "bytes but no lines" is corruption - two faults with
+   * nothing in common, and indistinguishable if you only ever count lines.
+   * That is what this console could not tell you before. */
+  uint32_t ints;
+  noInterrupts();
+  ints = s_echoInts;             /* 32-bit read the ISR could tear */
+  interrupts();
+
+  Serial.print(F("[link] rx "));
+  Serial.print(g_rxBytes);
+  Serial.print(F(" bytes / "));
+  Serial.print(g_rxLines);
+  Serial.print(F(" lines    tx "));
+  Serial.print(g_txLines);
+  Serial.print(F(" lines    echo int "));
+  Serial.println(ints);
+
+  if (g_rxBytes == 0UL) {
+    Serial.println(F("       NOT ONE BYTE has reached D4 since power-up, so"));
+    Serial.println(F("       nothing is arriving to be misread. In this order:"));
+    Serial.println(F("         1. at the MCX console type 'mark1', then meter"));
+    Serial.println(F("            MCX J2-2: ~1.8 V sending, 3.3 V idle, 0 V dead."));
+    Serial.println(F("         2. continuity from MCX J2-2 to this board's D4."));
+    Serial.println(F("         3. this GND to the MCX GND - the star point."));
+    Serial.println(F("       'j' in link_debug.ino clears this board first."));
+  } else if (g_rxLines == 0UL) {
+    Serial.println(F("       Bytes ARE arriving and none has formed a line, so"));
+    Serial.println(F("       this is corruption, not a broken wire: a baud that"));
+    Serial.println(F("       is not 38400 at both ends, no common ground, or the"));
+    Serial.println(F("       echo interrupts above."));
+  } else if (g_vcuUp != 1) {
+    Serial.print(F("       Heard "));
     Serial.print(g_rxLines);
-    Serial.println(F(" lines"));
-  } else {
-    Serial.println(F("SILENT"));
+    Serial.print(F(" lines and then nothing for "));
+    Serial.print((millis() - g_vcuAt) / 1000UL);
+    Serial.println(F(" s."));
+    Serial.println(F("       It worked once, so suspect the far end or a joint"));
+    Serial.println(F("       that moves - not the design of the link."));
   }
+
+  /* One ping in flight makes two edges, so about 33 a second is normal and
+   * ten thousand is a pin that nothing is driving. */
+  if ((ints - g_echoPrev) > 20000UL) {
+    Serial.println(F("       ECHO PINS ARE CHATTERING. Thousands of edges a"));
+    Serial.println(F("       second with one ping in flight means D2/D3 are not"));
+    Serial.println(F("       being driven: check both HC-SR04P have 5 V and a"));
+    Serial.println(F("       ground at the star point."));
+  }
+  g_echoPrev = ints;
 }
 
 static void linkService(void)
 {
   while (link.available()) {
     char c = (char)link.read();
+    g_rxBytes++;               /* before any judgement about what it is */
     if (c == '\n' || c == '\r') {
       if (g_linkLen == 0) continue;
       g_linkLine[g_linkLen] = '\0';
@@ -350,6 +409,7 @@ static void reportService(void)
   snprintf(out, sizeof(out), "P,%d,%d,%u",
            g_frontCm, g_backCm, (unsigned)g_pir);
   link.println(out);
+  g_txLines++;
 }
 
 /* ---- entry -------------------------------------------------------------- */
@@ -358,8 +418,17 @@ void setup(void)
 {
   pinMode(PIN_TRIG_F, OUTPUT); digitalWrite(PIN_TRIG_F, LOW);
   pinMode(PIN_TRIG_B, OUTPUT); digitalWrite(PIN_TRIG_B, LOW);
-  pinMode(PIN_ECHO_F, INPUT);
-  pinMode(PIN_ECHO_B, INPUT);
+  /* INPUT_PULLUP, not INPUT. An HC-SR04P drives ECHO push-pull, so when the
+   * sensor is present and powered the pull-up changes nothing - it loses to
+   * the driven level and costs 0.16 mA. When the sensor is absent, unpowered
+   * or its ground is off, INPUT leaves the pin floating around the threshold
+   * and it oscillates, firing echoEdge() thousands of times a second and
+   * wrecking SoftwareSerial's bit timing on the link. Pulled up, that same
+   * fault is silent and harmless: the pin sits high, no edge ever arrives,
+   * the ping times out and the range reports -1, which is the truth. A dead
+   * sensor should cost you that sensor, not the whole node. */
+  pinMode(PIN_ECHO_F, INPUT_PULLUP);
+  pinMode(PIN_ECHO_B, INPUT_PULLUP);
   pinMode(PIN_PIR, INPUT);
   pinMode(PIN_BUZZ, OUTPUT);   digitalWrite(PIN_BUZZ, LOW);
 

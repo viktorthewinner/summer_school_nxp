@@ -37,6 +37,27 @@ mcux_add_macro(
     CC "-DI2C_RETRY_TIMES=10000"
 )
 
+# Bound every LPUART wait, for the same reason and in the same spirit.
+#
+# UART_RETRY_TIMES defaults to 0 in fsl_lpuart.h, which that header defines as
+# "keep waiting for the flag until it is assert/deassert" - an UNBOUNDED wait,
+# exactly like the I2C one above. LPUART_WriteBlocking() spins on TDRE, and
+# LINK_SendLine() reaches it from the 1 Hz heartbeat, the 20 Hz drive repeat
+# and the horn. A transmitter that never raises that flag therefore stops the
+# main loop dead - no drive commands, no telemetry, and no console input,
+# because console_service() is in the same loop and never gets its turn. The
+# symptom is a board that prints nothing and will not accept a keystroke,
+# which is indistinguishable from a dead board.
+#
+# One character at 38400 is 260 us. The loop body is a load, a test and a
+# decrement, so at this 12 MHz core an iteration is roughly a microsecond:
+# 20000 is about 20 ms, some eighty character times of margin on a healthy
+# link and a bounded few tens of milliseconds on a broken one. A healthy
+# transmitter exits on the first pass and pays nothing.
+mcux_add_macro(
+    CC "-DUART_RETRY_TIMES=20000"
+)
+
 # Stack: 4 KB, not the linker script's default 2 KB.
 #
 # The deepest path here is console_service -> drive_try_command -> test_link,

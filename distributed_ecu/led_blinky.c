@@ -937,6 +937,134 @@ static void test_mark(link_id_t id)
     PRINTF("   done.\r\n");
 }
 
+/* --- 4. SENSE. Is anything connected to this channel's RX pin at all?
+ *
+ * Every other test here assumes there is a wire and asks what is on it. This
+ * one asks whether the wire exists, and it needs no meter.
+ *
+ * The pin comes off the LPUART and is read as a GPIO twice - once with the
+ * internal pull-DOWN on, then with the pull-UP - and the answer is in whether
+ * the two readings agree:
+ *
+ *   HIGH both times    something outside is driving it high, which is exactly
+ *                      what an idle UART line looks like. The wire is real.
+ *   LOW both times     something outside is holding it low. An idle UART does
+ *                      not do that: suspect the 1k/2k divider assembled the
+ *                      wrong way round, a wire sitting in a ground pin, or a
+ *                      far end powered off and clamping the line.
+ *   follows the pull   NOTHING IS CONNECTED. A floating pin obeys whichever
+ *                      resistor is switched on; a driven one cannot. The wire
+ *                      is off, broken, or in a different hole than you think.
+ *
+ * Then one second of watching with the pull-up on, counting transitions,
+ * which separates a good idle line from one actually carrying traffic.
+ *
+ * The pin is handed back to the LPUART before this returns.
+ * ------------------------------------------------------------------------ */
+static void test_sense(link_id_t id)
+{
+    /* Eleven fields, in the order the generated pin_mux.c uses - see the note
+     * in test_extra_pins_init() about what a short initializer does here. */
+    const port_pin_config_t senseDown = {
+        kPORT_PullDown, kPORT_LowPullResistor, kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable, kPORT_OpenDrainDisable,
+        kPORT_LowDriveStrength, kPORT_NormalDriveStrength,
+        kPORT_MuxAlt0, kPORT_InputBufferEnable, kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    const port_pin_config_t senseUp = {
+        kPORT_PullUp, kPORT_LowPullResistor, kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable, kPORT_OpenDrainDisable,
+        kPORT_LowDriveStrength, kPORT_NormalDriveStrength,
+        kPORT_MuxAlt0, kPORT_InputBufferEnable, kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    /* Back onto the LPUART exactly as pin_mux.c left it. */
+    const port_pin_config_t restore = {
+        kPORT_PullUp, kPORT_LowPullResistor, kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable, kPORT_OpenDrainDisable,
+        kPORT_LowDriveStrength, kPORT_NormalDriveStrength,
+        kPORT_MuxAlt2, kPORT_InputBufferEnable, kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    const gpio_pin_config_t gpioIn = { kGPIO_DigitalInput, 0 };
+
+    PORT_Type  *port  = (id == LINK_ARD1) ? PORT3 : PORT1;
+    GPIO_Type  *gpio  = (id == LINK_ARD1) ? GPIO3 : GPIO1;
+    uint32_t    pin   = (id == LINK_ARD1) ? 14u : 8u;
+    const char *where = (id == LINK_ARD1) ? "P3_14, J2 pin 4, marked D9"
+                                          : "P1_8, J2 pin 18, marked D18";
+
+    uint32_t down, up, prev, t0;
+    uint32_t edges = 0u, highs = 0u, samples = 0u;
+
+    PRINTF("\r\n== sense %s RX ==========================================\r\n",
+           LINK_GetName(id));
+    PRINTF("   %s, off the LPUART for one second.\r\n", where);
+
+    PORT_SetPinConfig(port, pin, &senseDown);
+    GPIO_PinInit(gpio, pin, &gpioIn);
+    for (t0 = now_ms(); (now_ms() - t0) < 10u; ) { }
+    down = GPIO_PinRead(gpio, pin);
+
+    PORT_SetPinConfig(port, pin, &senseUp);
+    for (t0 = now_ms(); (now_ms() - t0) < 10u; ) { }
+    up = GPIO_PinRead(gpio, pin);
+
+    prev = up;
+    for (t0 = now_ms(); (now_ms() - t0) < 1000u; )
+    {
+        uint32_t level = GPIO_PinRead(gpio, pin);
+
+        if (level != prev) { edges++; prev = level; }
+        if (level != 0u)   { highs++; }
+        samples++;
+    }
+
+    PORT_SetPinConfig(port, pin, &restore);
+
+    PRINTF("   pulled down: %s      pulled up: %s\r\n",
+           (down != 0u) ? "HIGH" : "LOW", (up != 0u) ? "HIGH" : "LOW");
+    PRINTF("   watched 1 s: %u transitions, high %u%% of the time\r\n",
+           (unsigned)edges,
+           (unsigned)((highs * 100u) / ((samples != 0u) ? samples : 1u)));
+
+    if (down != up)
+    {
+        PRINTF("\r\n   FLOATING - nothing is connected to this pin.\r\n");
+        PRINTF("   It followed the internal pull in both directions, and a pin\r\n");
+        PRINTF("   with a driver on the far end cannot do that. The wire is\r\n");
+        PRINTF("   off, broken, or in a different hole than you think it is.\r\n");
+        PRINTF("   Count the header again: %s.\r\n", where);
+    }
+    else if (down == 0u)
+    {
+        PRINTF("\r\n   HELD LOW by something outside this board.\r\n");
+        PRINTF("   An idle UART line sits HIGH, so this is not a quiet link -\r\n");
+        PRINTF("   it is a wrong one. Suspect the 1k/2k divider assembled the\r\n");
+        PRINTF("   wrong way round, the wire sitting in a ground pin, or the\r\n");
+        PRINTF("   far end powered off and clamping the line through its pin.\r\n");
+    }
+    else if (edges < 4u)
+    {
+        PRINTF("\r\n   DRIVEN HIGH and idle - THE WIRE IS GOOD.\r\n");
+        PRINTF("   Something outside is holding it at the UART idle level, so\r\n");
+        PRINTF("   the connection is real and the far end is simply not\r\n");
+        PRINTF("   sending. Look at that node, not at this cable.\r\n");
+    }
+    else
+    {
+        PRINTF("\r\n   DRIVEN AND ACTIVE - %u transitions in one second.\r\n",
+               (unsigned)edges);
+        PRINTF("   Traffic is arriving on this pin. If the link still says\r\n");
+        PRINTF("   SILENT the bytes are malformed rather than missing: baud,\r\n");
+        PRINTF("   or a level that never reaches the threshold. Look at the\r\n");
+        PRINTF("   frame error count on the diag line, and at 'raw%c'.\r\n",
+               (id == LINK_ARD1) ? '1' : '2');
+    }
+    PRINTF("=========================================================\r\n");
+}
+
 /* --- 3. RAW. Show every byte, not every line.
  *
  * link.c assembles lines and silently discards anything that never ends, so a
@@ -1070,6 +1198,49 @@ static void test_links_both(void)
         PRINTF("   Arduino first - it tests that board alone, with one jumper.\r\n");
     }
     PRINTF("===========================================================\r\n");
+}
+
+/* ===========================================================================
+ * SW2 and SW3 - the two tests you need most, with no console at all.
+ *
+ * A console that will not accept input is not only an annoyance: it takes
+ * every diagnostic on this board away at exactly the moment they are wanted.
+ * Both buttons are already muxed and read (test_extra_pins_init), so binding
+ * them costs nothing and removes that dependency.
+ *
+ *   SW2   sense1  - is anything connected to the PERC receive pin
+ *   SW3   busfix  - free an I2C bus a slave is holding low, then scan it
+ *
+ * A 400 ms lockout instead of a debounce: these launch a test that runs for
+ * a second or more, so a bouncing contact cannot start a second one.
+ * ======================================================================== */
+static void button_service(void)
+{
+    static uint32_t pressAt;
+    static uint32_t sw2Prev = 1u, sw3Prev = 1u;
+
+    uint32_t sw2 = GPIO_PinRead(GPIO3, 29U);
+    uint32_t sw3 = GPIO_PinRead(GPIO1, 7U);
+    bool     ready = ((now_ms() - pressAt) > 400u);
+
+    if ((sw2 == 0u) && (sw2Prev != 0u) && ready)      /* active low */
+    {
+        pressAt = now_ms();
+        PRINTF("\r\n  [SW2] sense1 - is the PERC receive wire there?\r\n");
+        test_sense(LINK_ARD1);
+        console_redraw_prompt();
+    }
+    else if ((sw3 == 0u) && (sw3Prev != 0u) && ready)
+    {
+        pressAt = now_ms();
+        PRINTF("\r\n  [SW3] I2C bus recovery, then a scan\r\n");
+        LINK_GwBusRecover();
+        test_i2c_scan();
+        console_redraw_prompt();
+    }
+
+    sw2Prev = sw2;
+    sw3Prev = sw3;
 }
 
 /* Send the current drive command to ACT. Called on change and then repeatedly,
@@ -1503,6 +1674,26 @@ static void diag_service(void)
     PRINTF(" | WEB ");
     if (keyAge < TELEOP_TIMEOUT_MS) { PRINTF("%u ms", (unsigned)keyAge); }
     else                            { PRINTF("silent"); }
+
+    /* Only when there are any. A frame error means bytes ARE arriving on that
+     * pin and cannot be read - the opposite fault from a dead wire, and
+     * invisible without this. */
+    {
+        uint32_t fe1 = LINK_GetFrameErrorCount(LINK_ARD1);
+        uint32_t fe2 = LINK_GetFrameErrorCount(LINK_ARD2);
+
+        uint32_t to1 = LINK_GetTxTimeoutCount(LINK_ARD1);
+        uint32_t to2 = LINK_GetTxTimeoutCount(LINK_ARD2);
+
+        if ((fe1 | fe2) != 0u)
+        {
+            PRINTF(" | frame err PERC %u ACT %u", (unsigned)fe1, (unsigned)fe2);
+        }
+        if ((to1 | to2) != 0u)
+        {
+            PRINTF(" | TX STALLED PERC %u ACT %u", (unsigned)to1, (unsigned)to2);
+        }
+    }
     PRINTF("\r\n");
     console_redraw_prompt();
 }
@@ -1556,6 +1747,8 @@ static bool drive_try_command(const char *line)
     if (strcmp(line, "loop2") == 0) { (void)test_loopback(LINK_ARD2); return true; }
     if (strcmp(line, "mark1") == 0) { test_mark(LINK_ARD1); return true; }
     if (strcmp(line, "mark2") == 0) { test_mark(LINK_ARD2); return true; }
+    if (strcmp(line, "sense1") == 0) { test_sense(LINK_ARD1); return true; }
+    if (strcmp(line, "sense2") == 0) { test_sense(LINK_ARD2); return true; }
 
     if ((strcmp(line, "raw1") == 0) || (strcmp(line, "raw2") == 0))
     {
@@ -1593,6 +1786,13 @@ static bool drive_try_command(const char *line)
 
     if (strcmp(line, "i2c") == 0)   { test_i2c_scan();        return true; }
     if (strcmp(line, "gw") == 0)    { test_gw_read();         return true; }
+    if (strcmp(line, "busfix") == 0)
+    {
+        PRINTF("\r\n  clocking the bus free, then re-initialising.\r\n");
+        LINK_GwBusRecover();
+        test_i2c_scan();
+        return true;
+    }
     if (strcmp(line, "imu") == 0)   { test_imu();             return true; }
     if (strcmp(line, "led") == 0)   { test_leds();            return true; }
     if (strcmp(line, "btn") == 0)   { test_buttons();         return true; }
@@ -1611,6 +1811,8 @@ static bool drive_try_command(const char *line)
                "\r\n"
                "\r\n  i2c         scan the bus - expect 0x42 ESP32, 0x68 MPU6050"
                "\r\n  gw          one raw read of the gateway, bytes and status"
+               "\r\n  busfix      clock a stuck I2C bus free - the cure for BUSY"
+               "\r\n              SW2 = sense1, SW3 = busfix, for a dead console"
                "\r\n  imu         MPU6050 WHO_AM_I then 10 samples"
                "\r\n  led         cycle the RGB LED       btn   watch SW2 / SW3"
                "\r\n  tx1 / tx2   round-trip test one link (needs test_link_*.ino)"
@@ -1619,6 +1821,8 @@ static bool drive_try_command(const char *line)
                "\r\n  LINK DEBUGGING - use these in this order:"
                "\r\n  loop1/loop2 THIS BOARD ONLY. Jumper its TX to its own RX."
                "\r\n              Fails = mux, clock or LPUART. Nothing external."
+               "\r\n  sense1/2    IS THE RX WIRE EVEN THERE? Reads the pin pulled"
+               "\r\n              down then up - follows the pull = nothing wired"
                "\r\n  mark1/mark2 transmit 0x55 for 5 s - measure TX with a meter"
                "\r\n              ~1.8 V sending, 3.3 V idle, 0 V not muxed"
                "\r\n  raw1/raw2   show every BYTE received, not every line."
@@ -1858,6 +2062,7 @@ int main(void)
     for (;;)
     {
         console_service();       /* this terminal -> everyone      */
+        button_service();        /* SW2 / SW3 when it will not type */
         teleop_service();        /* keys -> duties, 20 Hz          */
         drive_service();         /* repeat the drive command       */
         imu_service();           /* the only feedback in the car   */

@@ -8,6 +8,8 @@
 #include "fsl_lpuart.h"
 #include "fsl_lpi2c.h"
 #include "fsl_common.h"
+#include "fsl_gpio.h"
+#include "fsl_port.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -38,6 +40,8 @@ typedef struct
     volatile uint16_t head;
     volatile uint16_t tail;
     volatile uint32_t dropped;
+    volatile uint32_t frameErrors;
+    volatile uint32_t txTimeouts;
 
     /* Line reassembly, owned by the main context only. */
     char   line[LINK_LINE_MAX];
@@ -105,6 +109,24 @@ static void link_isr(link_id_t id)
     {
         (void)LPUART_ClearStatusFlags(base, (uint32_t)kLPUART_RxOverrunFlag);
         state->dropped++;
+    }
+
+    /* Framing, noise and parity errors do not stall the receiver the way an
+     * overrun does, so this is not about keeping it running - it is about
+     * being able to tell two silences apart. A pin with no signal on it
+     * produces no errors and no bytes; a pin carrying a signal this UART
+     * cannot read produces errors and no bytes. Same console output, opposite
+     * faults. They also latch, so clear them or the count means nothing. */
+    {
+        const uint32_t bad = (uint32_t)kLPUART_FramingErrorFlag |
+                             (uint32_t)kLPUART_NoiseErrorFlag |
+                             (uint32_t)kLPUART_ParityErrorFlag;
+
+        if ((flags & bad) != 0u)
+        {
+            (void)LPUART_ClearStatusFlags(base, flags & bad);
+            state->frameErrors++;
+        }
     }
 
     while ((LPUART_GetStatusFlags(base) & (uint32_t)kLPUART_RxDataRegFullFlag) != 0u)
@@ -186,6 +208,82 @@ static void link_gw_i2c_init(void)
     LPI2C_MasterInit(LINK_GW_LPI2C, &i2cCfg, CLOCK_GetLpi2cClkFreq());
 }
 
+/* About 5 us at 12 MHz, giving a recovery clock near 100 kHz. Nothing in the
+ * sequence below is timing critical; it only has to be slow enough that the
+ * stuck slave can follow it. */
+static void link_gw_delay(void)
+{
+    for (volatile uint32_t i = 0u; i < 20u; i++)
+    {
+    }
+}
+
+void LINK_GwBusRecover(void)
+{
+    /* Open drain, so writing a 1 releases the line and the pull-ups hold it
+     * high - exactly how a real I2C driver behaves. Never push-pull here: two
+     * drivers fighting over SDA is how pins die. */
+    const port_pin_config_t bitbang = {
+        kPORT_PullUp, kPORT_LowPullResistor, kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable, kPORT_OpenDrainEnable,
+        kPORT_LowDriveStrength, kPORT_NormalDriveStrength,
+        kPORT_MuxAlt0, kPORT_InputBufferEnable, kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    /* Back to the LPI2C, matching i2c_pullups_init() in led_blinky.c. */
+    const port_pin_config_t i2c = {
+        kPORT_PullUp, kPORT_LowPullResistor, kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable, kPORT_OpenDrainEnable,
+        kPORT_LowDriveStrength, kPORT_NormalDriveStrength,
+        kPORT_MuxAlt2, kPORT_InputBufferEnable, kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    const gpio_pin_config_t out = { kGPIO_DigitalOutput, 1 };
+    unsigned i;
+
+    PORT_SetPinConfig(LINK_GW_SCL_PORT, LINK_GW_SCL_PIN, &bitbang);
+    PORT_SetPinConfig(LINK_GW_SDA_PORT, LINK_GW_SDA_PIN, &bitbang);
+    GPIO_PinInit(LINK_GW_SCL_GPIO, LINK_GW_SCL_PIN, &out);
+    GPIO_PinInit(LINK_GW_SDA_GPIO, LINK_GW_SDA_PIN, &out);
+
+    GPIO_PinWrite(LINK_GW_SDA_GPIO, LINK_GW_SDA_PIN, 1u);   /* release both */
+    GPIO_PinWrite(LINK_GW_SCL_GPIO, LINK_GW_SCL_PIN, 1u);
+    link_gw_delay();
+
+    /* Nine clocks is the most a slave can still be waiting for: eight data
+     * bits and the ACK. Stop the moment it lets go of SDA. */
+    for (i = 0u; i < 9u; i++)
+    {
+        if (GPIO_PinRead(LINK_GW_SDA_GPIO, LINK_GW_SDA_PIN) != 0u)
+        {
+            break;
+        }
+        GPIO_PinWrite(LINK_GW_SCL_GPIO, LINK_GW_SCL_PIN, 0u);
+        link_gw_delay();
+        GPIO_PinWrite(LINK_GW_SCL_GPIO, LINK_GW_SCL_PIN, 1u);
+        link_gw_delay();
+    }
+
+    /* A STOP by hand - SDA rising while SCL is high - so every slave on the
+     * bus agrees the transaction is over rather than half finished. */
+    GPIO_PinWrite(LINK_GW_SDA_GPIO, LINK_GW_SDA_PIN, 0u);
+    link_gw_delay();
+    GPIO_PinWrite(LINK_GW_SCL_GPIO, LINK_GW_SCL_PIN, 1u);
+    link_gw_delay();
+    GPIO_PinWrite(LINK_GW_SDA_GPIO, LINK_GW_SDA_PIN, 1u);
+    link_gw_delay();
+
+    PORT_SetPinConfig(LINK_GW_SCL_PORT, LINK_GW_SCL_PIN, &i2c);
+    PORT_SetPinConfig(LINK_GW_SDA_PORT, LINK_GW_SDA_PIN, &i2c);
+
+    link_gw_i2c_init();
+
+    s_gwChunkLen    = 0u;
+    s_gwChunkPos    = 0u;
+    s_gwLen         = 0u;
+    s_gwConsecFails = 0u;
+}
+
 /* Blocking master write of one line to the gateway. */
 static void link_gw_send(const char *line)
 {
@@ -248,7 +346,19 @@ static size_t link_gw_read(uint8_t *out, size_t outSize)
         {
             s_gwConsecFails = 0u;
             s_gwRecoveries++;
-            link_gw_i2c_init();
+
+            /* Match the cure to the disease. BUSY is a slave holding a line
+             * down, and resetting the master does nothing about that - it
+             * just fails again, identically, forever. Everything else is the
+             * controller's own state, which a re-init does clear. */
+            if (s_gwLastStatus == kStatus_LPI2C_Busy)
+            {
+                LINK_GwBusRecover();
+            }
+            else
+            {
+                link_gw_i2c_init();
+            }
         }
         return 0u;
     }
@@ -285,8 +395,20 @@ void LINK_SendLine(link_id_t id, const char *line)
         return;
     }
 
-    LPUART_WriteBlocking(k_config[id].base, (const uint8_t *)line, strlen(line));
-    LPUART_WriteBlocking(k_config[id].base, &newline, 1u);
+    /* Bounded now - see UART_RETRY_TIMES in CMakeLists.txt. A timeout means
+     * this channel's transmitter stopped accepting bytes, which used to hang
+     * the whole loop here rather than being reported. Losing the line is the
+     * right answer; losing the car is not. */
+    if (LPUART_WriteBlocking(k_config[id].base, (const uint8_t *)line,
+                             strlen(line)) != kStatus_Success)
+    {
+        s_state[id].txTimeouts++;
+        return;
+    }
+    if (LPUART_WriteBlocking(k_config[id].base, &newline, 1u) != kStatus_Success)
+    {
+        s_state[id].txTimeouts++;
+    }
 }
 
 void LINK_Broadcast(const char *line, link_id_t exclude)
@@ -424,6 +546,16 @@ uint32_t LINK_GetDroppedCount(link_id_t id)
     return (id < LINK_UART_COUNT) ? s_state[id].dropped : 0u;
 }
 
+uint32_t LINK_GetFrameErrorCount(link_id_t id)
+{
+    return (id < LINK_UART_COUNT) ? s_state[id].frameErrors : 0u;
+}
+
+uint32_t LINK_GetTxTimeoutCount(link_id_t id)
+{
+    return (id < LINK_UART_COUNT) ? s_state[id].txTimeouts : 0u;
+}
+
 bool LINK_PollByte(link_id_t id, uint8_t *byte)
 {
     if ((byte == NULL) || (id >= LINK_UART_COUNT))
@@ -480,16 +612,22 @@ const char *LINK_I2CStatusHint(int32_t status)
                    "GPIO21/GPIO22 are not on the two pins the MCX is driving";
 
         case kStatus_LPI2C_FifoError:
-            /* This is the one worth spelling out. The SDK ranks NAK above FIFO
-             * error, so this status means NDF was NOT set: the slave answered
-             * its address and the transfer came apart afterwards. Sending
-             * someone to check wiring on this is sending them the wrong way. */
-            return "NOT a wiring fault - a NAK would outrank this, so the slave DID "
-                   "ACK and the DATA phase then broke. Suspect the far end's timing: "
-                   "an ESP32 that stretches SCL while its onRequest runs, or a "
-                   "previous odd-sized read leaving it out of frame. Try "
-                   "LINK_GW_BAUDRATE at 100000, and check the ESP32's own 'i' "
-                   "counters - reads climbing there proves it is being addressed";
+            /* Do NOT read this as "the slave answered". It is tempting, because
+             * LPI2C_MasterCheckAndClearError ranks NAK above FIFO error - but
+             * that ordering only decides between flags already latched when one
+             * status read sees them. On a multi-byte READ the two are a race:
+             * the START and address go into the command FIFO with the receive
+             * command queued behind them, and when the address is NAKed the
+             * master auto-stops, leaving that stale receive command to raise
+             * FEF. Which one the driver catches first is timing. Watch a bus
+             * with nothing on it and you get NAK and FIFO ERROR alternating. */
+            return "the transfer aborted in the data phase. On a multi-byte READ an "
+                   "address NAK can surface this way too - the driver reports "
+                   "whichever flag it catches first - so NAK and FIFO ERROR "
+                   "alternating means 'nothing is answering', not two faults. Where "
+                   "polls DO succeed and this only appears now and then, it is the "
+                   "far end's timing: an ESP32 stretching SCL inside onRequest, and "
+                   "LINK_GW_BAUDRATE at 100000 is the lever";
 
         case kStatus_LPI2C_Busy:
             return "SDA or SCL read LOW before the START: a missing pull-up, a wire "
@@ -517,6 +655,21 @@ const char *LINK_GwFailReason(void)
 
 const char *LINK_GwFailHint(void)
 {
+    /* One successful poll, ever, changes what every later failure means. With
+     * none at all the status word is nearly irrelevant - NAK, FIFO ERROR and
+     * their alternation all reduce to the same thing, and it is not a protocol
+     * problem. Say so, rather than making someone tune a baud rate at a device
+     * that has never once acknowledged its own address. */
+    if (s_gwPolls == 0u)
+    {
+        return "and NOT ONE poll has succeeded since this board booted, so read "
+               "this as presence rather than protocol: nothing is answering at "
+               "0x42 at all. Check the ESP32 is powered and actually running "
+               "esp32_gateway.ino (its console prints a banner, and 'i' shows the "
+               "counters), that SDA and SCL are still on the mikroBUS SDA/SCL "
+               "pins, and that it shares this board's ground";
+    }
+
     return LINK_I2CStatusHint((int32_t)s_gwLastStatus);
 }
 

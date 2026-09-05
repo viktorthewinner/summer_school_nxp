@@ -66,6 +66,16 @@
  * I2C is master-polled, so the gateway cannot initiate. The VCU reads it
  * every cycle; a remote command waits at most one poll period.
  * ------------------------------------------------------------------------ */
+/* The same two pins as GPIO, for the bus recovery in link.c. A slave holding
+ * SDA down can only be freed by clocking SCL by hand, which means taking both
+ * off the LPI2C for a moment. */
+#define LINK_GW_SCL_PORT     PORT3
+#define LINK_GW_SCL_GPIO     GPIO3
+#define LINK_GW_SCL_PIN      27u
+#define LINK_GW_SDA_PORT     PORT3
+#define LINK_GW_SDA_GPIO     GPIO3
+#define LINK_GW_SDA_PIN      28u
+
 #define LINK_GW_LPI2C        LPI2C0
 #define LINK_GW_INSTANCE     0u
 #define LINK_GW_ADDR         0x42u   /* must match GW_I2C_ADDR in the sketch */

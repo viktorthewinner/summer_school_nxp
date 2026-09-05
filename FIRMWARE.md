@@ -306,15 +306,43 @@ a parser throws away anything malformed — so a link carrying garbage looks ide
 dead one, and those two faults share no causes.
 
 > **`loop1` and `loop2` are the ones to reach for first if both links are dead.** LPUART2's
-> ALT2 mux value came from NXP's own generated example, but **LPUART1's was worked out by
-> elimination and has never been proven**. So "`loop1` passes, `loop2` fails" is a real
-> possible outcome, and it would mean the ALT value in `pin_mux.c` is wrong — not the loom.
+> ALT2 mux value came from NXP's own generated example. **LPUART1's was worked out by
+> elimination**, so "`loop1` passes, `loop2` fails" would have meant the ALT value in
+> `pin_mux.c` was wrong rather than the loom — but the ACT link has since run for hours on it,
+> which settles that question. Both ALT2 values are now proven on hardware.
 
 `mark1` / `mark2` transmit `0x55` for five seconds so a multimeter can settle on the TX pin:
 **~1.8 V** while sending, **3.3 V** idle, **0 V** if the pin is not muxed to the LPUART at all.
 Three clearly different readings, no oscilloscope.
 
 `raw1` / `raw2` put a channel into raw byte view on the MCX side, the same way round.
+
+**`sense1` / `sense2` ask the question the others assume: is the wire even there?** The receive
+pin comes off the LPUART for a second and is read as a GPIO twice, once with the internal
+pull-down and once with the pull-up. A pin with a driver on the far end reads the same both
+times; a pin connected to nothing follows whichever resistor is switched on. No meter needed.
+
+| Reading | Verdict |
+|---|---|
+| **HIGH** both times | driven at the UART idle level — **the wire is good** |
+| **LOW** both times | something outside is holding it down: the divider built the wrong way round, or a wire in a ground pin |
+| follows the pull | **nothing is connected** — wrong hole, loose, or broken |
+
+It then counts transitions for a second, which separates a good idle line from one carrying
+traffic. This is the fastest way to settle "is it the loom or the far end", and on 2026-09-05
+it found a PERC link whose two wires were simply in the wrong holes, in one second, after the
+byte counters had already proved both boards healthy.
+
+> **The two buttons run the two tests you are most likely to need, so a console that will not
+> accept input cannot take every diagnostic away with it.** **SW2** runs `sense1`; **SW3** runs
+> `busfix` and then an I²C scan.
+
+**`busfix` clocks a stuck I²C bus free.** It is the cure for a gateway reporting `BUSY`, which
+means a line reads low before the transfer starts — a *slave* holding it down, usually one
+interrupted part way through a byte. Re-initialising the master cannot fix that and will fail
+identically forever, so `busfix` takes the pins off the LPI2C, clocks `SCL` by hand until the
+slave releases `SDA`, generates a stop by hand and re-initialises. It also runs **automatically**
+whenever a run of gateway failures is `BUSY`.
 
 ### Reading the three consoles
 
@@ -350,7 +378,8 @@ is doing:
 
 ```
   [link] VCU UP - lines arriving on D4
-  [perc] front 41 cm   back -- cm   PIR still   horn off   VCU 240 ms ago, 96 lines
+  [perc] front 41 cm   back -- cm   PIR still   horn off
+  [link] rx 1184 bytes / 96 lines    tx 964 lines    echo int 3211
   [act] L0 R0  SAFE  VCU 12 ms ago, 1904 lines (1902 drive)
 ```
 
@@ -358,13 +387,29 @@ is doing:
 > quiet it heard nothing at all from a perfectly healthy VCU — a working link and a dead one
 > looked identical. The VCU now sends `H,0` once a second purely as a keep-alive.
 
+**Read the `rx` counters, not the word "silent".** A silent link has three causes and they have
+nothing in common, so PERC counts raw **bytes** separately from complete **lines** and prints
+the verdict underneath:
+
+| `rx` reads | What it means | Where to look |
+|---|---|---|
+| `0 bytes / 0 lines` | nothing is arriving at all | the wire. `mark1` at the MCX, then meter **J2-2**: ~1.8 V sending, 3.3 V idle, 0 V not muxed. Then continuity J2-2 → **D4**, then the shared ground |
+| `N bytes / 0 lines` | bytes arrive, none forms a line | **corruption, not a broken wire.** Baud not 38400 at both ends, no common ground, or the echo interrupt storm below |
+| `N bytes / M lines`, then silence | it worked and stopped | the far end, or a joint that moves |
+
+`echo int` counts every edge on **D2/D3**. Two per ping, so **about 33 a second is normal**.
+Tens of thousands means nothing is driving those pins — an HC-SR04P with no 5 V or no ground —
+and SoftwareSerial cannot hold bit timing through that storm, which takes the whole link down
+with it. Both echo pins are now `INPUT_PULLUP` so that fault reports `-1 cm` and stays local
+instead of killing the node.
+
 ### When it does not work
 
 | Symptom | Look at |
 |---|---|
 | page will not load at all | you are on the wrong WiFi. `w` on the ESP32 console lists connected clients |
 | page loads, everything reads `-` | the VCU is not polling. `i` on the ESP32 console: reads must climb |
-| `PERC silent`, `ACT silent` | that Arduino's own link. `tx1` / `tx2` at the MCX console |
+| `PERC silent`, `ACT silent` | that Arduino's own console first — the `[link] rx` counters below name the fault. Then `tx1` / `tx2` at the MCX |
 | wheels do nothing, page looks live | `sens` at the MCX console, then ACT's USB monitor |
 | horn will not stop | it already has: PERC drops it 500 ms after the last `H,1` |
 | keys do nothing | the page does not have focus, or the cursor is in the message box |

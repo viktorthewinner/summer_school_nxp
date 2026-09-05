@@ -1,27 +1,34 @@
 D:/summer_school/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2358:22:__NVIC_EnableIRQ	16	static
 D:/summer_school/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2555:22:__NVIC_SetPriority	16	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/common/fsl_common_arm.h:753:24:EnableIRQ	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:346:20:GPIO_PinWrite	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:428:24:GPIO_PinRead	16	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.h:827:23:LPUART_ReadByte	32	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:96:13:link_isr	32	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:129:6:LPUART2_IRQHandler	8	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:134:6:LPUART1_IRQHandler	8	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:142:6:LINK_Init	56	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:179:13:link_gw_i2c_init	40	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:190:13:link_gw_send	176	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:219:15:link_gw_read	96	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:273:6:LINK_SendLine	24	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:292:6:LINK_Broadcast	24	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:306:13:link_ring_get	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:324:13:link_gw_poll	24	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:366:6:LINK_PollLine	40	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:418:10:LINK_GetDroppedCount	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:427:6:LINK_PollByte	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:436:6:LINK_GwOnline	4	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:441:6:LINK_GwStats	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:447:13:LINK_I2CStatusName	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:470:13:LINK_I2CStatusHint	16	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:513:13:LINK_GwFailReason	8	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:518:13:LINK_GwFailHint	8	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:523:10:LINK_GwRecoveries	4	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:528:6:LINK_GwResync	8	static
-C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:538:13:LINK_GetName	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/port/fsl_port.h:360:20:PORT_SetPinConfig	32	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:100:13:link_isr	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:151:6:LPUART2_IRQHandler	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:156:6:LPUART1_IRQHandler	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:164:6:LINK_Init	56	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:201:13:link_gw_i2c_init	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:214:13:link_gw_delay	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:221:6:LINK_GwBusRecover	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:288:13:link_gw_send	176	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:317:15:link_gw_read	96	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:383:6:LINK_SendLine	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:414:6:LINK_Broadcast	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:428:13:link_ring_get	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:446:13:link_gw_poll	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:488:6:LINK_PollLine	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:540:10:LINK_GetDroppedCount	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:549:10:LINK_GetFrameErrorCount	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:554:10:LINK_GetTxTimeoutCount	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:559:6:LINK_PollByte	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:568:6:LINK_GwOnline	4	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:573:6:LINK_GwStats	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:579:13:LINK_I2CStatusName	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:602:13:LINK_I2CStatusHint	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:651:13:LINK_GwFailReason	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:656:13:LINK_GwFailHint	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:676:10:LINK_GwRecoveries	4	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:681:6:LINK_GwResync	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/link.c:691:13:LINK_GetName	16	static
