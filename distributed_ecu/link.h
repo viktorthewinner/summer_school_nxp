@@ -64,6 +64,19 @@ bool LINK_PollLine(link_id_t id, char *out, size_t outSize);
  *         an overlong line. Non-zero means it is being pushed too hard. */
 uint32_t LINK_GetDroppedCount(link_id_t id);
 
+/*!
+ * @brief Did the most recent gateway I2C transaction succeed?
+ *
+ * The gateway produces no bytes both when it is idle and when it is not
+ * there, so this is the only way to tell "nobody is typing in the browser"
+ * from "the I2C link is dead" - which is the first thing you need to know
+ * when the page shows nothing.
+ */
+bool LINK_GwOnline(void);
+
+/*! @brief Gateway transaction counters. Either pointer may be NULL. */
+void LINK_GwStats(uint32_t *polls, uint32_t *fails);
+
 /*! @brief Short printable name of a channel, e.g. "ARD1". */
 const char *LINK_GetName(link_id_t id);
 

@@ -64,6 +64,19 @@ static char     s_gwLine[LINK_LINE_MAX];
 static size_t   s_gwLen;
 static uint32_t s_gwDropped;
 
+/* One I2C read can carry several complete lines - at 20 Hz teleop it usually
+ * does. The chunk is therefore held between calls and consumed a line at a
+ * time; reading a fresh chunk per line would throw away everything after the
+ * first newline, which silently drops three key updates out of every four. */
+static uint8_t  s_gwChunk[LINK_GW_CHUNK];
+static size_t   s_gwChunkLen;
+static size_t   s_gwChunkPos;
+
+/* Gateway link health, for the console diagnostics. */
+static bool     s_gwOnline;
+static uint32_t s_gwPolls;
+static uint32_t s_gwFails;
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -146,8 +159,10 @@ void LINK_Init(void)
     /* Only one LPI2C instance on this part, so the accessor takes no index. */
     LPI2C_MasterInit(LINK_GW_LPI2C, &i2cCfg, CLOCK_GetLpi2cClkFreq());
 
-    s_gwLen     = 0u;
-    s_gwDropped = 0u;
+    s_gwLen      = 0u;
+    s_gwDropped  = 0u;
+    s_gwChunkLen = 0u;
+    s_gwChunkPos = 0u;
 }
 
 /* Blocking master write of one line to the gateway. */
@@ -195,8 +210,17 @@ static size_t link_gw_read(uint8_t *out, size_t outSize)
 
     if (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) != kStatus_Success)
     {
-        return 0u; /* gateway absent or busy - not an error worth counting */
+        /* Worth counting after all. A failed transfer and an idle gateway
+         * both produce no bytes, and telling them apart is the difference
+         * between "nobody is typing" and "the I2C link is dead" - which is
+         * the first question you ask when the browser shows nothing. */
+        s_gwOnline = false;
+        s_gwFails++;
+        return 0u;
     }
+
+    s_gwOnline = true;
+    s_gwPolls++;
 
     n = raw[0];
     if ((n == 0u) || (n > LINK_GW_CHUNK))
@@ -256,16 +280,24 @@ static bool link_ring_get(link_state_t *state, uint8_t *byte)
     return true;
 }
 
-/* Drain one gateway chunk and reassemble lines from it. */
+/* Reassemble lines from the gateway, one line per call.
+ *
+ * Bytes left over from the previous chunk are consumed first, and a new chunk
+ * is only fetched once the held one runs out. That is what makes several lines
+ * in one I2C read survive: the position is kept, so the next call resumes
+ * immediately after the newline instead of discarding the tail. */
 static bool link_gw_poll(char *out, size_t outSize)
 {
-    uint8_t chunk[LINK_GW_CHUNK];
-    size_t  got = link_gw_read(chunk, sizeof(chunk));
-    size_t  i;
-
-    for (i = 0u; i < got; i++)
+    if (s_gwChunkPos >= s_gwChunkLen)
     {
-        char ch = (char)chunk[i];
+        s_gwChunkLen = link_gw_read(s_gwChunk, sizeof(s_gwChunk));
+        s_gwChunkPos = 0u;
+    }
+
+    while (s_gwChunkPos < s_gwChunkLen)
+    {
+        char ch = (char)s_gwChunk[s_gwChunkPos];
+        s_gwChunkPos++;
 
         if ((ch == '\n') || (ch == '\r'))
         {
@@ -355,6 +387,17 @@ uint32_t LINK_GetDroppedCount(link_id_t id)
         return s_gwDropped;
     }
     return (id < LINK_UART_COUNT) ? s_state[id].dropped : 0u;
+}
+
+bool LINK_GwOnline(void)
+{
+    return s_gwOnline;
+}
+
+void LINK_GwStats(uint32_t *polls, uint32_t *fails)
+{
+    if (polls != NULL) { *polls = s_gwPolls; }
+    if (fails != NULL) { *fails = s_gwFails; }
 }
 
 const char *LINK_GetName(link_id_t id)

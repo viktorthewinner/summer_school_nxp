@@ -24,6 +24,42 @@
  *
  * The red LED toggles once per second as a liveness indicator.
  *
+ * Drive commands. Typing "d 40 40" here sends D,40,40 to ARD2 and then keeps
+ * repeating it at 20 Hz, because ACT stops the motors after 300 ms without a
+ * command. That repeat is the point: a command you type once is not a command
+ * the actuator can safely act on, and the timeout is what makes pulling this
+ * board's cable a safe event rather than a runaway.
+ *
+ * ---------------------------------------------------------------------------
+ * TELEOP - the browser drives, but this board decides
+ *
+ * The laptop sends key STATE, not motor commands. W A S D and space arrive
+ * here as flags and nothing else; the throttle ramp, the steering mix, the
+ * duty cap, the obstacle veto and the two watchdogs all live on this node.
+ * That is the point of the ESP32 being a gateway: WiFi can drop, stutter or
+ * be attacked and the worst it can do is stop sending keys.
+ *
+ *   from GW   K,<w>,<a>,<s>,<d>,<horn>   key state, 10 Hz plus on change
+ *             M,<text>                   message for the ACT display
+ *             E                          stop and disarm
+ *
+ *   to GW     T,<...>                    telemetry, 10 Hz - see telemetry_send
+ *
+ *   to ARD2   D,<left>,<right>           20 Hz while the browser is alive
+ *   to ARD1   H,<0|1>                    horn, repeated so it cannot stick on
+ *   from ARD1 P,<front_cm>,<back_cm>,<pir>
+ *   from ARD2 S,<left>,<right>,<age_ms>
+ *
+ * There is no reverse anywhere in this car - a low-side switch conducts one
+ * way - so S is a brake, not a gear. A turn on the spot is one side driven
+ * and the other held off.
+ *
+ * Three timeouts in series, each independent of the ones above it:
+ *
+ *   browser  stops sending keys when the tab loses focus
+ *   VCU      TELEOP_TIMEOUT_MS without a K line -> throttle 0, stop sending
+ *   ACT      300 ms without a D line            -> motors off in hardware
+ *
  * The file name is inherited from the SDK led_blinky example this project was
  * generated from; rename it in CMakeLists.txt if you prefer.
  */
@@ -34,10 +70,13 @@
 
 #include "fsl_debug_console.h"
 #include "fsl_lpuart.h"
+#include "fsl_lpi2c.h"
+#include "fsl_port.h"
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 /*******************************************************************************
  * Definitions
@@ -50,9 +89,56 @@
 #define KEY_BACKSPACE 0x08u
 #define KEY_DELETE    0x7Fu
 
-/* How often the gateway is polled, in main-loop iterations. I2C transactions
- * are blocking, so hammering the bus would starve the UART channels. */
-#define GW_POLL_DIVIDER 200u
+/* How often the gateway is polled. I2C transactions are blocking, so this is
+ * rate-limited rather than run every loop: 50 Hz is one 49-byte read every
+ * 20 ms, about 6 % of the bus, and it bounds keypress latency at 20 ms. */
+#define GW_POLL_MS      20u
+
+/* Drive command repeat. ACT's timeout is 300 ms; 20 Hz leaves plenty of margin
+ * for a dropped line without the motors stuttering. */
+#define DRIVE_REPEAT_MS 50u
+#define DRIVE_DUTY_MAX  70u
+#define LED_BLINK_MS    500u
+
+/* ---------------------------------------------------------------------------
+ * Teleop tuning. Everything the car feels like is in these ten numbers.
+ * ------------------------------------------------------------------------ */
+
+/* One control update, and one D, line to ACT, every tick. */
+#define TELEOP_TICK_MS     50u
+
+/* No key line for this long and the browser is assumed gone. Four times the
+ * 10 Hz keepalive, so it survives three lost lines before it fires. */
+#define TELEOP_TIMEOUT_MS  400u
+
+#define THROTTLE_MAX       65u   /* under DRIVE_DUTY_MAX, on purpose        */
+#define THROTTLE_RISE       3u   /* per tick: standstill to full in ~1.1 s  */
+#define THROTTLE_COAST      2u   /* per tick with W released - it rolls off */
+
+/* How much duty comes off the inside pair in a turn. Steering is the
+ * difference between the two channels and nothing else. */
+#define TURN_BIAS          28u
+
+/* Turning on the spot: one side driven, the other held off. Below about 40 %
+ * a stationary car will not break static friction and only buzzes. */
+#define PIVOT_DUTY         45u
+
+/* Front sonar veto. Closer than this and forward drive is refused - but a
+ * pivot is still allowed, because with no reverse turning away is the only
+ * way out. Ignored while PERC is silent; see teleop_guard(). */
+#define GUARD_STOP_CM      25
+#define SENSOR_STALE_MS   500u
+
+#define HORN_REPEAT_MS    250u   /* PERC drops the horn after 500 ms silent */
+#define HORN_IDLE_MS     1000u   /* and a keep-alive so PERC sees the VCU  */
+#define TELEMETRY_MS      100u
+#define IMU_SAMPLE_MS      50u
+
+/* MPU6050 - the VCU's only sensor, and the only feedback in the whole car. */
+#define IMU_ADDR        0x68u
+#define IMU_WHO_AM_I    0x75u
+#define IMU_PWR_MGMT_1  0x6Bu
+#define IMU_ACCEL_XOUT  0x3Bu   /* 14 bytes: accel, temp, gyro */
 
 /*******************************************************************************
  * Variables
@@ -60,16 +146,80 @@
 
 static char     s_consoleLine[LINK_LINE_MAX];
 static size_t   s_consoleLen;
-static uint32_t s_gwTick;
+static uint32_t s_gwPollAt;
+
+static volatile uint32_t s_ms;      /* free-running millisecond counter */
+
+static char     s_actStatus[LINK_LINE_MAX];   /* newest S, line from ACT */
+static uint32_t s_actPrintAt;
+static uint32_t s_actAt;            /* when ACT last said anything        */
+
+static bool     s_imuAwake;
+static bool     s_imuOk;            /* false = absent; telemetry sends 0s */
+static uint32_t s_imuAt;
+static uint32_t s_imuRetryAt;
+static int16_t  s_imuAx, s_imuAy, s_imuAz, s_imuGz;
+
+static uint32_t s_driveSentAt;
+static uint8_t  s_driveL;
+static uint8_t  s_driveR;
+static bool     s_driveArmed;       /* false = send nothing, ACT times out */
+
+/* Perception, as last reported by PERC. -1 cm means no echo, which on an
+ * ultrasonic means "nothing within range" and not "sensor broken". */
+static int      s_front = -1;
+static int      s_back  = -1;
+static uint8_t  s_pir;
+static uint32_t s_percAt;
+
+/* Teleop input state. Set only from a K, line, cleared by the watchdog. */
+static bool     s_keyW, s_keyA, s_keyS, s_keyD, s_keyHorn;
+static uint32_t s_keyAt;
+static bool     s_teleopLive;       /* true = the browser owns the wheels  */
+static uint32_t s_teleopTickAt;
+static uint8_t  s_throttle;
+static bool     s_guard;            /* front sonar is currently vetoing W  */
+
+static bool     s_horn;
+static uint32_t s_hornSentAt;
+
+static uint32_t s_telemetryAt;
+
+/* Link diagnostics. Each node's state is remembered so the console can report
+ * the CHANGE rather than the state - a line the moment something comes up or
+ * goes away, which is what you actually want to see, instead of a status you
+ * have to sit and watch. */
+#define DIAG_PERIOD_MS   2000u
+#define DIAG_SILENT_MS    600u   /* a node that has not spoken for this long */
+
+static bool     s_diagLoud = true;   /* periodic summary on/off - 'diag'   */
+static uint32_t s_diagAt;
+static int      s_wasPerc = -1;      /* -1 = never seen, 0 = down, 1 = up  */
+static int      s_wasAct  = -1;
+static int      s_wasGw   = -1;
+static int      s_wasKeys = -1;
 
 /*******************************************************************************
  * Code
  ******************************************************************************/
 
+/* 1 kHz. Everything timed in this file hangs off s_ms.
+ *
+ * Note this handler existed before but SysTick was never started, so the
+ * "heartbeat" LED was not actually blinking. It is now. */
 void SysTick_Handler(void)
 {
-    /* Heartbeat: if this stops blinking, the firmware is stuck. */
-    GPIO_PortToggle(BOARD_LED_GPIO, 1u << BOARD_LED_GPIO_PIN);
+    s_ms++;
+
+    if ((s_ms % LED_BLINK_MS) == 0u)
+    {
+        GPIO_PortToggle(BOARD_LED_GPIO, 1u << BOARD_LED_GPIO_PIN);
+    }
+}
+
+static uint32_t now_ms(void)
+{
+    return s_ms;
 }
 
 /* Reprint the prompt plus whatever the user had half-typed, so an incoming
@@ -106,6 +256,889 @@ static bool console_try_read(uint8_t *byte)
     return true;
 }
 
+/* =========================================================================
+ * Bench self-test. Everything here is driven from the console and touches no
+ * other node, so the VCU can be proven on its own before an Arduino is near it.
+ * ========================================================================= */
+
+/* LPI2C0 is already a configured master - LINK_Init() did it for the gateway,
+ * so these helpers just borrow it. */
+static bool i2c_probe(uint8_t addr)
+{
+    lpi2c_master_transfer_t xfer;
+    uint8_t                 dummy;
+
+    (void)memset(&xfer, 0, sizeof(xfer));
+    xfer.slaveAddress = addr;
+    xfer.direction    = kLPI2C_Read;
+    xfer.data         = &dummy;
+    xfer.dataSize     = 1u;
+    xfer.flags        = (uint32_t)kLPI2C_TransferDefaultFlag;
+
+    return (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) == kStatus_Success);
+}
+
+static bool i2c_read_regs(uint8_t addr, uint8_t reg, uint8_t *buf, size_t len)
+{
+    lpi2c_master_transfer_t xfer;
+
+    (void)memset(&xfer, 0, sizeof(xfer));
+    xfer.slaveAddress   = addr;
+    xfer.direction      = kLPI2C_Read;
+    xfer.subaddress     = reg;
+    xfer.subaddressSize = 1u;
+    xfer.data           = buf;
+    xfer.dataSize       = len;
+    xfer.flags          = (uint32_t)kLPI2C_TransferDefaultFlag;
+
+    return (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) == kStatus_Success);
+}
+
+static bool i2c_write_reg(uint8_t addr, uint8_t reg, uint8_t val)
+{
+    lpi2c_master_transfer_t xfer;
+
+    (void)memset(&xfer, 0, sizeof(xfer));
+    xfer.slaveAddress   = addr;
+    xfer.direction      = kLPI2C_Write;
+    xfer.subaddress     = reg;
+    xfer.subaddressSize = 1u;
+    xfer.data           = &val;
+    xfer.dataSize       = 1u;
+    xfer.flags          = (uint32_t)kLPI2C_TransferDefaultFlag;
+
+    return (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) == kStatus_Success);
+}
+
+/* ---------------------------------------------------------------------------
+ * The IMU, sampled continuously rather than only on the 'imu' command.
+ *
+ * It is the only feedback device in the whole car, so the telemetry stream
+ * carries it whether or not anyone asked. If the module is absent the reads
+ * fail, s_imuOk stays false and the telemetry sends four zeros - a live
+ * MPU6050 never reads exactly zero on all four axes, so that doubles as the
+ * "no IMU" marker the browser looks for.
+ * ------------------------------------------------------------------------ */
+
+static bool imu_wake(void)
+{
+    uint8_t who = 0u;
+
+    if (!i2c_read_regs(IMU_ADDR, IMU_WHO_AM_I, &who, 1u))
+    {
+        return false;
+    }
+    if (!i2c_write_reg(IMU_ADDR, IMU_PWR_MGMT_1, 0x00u)) /* it boots asleep */
+    {
+        return false;
+    }
+
+    s_imuAwake = true;
+    return true;
+}
+
+static void imu_service(void)
+{
+    uint8_t raw[14];
+
+    if ((now_ms() - s_imuAt) < IMU_SAMPLE_MS)
+    {
+        return;
+    }
+    s_imuAt = now_ms();
+
+    if (!s_imuAwake)
+    {
+        /* Retry quietly - it may be plugged in later - but once a second, not
+         * twenty times. A failing transfer still ties up the bus the gateway
+         * poll needs. */
+        if ((now_ms() - s_imuRetryAt) < 1000u)
+        {
+            return;
+        }
+        s_imuRetryAt = now_ms();
+        (void)imu_wake();
+        return;
+    }
+
+    if (!i2c_read_regs(IMU_ADDR, IMU_ACCEL_XOUT, raw, sizeof(raw)))
+    {
+        s_imuOk    = false;
+        s_imuAwake = false;    /* it may have been unplugged - wake it again */
+        return;
+    }
+
+    s_imuAx = (int16_t)(((uint16_t)raw[0]  << 8) | raw[1]);
+    s_imuAy = (int16_t)(((uint16_t)raw[2]  << 8) | raw[3]);
+    s_imuAz = (int16_t)(((uint16_t)raw[4]  << 8) | raw[5]);
+    s_imuGz = (int16_t)(((uint16_t)raw[12] << 8) | raw[13]);
+    s_imuOk = true;
+}
+
+static void test_i2c_scan(void)
+{
+    unsigned found = 0u;
+
+    PRINTF("\r\n-- I2C scan on LPI2C0 (P3_27 SCL / P3_28 SDA)\r\n");
+
+    for (uint8_t a = 0x08u; a < 0x78u; a++)
+    {
+        if (i2c_probe(a))
+        {
+            found++;
+            PRINTF("   0x%02X", a);
+            if (a == LINK_GW_ADDR) { PRINTF("  ESP32 gateway"); }
+            if (a == IMU_ADDR)     { PRINTF("  MPU6050"); }
+            if (a == 0x69u)        { PRINTF("  MPU6050 with AD0 high - tie AD0 to GND for 0x68"); }
+            PRINTF("\r\n");
+        }
+    }
+
+    if (found == 0u)
+    {
+        PRINTF("   nothing answered.\r\n");
+        PRINTF("   The bus has no pull-ups of its own - it relies on the 2.2k on the\r\n");
+        PRINTF("   MPU6050 board. With that module unplugged the bus is dead, which\r\n");
+        PRINTF("   also explains a scan that finds the ESP32 but nothing else.\r\n");
+    }
+    else
+    {
+        PRINTF("   %u device(s).\r\n", found);
+    }
+}
+
+static void test_imu(void)
+{
+    uint8_t who = 0u;
+    uint8_t raw[14];
+    int16_t ax, ay, az, gx, gy, gz;
+    int16_t t;
+
+    PRINTF("\r\n-- MPU6050\r\n");
+
+    if (!i2c_read_regs(IMU_ADDR, IMU_WHO_AM_I, &who, 1u))
+    {
+        PRINTF("   no answer at 0x%02X. Run 'i2c' first.\r\n", IMU_ADDR);
+        return;
+    }
+
+    PRINTF("   WHO_AM_I = 0x%02X %s\r\n", who,
+           (who == 0x68u) ? "(MPU6050)" :
+           (who == 0x70u) ? "(MPU6500 - different register map)" : "(unexpected)");
+
+    /* It boots asleep. Nothing reads sensibly until PWR_MGMT_1 is cleared. */
+    if (!s_imuAwake)
+    {
+        if (!i2c_write_reg(IMU_ADDR, IMU_PWR_MGMT_1, 0x00u))
+        {
+            PRINTF("   could not wake it.\r\n");
+            return;
+        }
+        s_imuAwake = true;
+        PRINTF("   woken (PWR_MGMT_1 = 0)\r\n");
+    }
+
+    for (unsigned i = 0u; i < 10u; i++)
+    {
+        uint32_t t0 = now_ms();
+
+        if (!i2c_read_regs(IMU_ADDR, IMU_ACCEL_XOUT, raw, sizeof(raw)))
+        {
+            PRINTF("   read failed\r\n");
+            return;
+        }
+
+        ax = (int16_t)(((uint16_t)raw[0]  << 8) | raw[1]);
+        ay = (int16_t)(((uint16_t)raw[2]  << 8) | raw[3]);
+        az = (int16_t)(((uint16_t)raw[4]  << 8) | raw[5]);
+        t  = (int16_t)(((uint16_t)raw[6]  << 8) | raw[7]);
+        gx = (int16_t)(((uint16_t)raw[8]  << 8) | raw[9]);
+        gy = (int16_t)(((uint16_t)raw[10] << 8) | raw[11]);
+        gz = (int16_t)(((uint16_t)raw[12] << 8) | raw[13]);
+
+        /* Defaults: accel +-2 g = 16384 LSB/g, gyro +-250 dps = 131 LSB/dps,
+         * temperature = raw/340 + 36.53 degC. */
+        PRINTF("   a %6d %6d %6d   g %6d %6d %6d   %d.%01d C\r\n",
+               ax, ay, az, gx, gy, gz,
+               (int)(t / 340 + 36), (int)((t % 340) * 10 / 340));
+
+        while ((now_ms() - t0) < 200u) { }
+    }
+
+    PRINTF("   Flat and still: az near +16384, gyro all near zero.\r\n");
+    PRINTF("   Turn the board about its vertical axis and gz should swing.\r\n");
+}
+
+/* The red LED is muxed by the generated pin_mux.c. Green, blue and the two
+ * buttons are not, so they are set up here instead - in this file, on purpose,
+ * because Config Tools would regenerate pin_mux.c and drop them again. */
+static void test_extra_pins_init(void)
+{
+    /* Eleven fields, in the order the generated pin_mux.c uses. Supplying
+     * fewer silently zero-fills the tail, which lands inputBuffer in the wrong
+     * slot and leaves the buttons reading nothing. */
+    const port_pin_config_t out = {
+        kPORT_PullDisable,           /* pull select        */
+        kPORT_LowPullResistor,       /* pull value         */
+        kPORT_FastSlewRate,          /* slew rate          */
+        kPORT_PassiveFilterDisable,  /* passive filter     */
+        kPORT_OpenDrainDisable,      /* open drain         */
+        kPORT_LowDriveStrength,      /* drive strength     */
+        kPORT_NormalDriveStrength,   /* drive strength 1   */
+        kPORT_MuxAlt0,               /* mux: plain GPIO    */
+        kPORT_InputBufferEnable,     /* input buffer       */
+        kPORT_InputNormal,           /* input not inverted */
+        kPORT_UnlockRegister,        /* PCR not locked     */
+    };
+    const port_pin_config_t in = {
+        kPORT_PullUp,                /* buttons are active low, so pull up */
+        kPORT_LowPullResistor,
+        kPORT_FastSlewRate,
+        kPORT_PassiveFilterEnable,   /* debounces the worst of the contact  */
+        kPORT_OpenDrainDisable,
+        kPORT_LowDriveStrength,
+        kPORT_NormalDriveStrength,
+        kPORT_MuxAlt0,
+        kPORT_InputBufferEnable,     /* without this the pin reads nothing  */
+        kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+    const gpio_pin_config_t gpioOut = { kGPIO_DigitalOutput, 1 };
+    const gpio_pin_config_t gpioIn  = { kGPIO_DigitalInput, 0 };
+
+    PORT_SetPinConfig(PORT3, 13U, &out);   /* green LED */
+    PORT_SetPinConfig(PORT3, 0U,  &out);   /* blue  LED */
+    PORT_SetPinConfig(PORT3, 29U, &in);    /* SW2 */
+    PORT_SetPinConfig(PORT1, 7U,  &in);    /* SW3 */
+
+    GPIO_PinInit(GPIO3, 13U, &gpioOut);
+    GPIO_PinInit(GPIO3, 0U,  &gpioOut);
+    GPIO_PinInit(GPIO3, 29U, &gpioIn);
+    GPIO_PinInit(GPIO1, 7U,  &gpioIn);
+}
+
+static void test_leds(void)
+{
+    PRINTF("\r\n-- RGB LED: red, green, blue, then off\r\n");
+
+    struct { GPIO_Type *g; uint32_t p; const char *n; } led[3] = {
+        { GPIO3, 12U, "red" }, { GPIO3, 13U, "green" }, { GPIO3, 0U, "blue" },
+    };
+
+    for (unsigned i = 0u; i < 3u; i++)
+    {
+        PRINTF("   %s\r\n", led[i].n);
+        GPIO_PinWrite(led[i].g, led[i].p, 0U);      /* active low */
+        for (uint32_t t0 = now_ms(); (now_ms() - t0) < 700u; ) { }
+        GPIO_PinWrite(led[i].g, led[i].p, 1U);
+    }
+
+    PRINTF("   Red is the heartbeat and resumes blinking on its own.\r\n");
+}
+
+static void test_buttons(void)
+{
+    uint32_t end = now_ms() + 8000u;
+    uint32_t s2 = 2u, s3 = 2u;
+
+    PRINTF("\r\n-- SW2 / SW3, 8 seconds. Press them.\r\n");
+
+    while ((int32_t)(now_ms() - end) < 0)
+    {
+        uint32_t a = GPIO_PinRead(GPIO3, 29U);
+        uint32_t b = GPIO_PinRead(GPIO1, 7U);
+
+        if (a != s2) { s2 = a; PRINTF("   SW2 %s\r\n", (a == 0u) ? "pressed" : "released"); }
+        if (b != s3) { s3 = b; PRINTF("   SW3 %s\r\n", (b == 0u) ? "pressed" : "released"); }
+    }
+
+    PRINTF("   done.\r\n");
+}
+
+/* How long to wait for a reply. A 12-byte round trip at 38400 is about 6 ms,
+ * so this is roughly eighty times what a healthy link needs. */
+#define LINK_TEST_TIMEOUT_MS  500u
+
+/* Round-trip test on one UART.
+ *
+ * Sends Q,<n> and waits for R,<n>,<node>. The far end answers automatically,
+ * but ONLY when it is running test_link_perc.ino or test_link_act.ino - the
+ * production sketches ignore Q, lines, so a FAIL here against perc.ino or
+ * act.ino means nothing at all.
+ *
+ * Sending on its own proves nothing, which is what was wrong with the old
+ * version of this: a line goes out whether or not anything is listening. */
+static bool test_link(link_id_t id)
+{
+    static uint16_t seq = 0u;
+
+    char     probe[LINK_LINE_MAX];
+    char     want[LINK_LINE_MAX];
+    char     line[LINK_LINE_MAX];
+    uint32_t t0;
+    bool     heard = false;   /* the node said SOMETHING, just not the answer */
+
+    seq++;
+    (void)snprintf(probe, sizeof(probe), "Q,%u", (unsigned int)seq);
+    (void)snprintf(want,  sizeof(want),  "R,%u,", (unsigned int)seq);
+
+    /* Throw away anything already queued - a heartbeat sitting in the buffer
+     * must not be mistaken for a reply. The sequence number would catch it
+     * anyway, but this keeps the output readable. */
+    while (LINK_PollLine(id, line, sizeof(line))) { }
+
+    PRINTF("\r\n-- %s  %s ... ", LINK_GetName(id), probe);
+    LINK_SendLine(id, probe);
+
+    t0 = now_ms();
+    while ((now_ms() - t0) < LINK_TEST_TIMEOUT_MS)
+    {
+        if (LINK_PollLine(id, line, sizeof(line)))
+        {
+            if (strncmp(line, want, strlen(want)) == 0)
+            {
+                PRINTF("PASS\r\n   reply: %s\r\n", line);
+                return true;
+            }
+            heard = true;
+            PRINTF("\r\n   ignoring: %s\r\n", line);
+        }
+    }
+
+    if (heard)
+    {
+        PRINTF("   FAIL - that node is talking, but it did not answer the probe.\r\n");
+        PRINTF("   Both directions work, so the wiring is fine. It is running the\r\n");
+        PRINTF("   wrong sketch: flash test_link_perc.ino / test_link_act.ino.\r\n");
+        return false;
+    }
+
+    PRINTF("FAIL - silence\r\n");
+    PRINTF("   Now look at that Arduino's own USB console:\r\n");
+    PRINTF("     it shows [rx] %s   -> this board transmits fine and the fault\r\n", probe);
+    PRINTF("                            is on the RETURN path, which is the only\r\n");
+    PRINTF("                            one with parts in it: the 1k/2k divider\r\n");
+    PRINTF("                            on that Arduino's D5. Swapped, it gives\r\n");
+    PRINTF("                            1.7 V and this pin never sees a start bit.\r\n");
+    PRINTF("     it shows nothing    -> the forward path is a bare wire, so it is\r\n");
+    PRINTF("                            the wire, the pin, or no common ground.\r\n");
+    PRINTF("   Garbage instead of silence is a baud or ground problem, not a pin.\r\n");
+    return false;
+}
+
+/* Both UARTs, one after the other, with a verdict. */
+static void test_links_both(void)
+{
+    bool a1, a2;
+
+    PRINTF("\r\n== link test ==============================================\r\n");
+    PRINTF("   Needs test_link_perc.ino on ARD1 and test_link_act.ino on\r\n");
+    PRINTF("   ARD2. Against the production sketches this always fails.\r\n");
+
+    a1 = test_link(LINK_ARD1);
+    a2 = test_link(LINK_ARD2);
+
+    PRINTF("\r\n   ARD1 (PERC, LPUART2, J2-2 / J2-4)   %s\r\n", a1 ? "PASS" : "FAIL");
+    PRINTF("   ARD2 (ACT,  LPUART1, J2-20 / J2-18) %s\r\n", a2 ? "PASS" : "FAIL");
+
+    if (a1 && a2)
+    {
+        PRINTF("\r\n   Both links are good in both directions, dividers included.\r\n");
+    }
+    else if (a1 != a2)
+    {
+        PRINTF("\r\n   One link works and the other does not, so the MCX, the baud\r\n");
+        PRINTF("   rate and the ground are all fine - they are shared. Compare the\r\n");
+        PRINTF("   two wirings against each other; the good one is the reference.\r\n");
+    }
+    else
+    {
+        PRINTF("\r\n   Neither link works. Something shared is wrong: the star\r\n");
+        PRINTF("   ground, or both Arduinos are unpowered. Run j on either\r\n");
+        PRINTF("   Arduino first - it tests that board alone, with one jumper.\r\n");
+    }
+    PRINTF("===========================================================\r\n");
+}
+
+/* Send the current drive command to ACT. Called on change and then repeatedly,
+ * because ACT deliberately forgets a command it has not heard for 300 ms. */
+static void drive_send(void)
+{
+    char cmd[32];
+
+    (void)snprintf(cmd, sizeof(cmd), "D,%u,%u",
+                   (unsigned)s_driveL, (unsigned)s_driveR);
+    LINK_SendLine(LINK_ARD2, cmd);
+    s_driveSentAt = now_ms();
+}
+
+/* Clamp, arm and send. Silent, because teleop calls this twenty times a
+ * second and printing it would make the console unusable. */
+static void drive_apply(uint32_t l, uint32_t r)
+{
+    s_driveL     = (uint8_t)((l > DRIVE_DUTY_MAX) ? DRIVE_DUTY_MAX : l);
+    s_driveR     = (uint8_t)((r > DRIVE_DUTY_MAX) ? DRIVE_DUTY_MAX : r);
+    s_driveArmed = true;
+    drive_send();
+}
+
+static void drive_set(uint32_t l, uint32_t r)
+{
+    drive_apply(l, r);
+    PRINTF("\r\n  drive L=%u%% R=%u%%\r\n", (unsigned)s_driveL, (unsigned)s_driveR);
+}
+
+static void drive_stop(void)
+{
+    s_driveL = 0u;
+    s_driveR = 0u;
+
+    /* Send the zero, then stop sending. ACT's timeout then holds it stopped
+     * even if this board dies a moment later. */
+    drive_send();
+    s_driveArmed = false;
+
+    PRINTF("\r\n  drive STOP\r\n");
+}
+
+static void drive_service(void)
+{
+    if (!s_driveArmed)
+    {
+        return;
+    }
+    if ((now_ms() - s_driveSentAt) >= DRIVE_REPEAT_MS)
+    {
+        drive_send();
+    }
+}
+
+/* ===========================================================================
+ * Teleop
+ * ======================================================================== */
+
+/* The horn lives on PERC, so it is a line on the ARD1 link. It is repeated
+ * while it is on, and PERC drops it after 500 ms of silence - otherwise a
+ * single lost "off" would leave the thing sounding until someone pulled a
+ * battery, which at a demo is the worst failure in the car. */
+static void horn_set(bool on)
+{
+    if (on == s_horn)
+    {
+        return;
+    }
+
+    s_horn       = on;
+    s_hornSentAt = now_ms();
+    LINK_SendLine(LINK_ARD1, on ? "H,1" : "H,0");
+}
+
+/* Repeat it: fast while sounding, so PERC's 500 ms watchdog stays fed, and
+ * slowly the rest of the time.
+ *
+ * That slow repeat is not about the horn. PERC has nothing else coming down
+ * this link - ranges only travel the other way - so without it PERC can
+ * never tell a healthy VCU from a dead one, and neither can anyone reading
+ * its USB console. One line a second buys that. */
+static void horn_service(void)
+{
+    uint32_t period = s_horn ? HORN_REPEAT_MS : HORN_IDLE_MS;
+
+    if ((now_ms() - s_hornSentAt) < period)
+    {
+        return;
+    }
+
+    s_hornSentAt = now_ms();
+    LINK_SendLine(LINK_ARD1, s_horn ? "H,1" : "H,0");
+}
+
+/* True while the front sonar says the way ahead is blocked.
+ *
+ * Deliberately permissive in two directions. A -1 reading is no echo, which
+ * on an ultrasonic means nothing is close enough to return one, so it opens
+ * the guard rather than closing it. And a silent PERC does not stop the car
+ * either: you need to be able to drive with PERC unflashed or unplugged
+ * while bringing the rest up, and a human is watching the wheels. The
+ * telemetry reports both facts, so the browser can say so out loud. */
+static bool teleop_guard(void)
+{
+    if ((now_ms() - s_percAt) > SENSOR_STALE_MS)
+    {
+        return false;                       /* PERC is not talking */
+    }
+    return (s_front >= 0) && (s_front < GUARD_STOP_CM);
+}
+
+/* Keys in, two duties out. This is the whole vehicle dynamics model.
+ *
+ *   W  ramp the throttle up            S  brake - straight to zero
+ *   A  take TURN_BIAS off the left     D  take it off the right
+ *
+ * With the throttle at zero, A or D alone spins the car on the spot instead,
+ * because a stationary car that cannot reverse has no other way to aim. */
+static void teleop_mix(uint32_t *outL, uint32_t *outR)
+{
+    uint32_t l, r;
+
+    s_guard = teleop_guard();
+
+    if (s_keyS || s_guard)
+    {
+        s_throttle = 0u;                    /* both are stops, not ramps */
+    }
+    else if (s_keyW)
+    {
+        s_throttle = (uint8_t)((s_throttle + THROTTLE_RISE > THROTTLE_MAX)
+                                   ? THROTTLE_MAX
+                                   : (s_throttle + THROTTLE_RISE));
+    }
+    else
+    {
+        s_throttle = (uint8_t)((s_throttle > THROTTLE_COAST)
+                                   ? (s_throttle - THROTTLE_COAST)
+                                   : 0u);
+    }
+
+    if (s_throttle > 0u)
+    {
+        l = s_throttle;
+        r = s_throttle;
+
+        if (s_keyA) { l = (s_throttle > TURN_BIAS) ? (s_throttle - TURN_BIAS) : 0u; }
+        if (s_keyD) { r = (s_throttle > TURN_BIAS) ? (s_throttle - TURN_BIAS) : 0u; }
+    }
+    else if (!s_keyS && (s_keyA != s_keyD))
+    {
+        /* Pivot. Drive the outside pair only - left turn means the right
+         * wheels push and the left ones hold. Still allowed under the guard,
+         * because turning away is the only escape from a wall. */
+        l = s_keyD ? PIVOT_DUTY : 0u;
+        r = s_keyA ? PIVOT_DUTY : 0u;
+    }
+    else
+    {
+        l = 0u;
+        r = 0u;
+    }
+
+    *outL = l;
+    *outR = r;
+}
+
+/* Let go of everything and go quiet, so ACT's own timeout is what actually
+ * cuts the motors. Called when the key stream stops, when the browser asks,
+ * and when someone types 'x' here - hence the reason being passed in. */
+static void teleop_release(const char *why)
+{
+    s_teleopLive = false;
+    s_throttle   = 0u;
+    s_keyW = s_keyA = s_keyS = s_keyD = s_keyHorn = false;
+    s_guard      = false;
+
+    horn_set(false);
+
+    s_driveL = 0u;
+    s_driveR = 0u;
+    drive_send();               /* one explicit zero on the way out */
+    s_driveArmed = false;
+
+    PRINTF("\r\n  [teleop] released - %s\r\n", why);
+    console_redraw_prompt();
+}
+
+static void teleop_service(void)
+{
+    uint32_t l, r;
+
+    if ((now_ms() - s_teleopTickAt) < TELEOP_TICK_MS)
+    {
+        return;
+    }
+    s_teleopTickAt = now_ms();
+
+    if ((now_ms() - s_keyAt) > TELEOP_TIMEOUT_MS)
+    {
+        if (s_teleopLive)
+        {
+            teleop_release("no keys from the browser");
+        }
+        return;
+    }
+
+    teleop_mix(&l, &r);
+    drive_apply(l, r);
+    horn_set(s_keyHorn);
+}
+
+/* "K,<w>,<a>,<s>,<d>,<horn>". Every field is one character, 0 or 1.
+ *
+ * A malformed line is dropped rather than half-applied: a corrupted key state
+ * that leaves W set is exactly the bug that runs a car into a wall. */
+static bool teleop_keys(const char *line)
+{
+    bool k[5];
+    int  i;
+
+    if ((line[0] != 'K') || (line[1] != ','))
+    {
+        return false;
+    }
+
+    for (i = 0; i < 5; i++)
+    {
+        /* K , w , a , s , d , h  ->  the value of field i is at 2 + 2*i */
+        size_t v = (size_t)(2 + (2 * i));
+        size_t c = v + 1u;
+
+        if ((line[v] != '0') && (line[v] != '1'))
+        {
+            return true;                    /* consumed, but not trusted */
+        }
+        if ((i < 4) && (line[c] != ','))
+        {
+            return true;
+        }
+        k[i] = (line[v] == '1');
+    }
+
+    s_keyW    = k[0];
+    s_keyA    = k[1];
+    s_keyS    = k[2];
+    s_keyD    = k[3];
+    s_keyHorn = k[4];
+    s_keyAt   = now_ms();
+
+    if (!s_teleopLive)
+    {
+        s_teleopLive = true;
+        s_throttle   = 0u;                  /* never inherit an old ramp */
+        PRINTF("\r\n  [teleop] browser connected - it has the wheels\r\n");
+        console_redraw_prompt();
+    }
+    return true;
+}
+
+/* One line, ten times a second, carrying everything the car knows.
+ *
+ * Field order, and it must match the parser in esp32_gateway.ino:
+ *
+ *   T,live,L,R,throttle,front,back,pir,horn,guard,ax,ay,az,gz,actAge,percAge
+ *
+ * front and back are centimetres, -1 for no echo. The two ages are
+ * milliseconds since that node last spoke, capped at 9999 - they are the link
+ * health readout, and a pegged one is how you see a dead Arduino from the
+ * browser. All four IMU fields zero means no MPU6050 on the bus. */
+static void telemetry_send(void)
+{
+    char     line[LINK_LINE_MAX];
+    uint32_t actAge, percAge;
+
+    if ((now_ms() - s_telemetryAt) < TELEMETRY_MS)
+    {
+        return;
+    }
+    s_telemetryAt = now_ms();
+
+    actAge  = now_ms() - s_actAt;
+    percAge = now_ms() - s_percAt;
+    if (actAge  > 9999u) { actAge  = 9999u; }
+    if (percAge > 9999u) { percAge = 9999u; }
+
+    (void)snprintf(line, sizeof(line),
+                   "T,%u,%u,%u,%u,%d,%d,%u,%u,%u,%d,%d,%d,%d,%u,%u",
+                   (unsigned)(s_teleopLive ? 1 : 0),
+                   (unsigned)s_driveL, (unsigned)s_driveR,
+                   (unsigned)s_throttle,
+                   s_front, s_back, (unsigned)s_pir,
+                   (unsigned)(s_horn ? 1 : 0),
+                   (unsigned)(s_guard ? 1 : 0),
+                   s_imuOk ? s_imuAx : 0, s_imuOk ? s_imuAy : 0,
+                   s_imuOk ? s_imuAz : 0, s_imuOk ? s_imuGz : 0,
+                   (unsigned)actAge, (unsigned)percAge);
+
+    LINK_SendLine(LINK_GW, line);
+}
+
+/* ===========================================================================
+ * Link diagnostics
+ *
+ * Four questions, answered on this console because the VCU is the only node
+ * that can see all four links at once:
+ *
+ *   is the ESP32 answering I2C?   LINK_GwOnline() - an idle gateway and an
+ *                                 absent one both send no bytes, so the
+ *                                 transaction status is the only difference
+ *   is PERC talking?              a P, line inside DIAG_SILENT_MS
+ *   is ACT talking?               an S, line inside DIAG_SILENT_MS
+ *   is the browser talking?       a K, line inside TELEOP_TIMEOUT_MS
+ * ======================================================================== */
+
+/* Print only when the answer changes. Returns the new state so the caller
+ * can store it. */
+static int diag_edge(const char *who, int was, bool now, const char *upMsg,
+                     const char *downMsg)
+{
+    int is = now ? 1 : 0;
+
+    if (was == is)
+    {
+        return is;
+    }
+
+    PRINTF("\r\n  [%s] %s\r\n", who, now ? upMsg : downMsg);
+    console_redraw_prompt();
+    return is;
+}
+
+static void diag_service(void)
+{
+    uint32_t polls, fails;
+    uint32_t percAge, actAge, keyAge;
+    bool     gwUp;
+
+    percAge = now_ms() - s_percAt;
+    actAge  = now_ms() - s_actAt;
+    keyAge  = now_ms() - s_keyAt;
+    gwUp    = LINK_GwOnline();
+
+    s_wasGw   = diag_edge("GW",   s_wasGw,   gwUp,
+                          "ESP32 answering on I2C",
+                          "ESP32 NOT answering - check SDA/SCL, and that the "
+                          "MPU6050 is plugged in (it is the only pull-up)");
+    s_wasPerc = diag_edge("PERC", s_wasPerc, percAge < DIAG_SILENT_MS,
+                          "up - ranges arriving",
+                          "SILENT - no P, line. Check J2-2/J2-4 and its divider");
+    s_wasAct  = diag_edge("ACT",  s_wasAct,  actAge < DIAG_SILENT_MS,
+                          "up - status arriving",
+                          "SILENT - no S, line. Check J2-20/J2-18 and its divider");
+    s_wasKeys = diag_edge("WEB",  s_wasKeys, keyAge < TELEOP_TIMEOUT_MS,
+                          "browser sending keys",
+                          "no keys - tab closed, unfocused, or WiFi gone");
+
+    if (!s_diagLoud)
+    {
+        return;
+    }
+    if ((now_ms() - s_diagAt) < DIAG_PERIOD_MS)
+    {
+        return;
+    }
+    s_diagAt = now_ms();
+
+    LINK_GwStats(&polls, &fails);
+
+    PRINTF("\r\n  [diag] GW %s %u ok / %u fail | PERC ", gwUp ? "up  " : "DOWN",
+           (unsigned)polls, (unsigned)fails);
+    if (percAge < DIAG_SILENT_MS) { PRINTF("%u ms", (unsigned)percAge); }
+    else                          { PRINTF("SILENT"); }
+    PRINTF(" | ACT ");
+    if (actAge < DIAG_SILENT_MS)  { PRINTF("%u ms", (unsigned)actAge); }
+    else                          { PRINTF("SILENT"); }
+    PRINTF(" | WEB ");
+    if (keyAge < TELEOP_TIMEOUT_MS) { PRINTF("%u ms", (unsigned)keyAge); }
+    else                            { PRINTF("silent"); }
+    PRINTF("\r\n");
+    console_redraw_prompt();
+}
+
+/* Returns true if the line was a local command and must not be broadcast. */
+static bool drive_try_command(const char *line)
+{
+    unsigned l, r;
+
+    if ((line[0] == 'd') && ((line[1] == ' ') || (line[1] == '\0')))
+    {
+        /* Two drivers on one set of wheels is how people get hurt. While the
+         * browser is sending keys it owns the drive, and this refuses rather
+         * than fighting it at 20 Hz. */
+        if (s_teleopLive)
+        {
+            PRINTF("\r\n  the browser is driving. 'x' takes the wheels back.\r\n");
+            return true;
+        }
+
+        if (sscanf(line + 1, "%u %u", &l, &r) == 2)
+        {
+            drive_set(l, r);
+        }
+        else if (sscanf(line + 1, "%u", &l) == 1)
+        {
+            drive_set(l, l);
+        }
+        else
+        {
+            PRINTF("\r\n  usage: d <both> | d <left> <right>   (0-%u)\r\n",
+                   (unsigned)DRIVE_DUTY_MAX);
+        }
+        return true;
+    }
+
+    /* A stop is never refused, whoever is driving. Releasing teleop clears
+     * the held keys and the throttle ramp with them, so a browser that still
+     * has W down restarts from zero rather than snapping back to speed. */
+    if ((line[0] == 'x') && (line[1] == '\0'))
+    {
+        if (s_teleopLive)
+        {
+            teleop_release("stopped from this console");
+        }
+        drive_stop();
+        return true;
+    }
+
+    if (strcmp(line, "diag") == 0)
+    {
+        s_diagLoud = !s_diagLoud;
+        PRINTF("\r\n  periodic link summary %s. Up/down messages stay on.\r\n",
+               s_diagLoud ? "ON, every 2 s" : "off");
+        return true;
+    }
+
+    if (strcmp(line, "sens") == 0)
+    {
+        PRINTF("\r\n  front %d cm   back %d cm   PIR %u   (%u ms old)\r\n",
+               s_front, s_back, (unsigned)s_pir,
+               (unsigned)(now_ms() - s_percAt));
+        PRINTF("  ACT %s   (%u ms old)\r\n",
+               (s_actStatus[0] != '\0') ? s_actStatus : "- nothing yet -",
+               (unsigned)(now_ms() - s_actAt));
+        PRINTF("  IMU %s  a %6d %6d %6d   gz %6d\r\n",
+               s_imuOk ? "ok " : "absent",
+               s_imuAx, s_imuAy, s_imuAz, s_imuGz);
+        return true;
+    }
+
+    if (strcmp(line, "i2c") == 0)   { test_i2c_scan();        return true; }
+    if (strcmp(line, "imu") == 0)   { test_imu();             return true; }
+    if (strcmp(line, "led") == 0)   { test_leds();            return true; }
+    if (strcmp(line, "btn") == 0)   { test_buttons();         return true; }
+    if (strcmp(line, "tx1") == 0)   { (void)test_link(LINK_ARD1); return true; }
+    if (strcmp(line, "tx2") == 0)   { (void)test_link(LINK_ARD2); return true; }
+    if (strcmp(line, "link") == 0)  { test_links_both();       return true; }
+
+    if ((line[0] == '?') && (line[1] == '\0'))
+    {
+        PRINTF("\r\n  d 40        both pairs to 40 %%"
+               "\r\n  d 40 20     left 40 %%, right 20 %% - this is how it steers"
+               "\r\n  d 40 0      pivot"
+               "\r\n  x           stop, and take the wheels back from the browser"
+               "\r\n  sens        ranges, PIR, ACT status and IMU, once"
+               "\r\n  diag        toggle the 2 s link summary (up/down msgs stay on)"
+               "\r\n"
+               "\r\n  i2c         scan the bus - expect 0x42 ESP32, 0x68 MPU6050"
+               "\r\n  imu         MPU6050 WHO_AM_I then 10 samples"
+               "\r\n  led         cycle the RGB LED       btn   watch SW2 / SW3"
+               "\r\n  tx1 / tx2   round-trip test one link (needs test_link_*.ino)"
+               "\r\n  link        round-trip test both, with a verdict"
+
+               "\r\n  anything else is broadcast to every node as before\r\n");
+        return true;
+    }
+
+    return false;
+}
+
 /* Anything typed here is tagged [MCX] and sent to every other node. */
 static void console_service(void)
 {
@@ -122,11 +1155,20 @@ static void console_service(void)
             }
 
             s_consoleLine[s_consoleLen] = '\0';
-            (void)snprintf(out, sizeof(out), "[MCX] %s", s_consoleLine);
 
-            LINK_Broadcast(out, LINK_COUNT); /* LINK_COUNT excludes nobody */
+            if (drive_try_command(s_consoleLine))
+            {
+                /* handled locally - do not flood the other nodes with it */
+            }
+            else
+            {
+                (void)snprintf(out, sizeof(out), "[MCX] %s", s_consoleLine);
 
-            PRINTF("\r\n  sent to ARD1 + ARD2 + GW: %s\r\n", s_consoleLine);
+                LINK_Broadcast(out, LINK_COUNT); /* LINK_COUNT excludes nobody */
+
+                PRINTF("\r\n  sent to ARD1 + ARD2 + GW: %s\r\n", s_consoleLine);
+            }
+
             s_consoleLen = 0u;
             console_redraw_prompt();
         }
@@ -151,6 +1193,84 @@ static void console_service(void)
     }
 }
 
+/* Protocol traffic, as opposed to chatter.
+ *
+ * Everything the four nodes say to each other by machine - status, ranges,
+ * keys, telemetry requests - is swallowed here and never printed or relayed.
+ * That matters more than it sounds: between them ACT and PERC produce fifteen
+ * lines a second, and broadcasting those to the other two nodes would fill
+ * both links with traffic nobody reads.
+ *
+ * Returns true when the line was protocol and has been dealt with. */
+static bool vcu_consume(link_id_t from, const char *line)
+{
+    if (from == LINK_ARD2)
+    {
+        /* ACT status at 5 Hz. Keep the newest, show it once a second - any
+         * more and this terminal cannot be typed into. */
+        if ((line[0] == 'S') && (line[1] == ','))
+        {
+            s_actAt = now_ms();
+            (void)snprintf(s_actStatus, sizeof(s_actStatus), "%s", line);
+
+            if ((now_ms() - s_actPrintAt) >= 1000u)
+            {
+                s_actPrintAt = now_ms();
+                PRINTF("\r\n  [ACT] %s\r\n", s_actStatus);
+                console_redraw_prompt();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    if (from == LINK_ARD1)
+    {
+        if ((line[0] == 'P') && (line[1] == ','))
+        {
+            int      f, b;
+            unsigned p;
+
+            if (sscanf(line + 2, "%d,%d,%u", &f, &b, &p) == 3)
+            {
+                s_front  = f;
+                s_back   = b;
+                s_pir    = (uint8_t)((p != 0u) ? 1 : 0);
+                s_percAt = now_ms();
+            }
+            return true;   /* even a malformed one - it is not for a human */
+        }
+        return false;
+    }
+
+    if (from == LINK_GW)
+    {
+        if (teleop_keys(line))
+        {
+            return true;
+        }
+
+        /* A message for the display goes straight through to ACT. The VCU
+         * has no opinion about text. */
+        if ((line[0] == 'M') && (line[1] == ','))
+        {
+            LINK_SendLine(LINK_ARD2, line);
+            PRINTF("\r\n  [lcd] %s\r\n", line + 2);
+            console_redraw_prompt();
+            return true;
+        }
+
+        if ((line[0] == 'E') && (line[1] == '\0'))
+        {
+            teleop_release("STOP pressed in the browser");
+            return true;
+        }
+        return false;
+    }
+
+    return false;
+}
+
 /* A line from one node is printed here and relayed to all the others. */
 static void link_service(link_id_t from)
 {
@@ -159,6 +1279,11 @@ static void link_service(link_id_t from)
 
     while (LINK_PollLine(from, line, sizeof(line)))
     {
+        if (vcu_consume(from, line))
+        {
+            continue;
+        }
+
         PRINTF("\r\n  [%s] %s\r\n", LINK_GetName(from), line);
 
         (void)snprintf(out, sizeof(out), "[%s] %s", LINK_GetName(from), line);
@@ -175,6 +1300,21 @@ int main(void)
 
     LINK_Init();
 
+    /* 1 kHz tick. Nothing was starting SysTick before, so both the heartbeat
+     * LED and the drive repeat below depend on this line. */
+    (void)SysTick_Config(SystemCoreClock / 1000u);
+
+    test_extra_pins_init();
+
+    /* Nothing has spoken yet, so make the ages say so. Left at zero they
+     * would read "0 ms old" for the first ten seconds and every link would
+     * look healthy before a single line had arrived. */
+    s_keyAt  = now_ms() - 10000u;
+    s_actAt  = s_keyAt;
+    s_percAt = s_keyAt;
+
+    (void)imu_wake();   /* absent is fine - imu_service() keeps retrying */
+
     PRINTF("\r\n");
     PRINTF("=============================================================\r\n");
     PRINTF(" FRDM-MCXA153 hub   -   MCX + ARD1 + ARD2 + ESP32 gateway\r\n");
@@ -185,24 +1325,39 @@ int main(void)
            (unsigned int)LINK_BAUDRATE);
     PRINTF(" GW   : LPI2C0   P3_27 SCL         P3_28 SDA         addr 0x%02X\r\n",
            (unsigned int)LINK_GW_ADDR);
+    PRINTF("\r\n Teleop: join WiFi \"NXP-AV\" and open http://192.168.4.1\r\n");
+    PRINTF("         W throttle   A / D steer   S brake   SPACE horn\r\n");
+    PRINTF("         The browser sends keys. This board decides everything.\r\n");
     PRINTF("\r\n Type a line and press Enter to send it to every node.\r\n");
+    PRINTF(" Drive:  d 40    both     d 40 20   steer     d 40 0   pivot\r\n");
+    PRINTF("         x       stop     sens      one sensor dump    ?  help\r\n");
+    PRINTF(" Duty is capped at %u %%. WHEELS OFF THE FLOOR until proven.\r\n",
+           (unsigned)DRIVE_DUTY_MAX);
+    PRINTF(" Self-test: i2c  imu  led  btn  tx1  tx2\r\n");
     PRINTF("-------------------------------------------------------------\r\n");
     PRINTF("> ");
 
     for (;;)
     {
         console_service();       /* this terminal -> everyone      */
-        link_service(LINK_ARD1); /* ARD1 -> here + ARD2 + GW       */
-        link_service(LINK_ARD2); /* ARD2 -> here + ARD1 + GW       */
+        teleop_service();        /* keys -> duties, 20 Hz          */
+        drive_service();         /* repeat the drive command       */
+        imu_service();           /* the only feedback in the car   */
+        horn_service();          /* horn repeat + PERC keep-alive  */
+        link_service(LINK_ARD1); /* PERC -> ranges, PIR            */
+        link_service(LINK_ARD2); /* ACT  -> drive status           */
 
         /* The gateway is polled, not interrupt-driven, and each poll is a
          * blocking I2C transaction. Rate-limit it so the UART channels keep
-         * their share of the loop. */
-        s_gwTick++;
-        if (s_gwTick >= GW_POLL_DIVIDER)
+         * their share of the loop - and so keypress latency stays bounded
+         * by a number rather than by however fast this loop happens to run. */
+        if ((now_ms() - s_gwPollAt) >= GW_POLL_MS)
         {
-            s_gwTick = 0u;
+            s_gwPollAt = now_ms();
             link_service(LINK_GW); /* laptop -> here + both Arduinos */
         }
+
+        telemetry_send();        /* here -> laptop, 10 Hz          */
+        diag_service();          /* who is talking, who stopped    */
     }
 }

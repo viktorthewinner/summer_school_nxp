@@ -398,12 +398,17 @@ J3's **odd** pins carry motor-control analog signals (BEMF, DC-bus current and v
 | 4 | VDD_BOARD |
 | 6 | `P1_29` / MCU_RESET_B |
 | 8 | **LDO_3V3** |
-| 10 | **SYS_5V0** |
+| 10 | **SYS_5V0** ← feed the board here, 5.0 V |
 | 12, 14 | **GND** |
-| 16 | P5-9V_VIN |
+| 16 | P5-9V_VIN ← **dead end, do not use** |
 
 Odd pins 5–15: `P3_6`–`P3_11` = PWM0_A0/B0/A1/B1/A2/B2 (three half-bridges).
 Odd pins 1, 3: `P2_7`, `P3_31` = MC_ENC_B, MC_ENC_A.
+
+> **Pin 16 is marked VIN and it does nothing.** It feeds connector `J22`, a 5 V regulator
+> footprint that is not populated, and the path from there into `SYS_5V0` is disabled by
+> default (UM12012 Rev 2.0, Table 7). Put a 9 V → 5 V buck module between the logic pack and
+> **pin 10** instead, and never with a USB cable also in the board — same rail.
 
 ### Header J4 — analog A0–A5
 

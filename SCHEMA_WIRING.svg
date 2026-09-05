@@ -1,0 +1,861 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2520 3040" width="2520" height="3040" font-family="Helvetica, Arial, sans-serif">
+<defs>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0B7A75"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B26B00"/></marker>
+<marker id="a-blue2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FB2"/></marker>
+<marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B03A3E"/></marker>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#12305B"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B3FA0"/></marker>
+<marker id="a-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#41546B"/></marker>
+</defs>
+<rect width="2520" height="3040" fill="#ffffff"/>
+<text x="1260.0" y="48" font-size="26" fill="#12305B" text-anchor="middle" font-weight="bold">Distributed ECU Car &#8212; Full Electrical Schematic</text>
+<text x="1260.0" y="76" font-size="13" fill="#5A6472" text-anchor="middle">Every component, every terminal, every wire. Five blocks; cross-block wires are labelled at both ends.  Architecture on SCHEMA_SIGNALS.svg, rails on SCHEMA_POWER.svg</text>
+<line x1="460" y1="104" x2="484" y2="104" stroke="#B26B00" stroke-width="3"/>
+<text x="490" y="108" font-size="11" fill="#5A6472">+5 V (USB)</text>
+<line x1="690" y1="104" x2="714" y2="104" stroke="#B03A3E" stroke-width="3"/>
+<text x="720" y="108" font-size="11" fill="#5A6472">PACK + (4.8 V)</text>
+<line x1="920" y1="104" x2="944" y2="104" stroke="#6B3FA0" stroke-width="3"/>
+<text x="950" y="108" font-size="11" fill="#5A6472">+3.3 V</text>
+<line x1="1150" y1="104" x2="1174" y2="104" stroke="#12305B" stroke-width="3"/>
+<text x="1180" y="108" font-size="11" fill="#5A6472">GND / star</text>
+<line x1="1380" y1="104" x2="1404" y2="104" stroke="#0B7A75" stroke-width="3"/>
+<text x="1410" y="108" font-size="11" fill="#5A6472">signal</text>
+<line x1="1610" y1="104" x2="1634" y2="104" stroke="#2F6FB2" stroke-width="3"/>
+<text x="1640" y="108" font-size="11" fill="#5A6472">sense</text>
+<line x1="1840" y1="104" x2="1864" y2="104" stroke="#6B3FA0" stroke-width="3"/>
+<text x="1870" y="108" font-size="11" fill="#5A6472">I&#178;C / SPI</text>
+<rect x="40" y="150" width="1180" height="800" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
+<rect x="40" y="150" width="1180" height="34" fill="#F4F7FA" rx="8"/>
+<rect x="40" y="178" width="1180" height="6" fill="#F4F7FA"/>
+<text x="56" y="173" font-size="14" fill="#12305B" font-weight="bold">A &#8212; VCU</text>
+<text x="1204" y="173" font-size="10.5" fill="#5A6472" text-anchor="end">FRDM-MCXA153 + HW-123 + the two level dividers</text>
+<rect x="300" y="210" width="250" height="300" fill="#ffffff" stroke="#12305B" stroke-width="1.8" rx="5"/>
+<rect x="300" y="210" width="250" height="40" fill="#12305B" rx="5"/>
+<rect x="300" y="244" width="250" height="6" fill="#12305B"/>
+<text x="425.0" y="228" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">FRDM-MCXA153</text>
+<text x="425.0" y="241" font-size="8.5" fill="#D6E0EC" text-anchor="middle">VCU &#183; 3.3 V</text>
+<circle cx="300" cy="268" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="300" y1="268" x2="288" y2="268" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="312" y="269" font-size="10.5" fill="#0B7A75" font-weight="bold">J2-2</text>
+<text x="312" y="280" font-size="8" fill="#5A6472">P3_15 &#183; silkscreen D8</text>
+<circle cx="300" cy="308" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="300" y1="308" x2="288" y2="308" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="312" y="309" font-size="10.5" fill="#0B7A75" font-weight="bold">J2-4</text>
+<text x="312" y="320" font-size="8" fill="#5A6472">P3_14 &#183; silkscreen D9</text>
+<circle cx="300" cy="348" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="300" y1="348" x2="288" y2="348" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="312" y="349" font-size="10.5" fill="#0B7A75" font-weight="bold">J2-20</text>
+<text x="312" y="360" font-size="8" fill="#5A6472">P1_9 &#183; silkscreen D19</text>
+<circle cx="300" cy="388" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="300" y1="388" x2="288" y2="388" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="312" y="389" font-size="10.5" fill="#0B7A75" font-weight="bold">J2-18</text>
+<text x="312" y="400" font-size="8" fill="#5A6472">P1_8 &#183; silkscreen D18</text>
+<circle cx="550" cy="268" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="550" y1="268" x2="562" y2="268" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="538" y="269" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J6 SCL</text>
+<text x="538" y="280" font-size="8" fill="#5A6472" text-anchor="end">P3_27 &#183; mikroBUS, marked SCL</text>
+<circle cx="550" cy="308" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="550" y1="308" x2="562" y2="308" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="538" y="309" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J6 SDA</text>
+<text x="538" y="320" font-size="8" fill="#5A6472" text-anchor="end">P3_28 &#183; mikroBUS, marked SDA</text>
+<circle cx="550" cy="348" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="550" y1="348" x2="562" y2="348" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="538" y="349" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J3-8</text>
+<text x="538" y="360" font-size="8" fill="#5A6472" text-anchor="end">LDO_3V3 &#183; silkscreen 3V3</text>
+<circle cx="550" cy="388" r="2.6" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="550" y1="388" x2="562" y2="388" stroke="#12305B" stroke-width="1.4"/>
+<text x="538" y="389" font-size="10.5" fill="#12305B" text-anchor="end" font-weight="bold">J3-12</text>
+<text x="538" y="400" font-size="8" fill="#5A6472" text-anchor="end">GND &#183; or J3-14, both are GND</text>
+<circle cx="550" cy="428" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="550" y1="428" x2="562" y2="428" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="538" y="429" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J3-10</text>
+<text x="538" y="440" font-size="8" fill="#5A6472" text-anchor="end">SYS_5V0 &#183; silkscreen 5V &#183; NOT J3-16</text>
+<circle cx="550" cy="468" r="2.6" fill="#ffffff" stroke="#41546B" stroke-width="1.4"/>
+<line x1="550" y1="468" x2="562" y2="468" stroke="#41546B" stroke-width="1.4"/>
+<text x="538" y="469" font-size="10.5" fill="#41546B" text-anchor="end" font-weight="bold">USB</text>
+<text x="538" y="480" font-size="8" fill="#5A6472" text-anchor="end">MCU-Link &#183; the micro-B socket</text>
+<rect x="700" y="214" width="260" height="160" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.8" rx="5"/>
+<rect x="700" y="214" width="260" height="40" fill="#6B3FA0" rx="5"/>
+<rect x="700" y="248" width="260" height="6" fill="#6B3FA0"/>
+<text x="830.0" y="231" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">MPU6050</text>
+<text x="830.0" y="245" font-size="8.5" fill="#D6E0EC" text-anchor="middle">IMU &#183; 0x68 &#183; 3.3 V</text>
+<circle cx="700" cy="268" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="700" y1="268" x2="688" y2="268" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="710" y="271.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">SCL</text>
+<circle cx="700" cy="308" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="700" y1="308" x2="688" y2="308" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="710" y="311.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">SDA</text>
+<circle cx="960" cy="268" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="960" y1="268" x2="972" y2="268" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="950" y="271.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">VCC</text>
+<circle cx="960" cy="308" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="960" y1="308" x2="972" y2="308" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="950" y="311.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">GND</text>
+<circle cx="960" cy="348" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="960" y1="348" x2="972" y2="348" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="950" y="351.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">AD0</text>
+<text x="710" y="366" font-size="8.5" fill="#5A6472">module silkscreen &#183; XDA, XCL, INT stay unconnected</text>
+<text x="302" y="524" font-size="9.5" fill="#B03A3E" font-weight="bold">HOW TO READ THESE</text>
+<text x="302" y="538" font-size="8.5" fill="#5A6472">J2-2 means connector J2, pin 2. J1&#8211;J4 are the Arduino-form</text>
+<text x="302" y="550" font-size="8.5" fill="#5A6472">headers and are two-row, so count carefully &#8212; UM12012</text>
+<text x="302" y="562" font-size="8.5" fill="#5A6472">Figures 11&#8211;12 show the numbering. The silkscreen name is</text>
+<text x="302" y="574" font-size="8.5" fill="#5A6472">the quickest check: J2-2 is the pin marked D8 on the board.</text>
+<text x="302" y="594" font-size="8.5" fill="#B03A3E">P1_8 / P1_9 are the Arduino header's I&#178;C pins, but here they</text>
+<text x="302" y="606" font-size="8.5" fill="#B03A3E">are LPUART1. The real I&#178;C is P3_27 / P3_28 on mikroBUS.</text>
+<polyline points="288,268 248,268" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="242" y="271.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; PERC D4  (direct)</text>
+<polyline points="288,308 248,308" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="242" y="311.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8592; PERC D5  (via divider)</text>
+<polyline points="288,348 248,348" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="242" y="351.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; ACT D4  (direct)</text>
+<polyline points="288,388 248,388" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="242" y="391.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8592; ACT D5  (via divider)</text>
+<text x="110" y="640" font-size="10.5" fill="#B03A3E" font-weight="bold">THE TWO DIVIDERS &#8212; build both, one per Arduino</text>
+<text x="110" y="674" font-size="9.5" fill="#B03A3E" font-weight="bold">PERC D5</text>
+<line x1="110" y1="690" x2="150" y2="690" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="163.0" y="685.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="174" y="681" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">1 k&#8486;</text>
+<line x1="198" y1="690" x2="260" y2="690" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="230" cy="690" r="3.2" fill="#B03A3E"/>
+<line x1="230" y1="690" x2="230" y2="710" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="225.5" y="710.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="221" y="724.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">2 k&#8486;</text>
+<line x1="230" y1="732" x2="230" y2="740" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="230" y1="740" x2="230" y2="748" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="221" y1="748" x2="239" y2="748" stroke="#B03A3E" stroke-width="2"/>
+<line x1="224.5" y1="752" x2="235.5" y2="752" stroke="#B03A3E" stroke-width="2"/>
+<line x1="227.5" y1="756" x2="232.5" y2="756" stroke="#B03A3E" stroke-width="2"/>
+<text x="268" y="694" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; MCX J2-4</text>
+<text x="268" y="707" font-size="8.5" fill="#5A6472">5 V &#215; 2/(1+2) = 3.33 V</text>
+<text x="110" y="766" font-size="9.5" fill="#B03A3E" font-weight="bold">ACT D5</text>
+<line x1="110" y1="782" x2="150" y2="782" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="163.0" y="777.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="174" y="773" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">1 k&#8486;</text>
+<line x1="198" y1="782" x2="260" y2="782" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="230" cy="782" r="3.2" fill="#B03A3E"/>
+<line x1="230" y1="782" x2="230" y2="802" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="225.5" y="802.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="221" y="816.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">2 k&#8486;</text>
+<line x1="230" y1="824" x2="230" y2="832" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="230" y1="832" x2="230" y2="840" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="221" y1="840" x2="239" y2="840" stroke="#B03A3E" stroke-width="2"/>
+<line x1="224.5" y1="844" x2="235.5" y2="844" stroke="#B03A3E" stroke-width="2"/>
+<line x1="227.5" y1="848" x2="232.5" y2="848" stroke="#B03A3E" stroke-width="2"/>
+<text x="268" y="786" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; MCX J2-18</text>
+<text x="268" y="799" font-size="8.5" fill="#5A6472">5 V &#215; 2/(1+2) = 3.33 V</text>
+<text x="110" y="858" font-size="9.5" fill="#B03A3E" font-weight="bold">J3-16 (VIN) DOES NOTHING: J22 not populated, path to SYS_5V0 disabled (UM12012).</text>
+<text x="110" y="872" font-size="9.5" fill="#B03A3E" font-weight="bold">The pack reaches the MCX only through the buck module, 5.0 V into J3-10. Never with USB in.</text>
+<text x="110" y="892" font-size="9.5" fill="#B03A3E" font-weight="bold">On the pack alone you lose VCOM: no console, no FreeMASTER, no debugger.</text>
+<line x1="1100" y1="308" x2="1100" y2="900" stroke="#12305B" stroke-width="3"/>
+<text x="1100" y="300" font-size="9.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<line x1="1020" y1="584" x2="1020" y2="900" stroke="#6B3FA0" stroke-width="3"/>
+<text x="1020" y="576" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">LOGIC 9V</text>
+<polyline points="562,268 688,268" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<polyline points="562,308 688,308" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="566" y="383.5" font-size="9" fill="#6B3FA0" font-style="italic">this pair also runs to ESP32 &#8212; block B</text>
+<polyline points="562,348 600,348" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<circle cx="600" cy="348" r="3.2" fill="#6B3FA0"/>
+<text x="606" y="351.5" font-size="9" fill="#6B3FA0" font-style="italic">&#8594; MPU6050 VCC</text>
+<polyline points="972,268 1000,268" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<circle cx="1000" cy="268" r="3.2" fill="#6B3FA0"/>
+<text x="1006" y="271.5" font-size="9" fill="#6B3FA0" font-style="italic">&#8594; MCX J3-8 &#183; 3V3</text>
+<polyline points="562,428 600,428 600,584" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="600" y="566" width="190" height="36" fill="#FFF6E5" stroke="#B26B00" stroke-width="1.8" rx="4"/>
+<text x="695" y="580" font-size="9.5" fill="#B26B00" text-anchor="middle" font-weight="bold">BUCK 9 V &#8594; 5.0 V</text>
+<text x="695" y="592" font-size="7.5" fill="#B26B00" text-anchor="middle">OUT+ &#8594; J3-10 &#183; IN+ &#8592; logic pack</text>
+<polyline points="790,584 1020,584" fill="none" stroke="#6B3FA0" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1020" cy="584" r="3.2" fill="#6B3FA0"/>
+<polyline points="562,388 1100,388" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1100" cy="388" r="3.2" fill="#12305B"/>
+<polyline points="972,308 1100,308" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1100" cy="308" r="3.2" fill="#12305B"/>
+<polyline points="972,348 1100,348" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1100" cy="348" r="3.2" fill="#12305B"/>
+<polyline points="1100,900 1100,930" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1020,900 1020,930" fill="none" stroke="#6B3FA0" stroke-width="3" stroke-linejoin="round"/>
+<text x="1090" y="949.5" font-size="9" fill="#12305B" text-anchor="end" font-style="italic">GND &#8594; star, block E</text>
+<text x="1090" y="961.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">9 V &#8592; logic pack, block E</text>
+<text x="690" y="432" font-size="10" fill="#B03A3E" font-weight="bold">MPU6050 &#8212; WHERE EACH PIN GOES</text>
+<text x="690" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">SCL</text>
+<text x="726" y="452" font-size="9" fill="#5A6472">&#8594;</text>
+<text x="742" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J6 SCL</text>
+<text x="838" y="452" font-size="8.5" fill="#5A6472">P3_27 on mikroBUS &#183; shared with the ESP32</text>
+<text x="690" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">SDA</text>
+<text x="726" y="468" font-size="9" fill="#5A6472">&#8594;</text>
+<text x="742" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J6 SDA</text>
+<text x="838" y="468" font-size="8.5" fill="#5A6472">P3_28 on mikroBUS &#183; shared with the ESP32</text>
+<text x="690" y="484" font-size="9" fill="#6B3FA0" font-weight="bold">VCC</text>
+<text x="726" y="484" font-size="9" fill="#5A6472">&#8594;</text>
+<text x="742" y="484" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J3-8</text>
+<text x="838" y="484" font-size="8.5" fill="#5A6472">the pin marked 3V3 &#183; 3.3 V ONLY, never 5 V</text>
+<text x="690" y="500" font-size="9" fill="#12305B" font-weight="bold">GND</text>
+<text x="726" y="500" font-size="9" fill="#5A6472">&#8594;</text>
+<text x="742" y="500" font-size="9" fill="#12305B" font-weight="bold">★ star point</text>
+<text x="838" y="500" font-size="8.5" fill="#5A6472">with every other ground in the car</text>
+<text x="690" y="516" font-size="9" fill="#12305B" font-weight="bold">AD0</text>
+<text x="726" y="516" font-size="9" fill="#5A6472">&#8594;</text>
+<text x="742" y="516" font-size="9" fill="#12305B" font-weight="bold">★ star point</text>
+<text x="838" y="516" font-size="8.5" fill="#5A6472">this is what sets the address to 0x68</text>
+<text x="690" y="548" font-size="8.5" fill="#5A6472">XDA, XCL and INT stay unconnected.</text>
+<rect x="1280" y="150" width="1200" height="800" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
+<rect x="1280" y="150" width="1200" height="34" fill="#F4F7FA" rx="8"/>
+<rect x="1280" y="178" width="1200" height="6" fill="#F4F7FA"/>
+<text x="1296" y="173" font-size="14" fill="#12305B" font-weight="bold">B &#8212; GATEWAY</text>
+<text x="2464" y="173" font-size="10.5" fill="#5A6472" text-anchor="end">ESP32 &#183; WiFi access point and the laptop link</text>
+<rect x="1330" y="215" width="250" height="106" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.8" rx="5"/>
+<rect x="1330" y="215" width="250" height="40" fill="#6B3FA0" rx="5"/>
+<rect x="1330" y="249" width="250" height="6" fill="#6B3FA0"/>
+<text x="1455.0" y="232" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">ESP32</text>
+<text x="1455.0" y="246" font-size="8.5" fill="#D6E0EC" text-anchor="middle">gateway &#183; 3.3 V</text>
+<circle cx="1330" cy="269" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1330" y1="269" x2="1318" y2="269" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1340" y="272.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">GPIO22</text>
+<circle cx="1330" cy="295" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1330" y1="295" x2="1318" y2="295" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1340" y="298.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">GPIO21</text>
+<circle cx="1580" cy="269" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1580" y1="269" x2="1592" y2="269" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1570" y="272.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">GND</text>
+<circle cx="1580" cy="295" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1580" y1="295" x2="1592" y2="295" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1570" y="298.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">VIN</text>
+<text x="1340" y="313" font-size="8.5" fill="#5A6472">I&#178;C slave 0x42 &#183; 400 kHz</text>
+<polyline points="1318,269 1278,269" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1272" y="272.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J6 SCL  (block A)</text>
+<polyline points="1318,295 1278,295" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1272" y="298.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J6 SDA  (block A)</text>
+<rect x="1760" y="215" width="250" height="118" fill="#ffffff" stroke="#41546B" stroke-width="2.2" rx="6"/>
+<rect x="1760" y="215" width="250" height="40" fill="#41546B" rx="6"/>
+<rect x="1760" y="247" width="250" height="8" fill="#41546B"/>
+<text x="1885.0" y="235" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">Laptop</text>
+<text x="1885.0" y="249" font-size="10.5" fill="#D6E0EC" text-anchor="middle">driver station</text>
+<polyline points="1580,300 1760,300" fill="none" stroke="#6B3FA0" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<text x="1670" y="292" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">WiFi</text>
+<text x="1670" y="316" font-size="9" fill="#5A6472" text-anchor="middle">NXP-AV</text>
+<line x1="2380" y1="250" x2="2380" y2="900" stroke="#12305B" stroke-width="3"/>
+<text x="2380" y="242" font-size="9.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<polyline points="1592,269 2380,269" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2380" cy="269" r="3.2" fill="#12305B"/>
+<polyline points="1592,295 2320,295" fill="none" stroke="#6B3FA0" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2320" cy="295" r="3.2" fill="#6B3FA0"/>
+<polyline points="2320,295 2320,900 2320,930" fill="none" stroke="#B03A3E" stroke-width="2.6" stroke-linejoin="round"/>
+<text x="2310" y="965.5" font-size="9" fill="#B03A3E" text-anchor="end" font-style="italic">9 V &#8592; logic pack, block E</text>
+<text x="2288" y="470" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">CHECK THE REGULATOR FIRST</text>
+<text x="2288" y="484" font-size="8" fill="#5A6472" text-anchor="end">9 V on VIN is only safe if the board carries an AMS1117 &#8212; the</text>
+<text x="2288" y="496" font-size="8" fill="#5A6472" text-anchor="end">fat 4-pin SOT-223 next to the USB socket, rated to 15 V in.</text>
+<text x="2288" y="508" font-size="8" fill="#B03A3E" text-anchor="end">Some cheaper DevKits fit a tiny 5-pin SOT-23 instead (ME6211,</text>
+<text x="2288" y="520" font-size="8" fill="#B03A3E" text-anchor="end">RT9013). Those stop at about 6 V and 9 V destroys them.</text>
+<text x="2288" y="532" font-size="8" fill="#B03A3E" text-anchor="end">Look before you connect the pack.</text>
+<text x="2288" y="560" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">AND POINT A FAN AT IT</text>
+<text x="2288" y="574" font-size="8" fill="#5A6472" text-anchor="end">An AMS1117 dropping 9 V to 3.3 V burns 0.68 W at the ESP32's</text>
+<text x="2288" y="586" font-size="8" fill="#5A6472" text-anchor="end">WiFi average &#8212; about +68 &#176;C in still air, the hot end of</text>
+<text x="2288" y="598" font-size="8" fill="#5A6472" text-anchor="end">survivable. Moving air roughly halves it, to +31 &#176;C.</text>
+<text x="2288" y="610" font-size="8" fill="#12305B" text-anchor="end">The 5 V fan in block E is aimed here for that reason.</text>
+<text x="2288" y="638" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">NOT A DIVIDER</text>
+<text x="2288" y="652" font-size="8" fill="#5A6472" text-anchor="end">A divider sets voltage by ratio, and the ratio only holds while</text>
+<text x="2288" y="664" font-size="8" fill="#5A6472" text-anchor="end">nothing draws from it. To hold 6 V at 100 mA it needs ~5 &#8486;</text>
+<text x="2288" y="676" font-size="8" fill="#5A6472" text-anchor="end">source resistance: 400 mA burnt continuously, 3.6 W in two</text>
+<text x="2288" y="688" font-size="8" fill="#5A6472" text-anchor="end">resistors &#8212; and a 500 mA WiFi burst still drags it to 3.5 V</text>
+<text x="2288" y="700" font-size="8" fill="#5A6472" text-anchor="end">and resets the board. There is no divider that works here.</text>
+<text x="2288" y="718" font-size="8" fill="#12305B" text-anchor="end">Four 1N4001 in series WOULD drop it neatly to ~6.2 V if you</text>
+<text x="2288" y="730" font-size="8" fill="#12305B" text-anchor="end">ever buy some &#8212; a diode drop barely moves with current.</text>
+<text x="2244" y="283" font-size="8.5" fill="#B03A3E" font-weight="bold">VIN, not 3V3 &#8212;</text>
+<text x="2244" y="296" font-size="8.5" fill="#B03A3E" font-weight="bold">470 &#181;F here</text>
+<polyline points="2380,900 2380,930" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
+<text x="2370" y="949.5" font-size="9" fill="#12305B" text-anchor="end" font-style="italic">GND &#8594; star, block E</text>
+<text x="1300" y="420" font-size="10" fill="#5A6472">Four wires. This node has no sensors and no display: it is the</text>
+<text x="1300" y="436" font-size="10" fill="#5A6472">route between the laptop and the VCU, and nothing else.</text>
+<text x="1300" y="464" font-size="10" fill="#B03A3E" font-weight="bold">It is a GATEWAY, not a controller. Everything from the laptop</text>
+<text x="1300" y="480" font-size="10" fill="#B03A3E" font-weight="bold">arrives at the VCU as a request; the VCU decides what to act on.</text>
+<text x="1300" y="496" font-size="10" fill="#5A6472">That is what stops a dropped WiFi link being a safety problem &#8212;</text>
+<text x="1300" y="512" font-size="10" fill="#5A6472">and it is what makes the fault-injection demo worth watching.</text>
+<text x="1300" y="548" font-size="10" fill="#5A6472">Roughly 30 GPIO are unused here &#8212; by a wide margin the emptiest</text>
+<text x="1300" y="564" font-size="10" fill="#5A6472">board in the project. GPIO6&#8211;11 are the flash, 34&#8211;39 are input</text>
+<text x="1300" y="580" font-size="10" fill="#5A6472">only, and 0, 2, 5, 12, 15 are strapping pins to leave alone.</text>
+<rect x="40" y="990" width="1180" height="1000" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
+<rect x="40" y="990" width="1180" height="34" fill="#F4F7FA" rx="8"/>
+<rect x="40" y="1018" width="1180" height="6" fill="#F4F7FA"/>
+<text x="56" y="1013" font-size="14" fill="#12305B" font-weight="bold">C &#8212; PERC</text>
+<text x="1204" y="1013" font-size="10.5" fill="#5A6472" text-anchor="end">Arduino 1 + two fixed HC-SR04P, PIR, buzzer</text>
+<rect x="180" y="1050" width="250" height="810" fill="#ffffff" stroke="#0B7A75" stroke-width="1.8" rx="5"/>
+<rect x="180" y="1050" width="250" height="40" fill="#0B7A75" rx="5"/>
+<rect x="180" y="1084" width="250" height="6" fill="#0B7A75"/>
+<text x="305" y="1067" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">Arduino 1</text>
+<text x="305" y="1081" font-size="8.5" fill="#D6E0EC" text-anchor="middle">PERC &#183; 5 V</text>
+<circle cx="430" cy="1104" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1104" x2="442" y2="1104" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1107.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D3</text>
+<circle cx="430" cy="1126" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1126" x2="442" y2="1126" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1129.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D7</text>
+<circle cx="430" cy="1234" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1234" x2="442" y2="1234" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1237.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D2</text>
+<circle cx="430" cy="1256" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1256" x2="442" y2="1256" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1259.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D6</text>
+<circle cx="430" cy="1364" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1364" x2="442" y2="1364" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1367.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D8</text>
+<circle cx="430" cy="1474" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="430" y1="1474" x2="442" y2="1474" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="420" y="1477.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D9</text>
+<circle cx="430" cy="1600" r="2.6" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<line x1="430" y1="1600" x2="442" y2="1600" stroke="#B26B00" stroke-width="1.4"/>
+<text x="420" y="1603.5" font-size="9.5" fill="#B26B00" text-anchor="end" font-weight="bold">5V</text>
+<circle cx="430" cy="1622" r="2.6" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="430" y1="1622" x2="442" y2="1622" stroke="#12305B" stroke-width="1.4"/>
+<text x="420" y="1625.5" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">GND</text>
+<circle cx="180" cy="1130" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="180" y1="1130" x2="168" y2="1130" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="190" y="1133.5" font-size="9.5" fill="#0B7A75" font-weight="bold">D4</text>
+<polyline points="168,1130 160,1130" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<circle cx="180" cy="1156" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="180" y1="1156" x2="168" y2="1156" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="190" y="1159.5" font-size="9.5" fill="#0B7A75" font-weight="bold">D5</text>
+<polyline points="168,1156 160,1156" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="158" y="1133.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8592; MCX J2-2</text>
+<text x="158" y="1159.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; divider &#8594; MCX J2-4</text>
+<text x="192" y="1840" font-size="8.5" fill="#5A6472">D0/D1 free &#183; D10&#8211;D13, A0&#8211;A5 spare</text>
+<rect x="620" y="1050" width="280" height="102" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.8" rx="5"/>
+<rect x="620" y="1050" width="280" height="40" fill="#2F6FB2" rx="5"/>
+<rect x="620" y="1084" width="280" height="6" fill="#2F6FB2"/>
+<text x="760.0" y="1067" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">HC-SR04P front</text>
+<text x="760.0" y="1081" font-size="8.5" fill="#D6E0EC" text-anchor="middle">fixed &#183; forward &#183; 5 V &#183; D3 / D7</text>
+<circle cx="620" cy="1104" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="620" y1="1104" x2="608" y2="1104" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="630" y="1107.5" font-size="9.5" fill="#2F6FB2" font-weight="bold">ECHO</text>
+<circle cx="620" cy="1126" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="620" y1="1126" x2="608" y2="1126" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="630" y="1129.5" font-size="9.5" fill="#2F6FB2" font-weight="bold">TRIG</text>
+<circle cx="900" cy="1104" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1104" x2="912" y2="1104" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1107.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">VCC</text>
+<circle cx="900" cy="1126" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1126" x2="912" y2="1126" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1129.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">GND</text>
+<text x="630" y="1144" font-size="8.5" fill="#5A6472">ECHO is 5 V &#8212; never to the MCX</text>
+<rect x="620" y="1180" width="280" height="102" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.8" rx="5"/>
+<rect x="620" y="1180" width="280" height="40" fill="#2F6FB2" rx="5"/>
+<rect x="620" y="1214" width="280" height="6" fill="#2F6FB2"/>
+<text x="760.0" y="1197" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">HC-SR04P back</text>
+<text x="760.0" y="1211" font-size="8.5" fill="#D6E0EC" text-anchor="middle">fixed &#183; rearward &#183; 5 V &#183; D2 / D6</text>
+<circle cx="620" cy="1234" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="620" y1="1234" x2="608" y2="1234" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="630" y="1237.5" font-size="9.5" fill="#2F6FB2" font-weight="bold">ECHO </text>
+<circle cx="620" cy="1256" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="620" y1="1256" x2="608" y2="1256" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="630" y="1259.5" font-size="9.5" fill="#2F6FB2" font-weight="bold">TRIG </text>
+<circle cx="900" cy="1234" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1234" x2="912" y2="1234" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1237.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">VCC </text>
+<circle cx="900" cy="1256" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1256" x2="912" y2="1256" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1259.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">GND </text>
+<text x="630" y="1274" font-size="8.5" fill="#5A6472">fire them alternately, 60 ms apart</text>
+<rect x="620" y="1310" width="280" height="102" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.8" rx="5"/>
+<rect x="620" y="1310" width="280" height="40" fill="#2F6FB2" rx="5"/>
+<rect x="620" y="1344" width="280" height="6" fill="#2F6FB2"/>
+<text x="760.0" y="1327" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">HC-SR501</text>
+<text x="760.0" y="1341" font-size="8.5" fill="#D6E0EC" text-anchor="middle">PIR &#183; 5 V</text>
+<circle cx="620" cy="1364" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="620" y1="1364" x2="608" y2="1364" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="630" y="1367.5" font-size="9.5" fill="#2F6FB2" font-weight="bold">OUT</text>
+<circle cx="900" cy="1364" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1364" x2="912" y2="1364" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1367.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">VCC  </text>
+<circle cx="900" cy="1386" r="2.6" fill="#ffffff" stroke="#2F6FB2" stroke-width="1.4"/>
+<line x1="900" y1="1386" x2="912" y2="1386" stroke="#2F6FB2" stroke-width="1.4"/>
+<text x="890" y="1389.5" font-size="9.5" fill="#2F6FB2" text-anchor="end" font-weight="bold">GND  </text>
+<text x="630" y="1404" font-size="8.5" fill="#5A6472">~1 min warm-up</text>
+<rect x="620" y="1420" width="280" height="80" fill="#ffffff" stroke="#B26B00" stroke-width="1.8" rx="5"/>
+<rect x="620" y="1420" width="280" height="40" fill="#B26B00" rx="5"/>
+<rect x="620" y="1454" width="280" height="6" fill="#B26B00"/>
+<text x="760.0" y="1437" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">SFM-27 buzzer</text>
+<text x="760.0" y="1451" font-size="8.5" fill="#D6E0EC" text-anchor="middle">active or passive &#8212; test first</text>
+<circle cx="620" cy="1474" r="2.6" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<line x1="620" y1="1474" x2="608" y2="1474" stroke="#B26B00" stroke-width="1.4"/>
+<text x="630" y="1477.5" font-size="9.5" fill="#B26B00" font-weight="bold">IN</text>
+<circle cx="900" cy="1474" r="2.6" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<line x1="900" y1="1474" x2="912" y2="1474" stroke="#B26B00" stroke-width="1.4"/>
+<text x="890" y="1477.5" font-size="9.5" fill="#B26B00" text-anchor="end" font-weight="bold">GND   </text>
+<text x="630" y="1492" font-size="8.5" fill="#5A6472">220 &#8486; in series until measured</text>
+<polyline points="608,1104 442,1104" fill="none" stroke="#2F6FB2" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="442,1126 608,1126" fill="none" stroke="#2F6FB2" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="608,1234 442,1234" fill="none" stroke="#2F6FB2" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="442,1256 608,1256" fill="none" stroke="#2F6FB2" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="608,1364 442,1364" fill="none" stroke="#2F6FB2" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-blue2)"/>
+<polyline points="442,1474 608,1474" fill="none" stroke="#B26B00" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-amber)"/>
+<line x1="1040" y1="1080" x2="1040" y2="1940" stroke="#B26B00" stroke-width="3"/>
+<text x="1040" y="1072" font-size="9.5" fill="#B26B00" text-anchor="middle" font-weight="bold">+5V</text>
+<line x1="1090" y1="1080" x2="1090" y2="1940" stroke="#12305B" stroke-width="3"/>
+<text x="1090" y="1072" font-size="9.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<line x1="1150" y1="1080" x2="1150" y2="1940" stroke="#B03A3E" stroke-width="3"/>
+<text x="1150" y="1072" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">PACK+</text>
+<polyline points="912,1104 1040,1104" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1040" cy="1104" r="3.2" fill="#B26B00"/>
+<polyline points="912,1234 1040,1234" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1040" cy="1234" r="3.2" fill="#B26B00"/>
+<polyline points="912,1364 1040,1364" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1040" cy="1364" r="3.2" fill="#B26B00"/>
+<polyline points="442,1600 1040,1600" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1040" cy="1600" r="3.2" fill="#B26B00"/>
+<polyline points="912,1126 1090,1126" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1090" cy="1126" r="3.2" fill="#12305B"/>
+<polyline points="912,1256 1090,1256" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1090" cy="1256" r="3.2" fill="#12305B"/>
+<polyline points="912,1386 1090,1386" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1090" cy="1386" r="3.2" fill="#12305B"/>
+<polyline points="912,1474 1090,1474" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1090" cy="1474" r="3.2" fill="#12305B"/>
+<polyline points="442,1622 1090,1622" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="1090" cy="1622" r="3.2" fill="#12305B"/>
+<polyline points="1040,1940 1040,1966" fill="none" stroke="#B26B00" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1090,1940 1090,1966" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
+<text x="1032" y="1978" font-size="8.5" fill="#B26B00" text-anchor="middle" font-weight="bold">5 V</text>
+<text x="1090" y="1978" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<text x="192" y="1880" font-size="9.5" fill="#5A6472">Everything on this node runs from the Arduino 5 V pin now.</text>
+<text x="192" y="1900" font-size="9.5" fill="#B03A3E" font-weight="bold">Nothing here touches the traction pack &#8212; the servos are gone.</text>
+<rect x="1280" y="990" width="1200" height="1000" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
+<rect x="1280" y="990" width="1200" height="34" fill="#F4F7FA" rx="8"/>
+<rect x="1280" y="1018" width="1200" height="6" fill="#F4F7FA"/>
+<text x="1296" y="1013" font-size="14" fill="#12305B" font-weight="bold">D &#8212; ACT</text>
+<text x="2464" y="1013" font-size="10.5" fill="#5A6472" text-anchor="end">Arduino 2 + 1602A + the four transistor bases</text>
+<rect x="1330" y="1050" width="250" height="570" fill="#ffffff" stroke="#0B7A75" stroke-width="1.8" rx="5"/>
+<rect x="1330" y="1050" width="250" height="40" fill="#0B7A75" rx="5"/>
+<rect x="1330" y="1084" width="250" height="6" fill="#0B7A75"/>
+<text x="1455" y="1067" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">Arduino 2</text>
+<text x="1455" y="1081" font-size="8.5" fill="#D6E0EC" text-anchor="middle">ACT &#183; 5 V</text>
+<circle cx="1580" cy="1290" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1290" x2="1592" y2="1290" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1293.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D6</text>
+<circle cx="1580" cy="1320" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1320" x2="1592" y2="1320" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1323.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D7</text>
+<circle cx="1580" cy="1350" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1350" x2="1592" y2="1350" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1353.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D8</text>
+<circle cx="1580" cy="1380" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1380" x2="1592" y2="1380" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1383.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D11</text>
+<circle cx="1580" cy="1410" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1410" x2="1592" y2="1410" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1413.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D12</text>
+<circle cx="1580" cy="1440" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1440" x2="1592" y2="1440" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1443.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">A2</text>
+<circle cx="1580" cy="1480" r="2.6" fill="#ffffff" stroke="#B26B00" stroke-width="1.4"/>
+<line x1="1580" y1="1480" x2="1592" y2="1480" stroke="#B26B00" stroke-width="1.4"/>
+<text x="1570" y="1483.5" font-size="9.5" fill="#B26B00" text-anchor="end" font-weight="bold">5V</text>
+<circle cx="1580" cy="1510" r="2.6" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="1580" y1="1510" x2="1592" y2="1510" stroke="#12305B" stroke-width="1.4"/>
+<text x="1570" y="1513.5" font-size="9.5" fill="#12305B" text-anchor="end" font-weight="bold">GND</text>
+<circle cx="1580" cy="1550" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1550" x2="1592" y2="1550" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1553.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D9</text>
+<circle cx="1580" cy="1580" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1580" y1="1580" x2="1592" y2="1580" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1570" y="1583.5" font-size="9.5" fill="#0B7A75" text-anchor="end" font-weight="bold">D10</text>
+<circle cx="1330" cy="1130" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1330" y1="1130" x2="1318" y2="1130" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1340" y="1133.5" font-size="9.5" fill="#0B7A75" font-weight="bold">D4</text>
+<polyline points="1318,1130 1310,1130" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<circle cx="1330" cy="1156" r="2.6" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
+<line x1="1330" y1="1156" x2="1318" y2="1156" stroke="#0B7A75" stroke-width="1.4"/>
+<text x="1340" y="1159.5" font-size="9.5" fill="#0B7A75" font-weight="bold">D5</text>
+<polyline points="1318,1156 1310,1156" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1308" y="1133.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8592; MCX J2-20</text>
+<text x="1308" y="1159.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; divider &#8594; MCX J2-18</text>
+<text x="1342" y="1604" font-size="8.5" fill="#5A6472">D0/D1 free &#183; D2/D3 held for encoders &#183; D13, A3&#8211;A5 spare</text>
+<rect x="1900" y="1236" width="260" height="230" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.8" rx="5"/>
+<rect x="1900" y="1236" width="260" height="40" fill="#6B3FA0" rx="5"/>
+<rect x="1900" y="1270" width="260" height="6" fill="#6B3FA0"/>
+<text x="2030.0" y="1253" font-size="12.5" fill="#ffffff" text-anchor="middle" font-weight="bold">1602A</text>
+<text x="2030.0" y="1267" font-size="8.5" fill="#D6E0EC" text-anchor="middle">16&#215;2 LCD &#183; bare HD44780 &#183; 5 V</text>
+<circle cx="1900" cy="1290" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1290" x2="1888" y2="1290" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1293.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">RS</text>
+<circle cx="1900" cy="1320" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1320" x2="1888" y2="1320" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1323.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">E</text>
+<circle cx="1900" cy="1350" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1350" x2="1888" y2="1350" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1353.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">DB4</text>
+<circle cx="1900" cy="1380" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1380" x2="1888" y2="1380" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1383.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">DB5</text>
+<circle cx="1900" cy="1410" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1410" x2="1888" y2="1410" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1413.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">DB6</text>
+<circle cx="1900" cy="1440" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="1900" y1="1440" x2="1888" y2="1440" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="1910" y="1443.5" font-size="9.5" fill="#6B3FA0" font-weight="bold">DB7</text>
+<circle cx="2160" cy="1290" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1290" x2="2172" y2="1290" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1293.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">VSS</text>
+<circle cx="2160" cy="1320" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1320" x2="2172" y2="1320" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1323.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">VDD</text>
+<circle cx="2160" cy="1350" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1350" x2="2172" y2="1350" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1353.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">V0</text>
+<circle cx="2160" cy="1380" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1380" x2="2172" y2="1380" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1383.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">RW</text>
+<circle cx="2160" cy="1410" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1410" x2="2172" y2="1410" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1413.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">A</text>
+<circle cx="2160" cy="1440" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
+<line x1="2160" y1="1440" x2="2172" y2="1440" stroke="#6B3FA0" stroke-width="1.4"/>
+<text x="2150" y="1443.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">K</text>
+<text x="1910" y="1458" font-size="8.5" fill="#5A6472">4-bit mode &#8212; DB0&#8211;DB3 stay unconnected</text>
+<polyline points="1592,1290 1888,1290" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1592,1320 1888,1320" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1592,1350 1888,1350" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1592,1380 1888,1380" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1592,1410 1888,1410" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<polyline points="1592,1440 1888,1440" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#a-purple)"/>
+<line x1="2200" y1="1080" x2="2200" y2="1940" stroke="#B26B00" stroke-width="3"/>
+<text x="2200" y="1072" font-size="9.5" fill="#B26B00" text-anchor="middle" font-weight="bold">+5V</text>
+<line x1="2260" y1="1080" x2="2260" y2="1940" stroke="#12305B" stroke-width="3"/>
+<text x="2260" y="1072" font-size="9.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<polyline points="1592,1480 2200,1480" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2200" cy="1480" r="3.2" fill="#B26B00"/>
+<polyline points="1592,1510 2260,1510" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2260" cy="1510" r="3.2" fill="#12305B"/>
+<polyline points="2172,1290 2260,1290" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2260" cy="1290" r="3.2" fill="#12305B"/>
+<polyline points="2172,1380 2260,1380" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2260" cy="1380" r="3.2" fill="#12305B"/>
+<polyline points="2172,1440 2260,1440" fill="none" stroke="#12305B" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2260" cy="1440" r="3.2" fill="#12305B"/>
+<polyline points="2172,1320 2200,1320" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<circle cx="2200" cy="1320" r="3.2" fill="#B26B00"/>
+<polyline points="2172,1410 2200,1410" fill="none" stroke="#B26B00" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="2173.0" y="1405.5" width="26" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="2186" y="1401" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">220 &#8486;</text>
+<circle cx="2200" cy="1410" r="3.2" fill="#B26B00"/>
+<polyline points="2172,1350 2240,1350" fill="none" stroke="#B03A3E" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="2246" y="1353.5" font-size="9" fill="#B03A3E" font-style="italic">&#8594; wiper</text>
+<polyline points="2200,1940 2200,1966" fill="none" stroke="#B26B00" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2260,1940 2260,1966" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
+<text x="2200" y="1978" font-size="8.5" fill="#B26B00" text-anchor="middle" font-weight="bold">5 V</text>
+<text x="2260" y="1978" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
+<rect x="2300" y="1180" width="170" height="250" fill="#F4F7FA" stroke="#B03A3E" stroke-width="1.6" rx="6"/>
+<text x="2385" y="1204" font-size="11" fill="#B03A3E" text-anchor="middle" font-weight="bold">CONTRAST</text>
+<line x1="2385" y1="1226" x2="2385" y2="1250" stroke="#B26B00" stroke-width="1.8"/>
+<line x1="2367" y1="1226" x2="2403" y2="1226" stroke="#B26B00" stroke-width="2.6"/>
+<text x="2385" y="1220" font-size="8.5" fill="#B26B00" text-anchor="middle" font-weight="bold">+5 V</text>
+<rect x="2380.5" y="1250.0" width="9" height="76" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<polygon points="2352,1288 2366,1282 2366,1294" fill="#B03A3E"/>
+<line x1="2320" y1="1288" x2="2352" y2="1288" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="2316" y="1292" font-size="9" fill="#B03A3E" text-anchor="end" font-weight="bold">V0</text>
+<line x1="2385" y1="1326" x2="2385" y2="1352" stroke="#B03A3E" stroke-width="1.8"/>
+<line x1="2385" y1="1352" x2="2385" y2="1360" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="2376" y1="1360" x2="2394" y2="1360" stroke="#B03A3E" stroke-width="2"/>
+<line x1="2379.5" y1="1364" x2="2390.5" y2="1364" stroke="#B03A3E" stroke-width="2"/>
+<line x1="2382.5" y1="1368" x2="2387.5" y2="1368" stroke="#B03A3E" stroke-width="2"/>
+<text x="2312" y="1400" font-size="8.5" fill="#5A6472">10 k&#8486; trimpot. Without it</text>
+<text x="2312" y="1412" font-size="8.5" fill="#5A6472">the screen is blank or all</text>
+<text x="2312" y="1424" font-size="8.5" fill="#5A6472">solid blocks.</text>
+<text x="1900" y="1494" font-size="9" fill="#B03A3E">1602A: RW to GND &#8212; write-only. Leave it floating</text>
+<text x="1900" y="1508" font-size="9" fill="#B03A3E">and the display drives the data bus back at you.</text>
+<text x="1900" y="1522" font-size="9" fill="#5A6472">Backlight needs the 220 &#8486; unless the module already</text>
+<text x="1900" y="1536" font-size="9" fill="#5A6472">has one. DB0&#8211;DB3 stay unconnected in 4-bit mode.</text>
+<text x="1300" y="1656" font-size="10.5" fill="#B03A3E" font-weight="bold">BASE DRIVE &#8212; each PWM pin feeds TWO bases</text>
+<text x="1300" y="1672" font-size="9" fill="#5A6472">470 &#8486; in series, 10 k&#8486; base-to-emitter</text>
+<polyline points="1592,1550 1640,1550 1640,1770" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="1808" y="1686" font-size="9" fill="#5A6472">Q1 + Q2  &#8212; left pair</text>
+<circle cx="1640" cy="1700" r="3.4" fill="#B03A3E"/>
+<line x1="1640" y1="1700" x2="1680" y2="1700" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="1693.0" y="1695.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1704" y="1691" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+<line x1="1728" y1="1700" x2="1800" y2="1700" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1764" cy="1700" r="3.2" fill="#B03A3E"/>
+<line x1="1764" y1="1700" x2="1764" y2="1712" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="1759.5" y="1712.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1755" y="1726.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">10 k&#8486;</text>
+<line x1="1764" y1="1734" x2="1764" y2="1742" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="1764" y1="1742" x2="1764" y2="1750" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1755" y1="1750" x2="1773" y2="1750" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1758.5" y1="1754" x2="1769.5" y2="1754" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1761.5" y1="1758" x2="1766.5" y2="1758" stroke="#B03A3E" stroke-width="2"/>
+<text x="1808" y="1703.5" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; base of Q1</text>
+<circle cx="1640" cy="1770" r="3.4" fill="#B03A3E"/>
+<line x1="1640" y1="1770" x2="1680" y2="1770" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="1693.0" y="1765.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1704" y="1761" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+<line x1="1728" y1="1770" x2="1800" y2="1770" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1764" cy="1770" r="3.2" fill="#B03A3E"/>
+<line x1="1764" y1="1770" x2="1764" y2="1782" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="1759.5" y="1782.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1755" y="1796.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">10 k&#8486;</text>
+<line x1="1764" y1="1804" x2="1764" y2="1812" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="1764" y1="1812" x2="1764" y2="1820" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1755" y1="1820" x2="1773" y2="1820" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1758.5" y1="1824" x2="1769.5" y2="1824" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1761.5" y1="1828" x2="1766.5" y2="1828" stroke="#B03A3E" stroke-width="2"/>
+<text x="1808" y="1773.5" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; base of Q2</text>
+<polyline points="1592,1580 1616,1580 1616,1910" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="1808" y="1826" font-size="9" fill="#5A6472">Q3 + Q4  &#8212; right pair</text>
+<circle cx="1616" cy="1840" r="3.4" fill="#B03A3E"/>
+<line x1="1616" y1="1840" x2="1680" y2="1840" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="1693.0" y="1835.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1704" y="1831" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+<line x1="1728" y1="1840" x2="1800" y2="1840" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1764" cy="1840" r="3.2" fill="#B03A3E"/>
+<line x1="1764" y1="1840" x2="1764" y2="1852" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="1759.5" y="1852.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1755" y="1866.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">10 k&#8486;</text>
+<line x1="1764" y1="1874" x2="1764" y2="1882" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="1764" y1="1882" x2="1764" y2="1890" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1755" y1="1890" x2="1773" y2="1890" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1758.5" y1="1894" x2="1769.5" y2="1894" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1761.5" y1="1898" x2="1766.5" y2="1898" stroke="#B03A3E" stroke-width="2"/>
+<text x="1808" y="1843.5" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; base of Q3</text>
+<circle cx="1616" cy="1910" r="3.4" fill="#B03A3E"/>
+<line x1="1616" y1="1910" x2="1680" y2="1910" stroke="#B03A3E" stroke-width="1.6"/>
+<rect x="1693.0" y="1905.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1704" y="1901" font-size="9.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+<line x1="1728" y1="1910" x2="1800" y2="1910" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1764" cy="1910" r="3.2" fill="#B03A3E"/>
+<line x1="1764" y1="1910" x2="1764" y2="1922" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="1759.5" y="1922.0" width="9" height="22" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<text x="1755" y="1936.5" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">10 k&#8486;</text>
+<line x1="1764" y1="1944" x2="1764" y2="1952" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="1764" y1="1952" x2="1764" y2="1960" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1755" y1="1960" x2="1773" y2="1960" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1758.5" y1="1964" x2="1769.5" y2="1964" stroke="#B03A3E" stroke-width="2"/>
+<line x1="1761.5" y1="1968" x2="1766.5" y2="1968" stroke="#B03A3E" stroke-width="2"/>
+<text x="1808" y="1913.5" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; base of Q4</text>
+<rect x="40" y="2030" width="2440" height="700" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
+<rect x="40" y="2030" width="2440" height="34" fill="#F4F7FA" rx="8"/>
+<rect x="40" y="2058" width="2440" height="6" fill="#F4F7FA"/>
+<text x="56" y="2053" font-size="14" fill="#12305B" font-weight="bold">E &#8212; DRIVE AND POWER</text>
+<text x="2464" y="2053" font-size="10.5" fill="#5A6472" text-anchor="end">4 &#215; PN2222A low-side channels &#183; 1N4001 flyback &#183; pack &#183; star ground</text>
+<line x1="140" y1="2110" x2="2380" y2="2110" stroke="#B03A3E" stroke-width="3.4"/>
+<text x="140" y="2100" font-size="11" fill="#B03A3E" font-weight="bold">PACK +  (4 &#215; AA NiMH, 4.8 V)</text>
+<line x1="140" y1="2600" x2="2380" y2="2600" stroke="#12305B" stroke-width="5"/>
+<text x="140" y="2624" font-size="11" fill="#12305B" font-weight="bold">STAR GROUND &#8212; traction pack −, logic pack −, USB ground, all four board grounds, all four emitters, every component GND</text>
+<circle cx="260" cy="2190" r="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="260" y="2196" font-size="14" fill="#B03A3E" text-anchor="middle" font-weight="bold">M</text>
+<line x1="260" y1="2110" x2="260" y2="2170" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="260" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="260" y1="2210" x2="260" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="234" y="2244" font-size="8.5" fill="#5A6472" text-anchor="end">motor 1</text>
+<polygon points="381,2199 399,2199 390,2183" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="380" y1="2183" x2="400" y2="2183" stroke="#B03A3E" stroke-width="2.4"/>
+<line x1="390" y1="2110" x2="390" y2="2183" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="390" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="390" y1="2199" x2="390" y2="2270" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="406" y="2196" font-size="9" fill="#B03A3E" font-weight="bold">1N4001</text>
+<text x="406" y="2208" font-size="8.5" fill="#5A6472">band up</text>
+<line x1="260" y1="2270" x2="390" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="260" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="390" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="325" cy="2270" r="3.4" fill="#B03A3E"/>
+<line x1="325" y1="2270" x2="325" y2="2320" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="325" cy="2370" r="26" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="312" y1="2353" x2="312" y2="2387" stroke="#12305B" stroke-width="2.6"/>
+<line x1="280" y1="2370" x2="312" y2="2370" stroke="#12305B" stroke-width="1.8"/>
+<line x1="312" y1="2361" x2="341" y2="2346" stroke="#12305B" stroke-width="1.8"/>
+<line x1="341" y1="2346" x2="341" y2="2320" stroke="#12305B" stroke-width="1.8"/>
+<line x1="312" y1="2379" x2="341" y2="2394" stroke="#12305B" stroke-width="1.8"/>
+<line x1="341" y1="2394" x2="341" y2="2600" stroke="#12305B" stroke-width="1.8"/>
+<polygon points="334.6,2391 324.0,2390 327.8,2383" fill="#12305B"/>
+<circle cx="341" cy="2600" r="3.4" fill="#12305B"/>
+<circle cx="341" cy="2320" r="3.4" fill="#B03A3E"/>
+<text x="359" y="2338" font-size="9" fill="#12305B" font-weight="bold">C</text>
+<text x="359" y="2410" font-size="9" fill="#12305B" font-weight="bold">E</text>
+<text x="325" y="2436" font-size="10" fill="#12305B" text-anchor="middle" font-weight="bold">Q1  PN2222A</text>
+<polyline points="280,2370 235,2370" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="229" y="2374" font-size="9" fill="#B03A3E" text-anchor="end" font-weight="bold">base &#8592; 470 &#8486; &#8592; D9</text>
+<text x="229" y="2388" font-size="8.5" fill="#5A6472" text-anchor="end">block D</text>
+<circle cx="780" cy="2190" r="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="780" y="2196" font-size="14" fill="#B03A3E" text-anchor="middle" font-weight="bold">M</text>
+<line x1="780" y1="2110" x2="780" y2="2170" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="780" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="780" y1="2210" x2="780" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="754" y="2244" font-size="8.5" fill="#5A6472" text-anchor="end">motor 2</text>
+<polygon points="901,2199 919,2199 910,2183" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="900" y1="2183" x2="920" y2="2183" stroke="#B03A3E" stroke-width="2.4"/>
+<line x1="910" y1="2110" x2="910" y2="2183" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="910" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="910" y1="2199" x2="910" y2="2270" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="926" y="2196" font-size="9" fill="#B03A3E" font-weight="bold">1N4001</text>
+<text x="926" y="2208" font-size="8.5" fill="#5A6472">band up</text>
+<line x1="780" y1="2270" x2="910" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="780" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="910" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="845" cy="2270" r="3.4" fill="#B03A3E"/>
+<line x1="845" y1="2270" x2="845" y2="2320" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="845" cy="2370" r="26" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="832" y1="2353" x2="832" y2="2387" stroke="#12305B" stroke-width="2.6"/>
+<line x1="800" y1="2370" x2="832" y2="2370" stroke="#12305B" stroke-width="1.8"/>
+<line x1="832" y1="2361" x2="861" y2="2346" stroke="#12305B" stroke-width="1.8"/>
+<line x1="861" y1="2346" x2="861" y2="2320" stroke="#12305B" stroke-width="1.8"/>
+<line x1="832" y1="2379" x2="861" y2="2394" stroke="#12305B" stroke-width="1.8"/>
+<line x1="861" y1="2394" x2="861" y2="2600" stroke="#12305B" stroke-width="1.8"/>
+<polygon points="854.6,2391 844.0,2390 847.8,2383" fill="#12305B"/>
+<circle cx="861" cy="2600" r="3.4" fill="#12305B"/>
+<circle cx="861" cy="2320" r="3.4" fill="#B03A3E"/>
+<text x="879" y="2338" font-size="9" fill="#12305B" font-weight="bold">C</text>
+<text x="879" y="2410" font-size="9" fill="#12305B" font-weight="bold">E</text>
+<text x="845" y="2436" font-size="10" fill="#12305B" text-anchor="middle" font-weight="bold">Q2  PN2222A</text>
+<polyline points="800,2370 755,2370" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="749" y="2374" font-size="9" fill="#B03A3E" text-anchor="end" font-weight="bold">base &#8592; 470 &#8486; &#8592; D9</text>
+<text x="749" y="2388" font-size="8.5" fill="#5A6472" text-anchor="end">block D</text>
+<circle cx="1300" cy="2190" r="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="1300" y="2196" font-size="14" fill="#B03A3E" text-anchor="middle" font-weight="bold">M</text>
+<line x1="1300" y1="2110" x2="1300" y2="2170" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1300" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="1300" y1="2210" x2="1300" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="1274" y="2244" font-size="8.5" fill="#5A6472" text-anchor="end">motor 3</text>
+<polygon points="1421,2199 1439,2199 1430,2183" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1420" y1="2183" x2="1440" y2="2183" stroke="#B03A3E" stroke-width="2.4"/>
+<line x1="1430" y1="2110" x2="1430" y2="2183" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1430" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="1430" y1="2199" x2="1430" y2="2270" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="1446" y="2196" font-size="9" fill="#B03A3E" font-weight="bold">1N4001</text>
+<text x="1446" y="2208" font-size="8.5" fill="#5A6472">band up</text>
+<line x1="1300" y1="2270" x2="1430" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1300" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="1430" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="1365" cy="2270" r="3.4" fill="#B03A3E"/>
+<line x1="1365" y1="2270" x2="1365" y2="2320" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1365" cy="2370" r="26" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="1352" y1="2353" x2="1352" y2="2387" stroke="#12305B" stroke-width="2.6"/>
+<line x1="1320" y1="2370" x2="1352" y2="2370" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1352" y1="2361" x2="1381" y2="2346" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1381" y1="2346" x2="1381" y2="2320" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1352" y1="2379" x2="1381" y2="2394" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1381" y1="2394" x2="1381" y2="2600" stroke="#12305B" stroke-width="1.8"/>
+<polygon points="1374.6,2391 1364.0,2390 1367.8,2383" fill="#12305B"/>
+<circle cx="1381" cy="2600" r="3.4" fill="#12305B"/>
+<circle cx="1381" cy="2320" r="3.4" fill="#B03A3E"/>
+<text x="1399" y="2338" font-size="9" fill="#12305B" font-weight="bold">C</text>
+<text x="1399" y="2410" font-size="9" fill="#12305B" font-weight="bold">E</text>
+<text x="1365" y="2436" font-size="10" fill="#12305B" text-anchor="middle" font-weight="bold">Q3  PN2222A</text>
+<polyline points="1320,2370 1275,2370" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="1269" y="2374" font-size="9" fill="#B03A3E" text-anchor="end" font-weight="bold">base &#8592; 470 &#8486; &#8592; D10</text>
+<text x="1269" y="2388" font-size="8.5" fill="#5A6472" text-anchor="end">block D</text>
+<circle cx="1820" cy="2190" r="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="1820" y="2196" font-size="14" fill="#B03A3E" text-anchor="middle" font-weight="bold">M</text>
+<line x1="1820" y1="2110" x2="1820" y2="2170" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1820" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="1820" y1="2210" x2="1820" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<text x="1794" y="2244" font-size="8.5" fill="#5A6472" text-anchor="end">motor 4</text>
+<polygon points="1941,2199 1959,2199 1950,2183" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6"/>
+<line x1="1940" y1="2183" x2="1960" y2="2183" stroke="#B03A3E" stroke-width="2.4"/>
+<line x1="1950" y1="2110" x2="1950" y2="2183" stroke="#B03A3E" stroke-width="1.6"/>
+<circle cx="1950" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="1950" y1="2199" x2="1950" y2="2270" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="1966" y="2196" font-size="9" fill="#B03A3E" font-weight="bold">1N4001</text>
+<text x="1966" y="2208" font-size="8.5" fill="#5A6472">band up</text>
+<line x1="1820" y1="2270" x2="1950" y2="2270" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1820" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="1950" cy="2270" r="3.4" fill="#B03A3E"/>
+<circle cx="1885" cy="2270" r="3.4" fill="#B03A3E"/>
+<line x1="1885" y1="2270" x2="1885" y2="2320" stroke="#B03A3E" stroke-width="1.8"/>
+<circle cx="1885" cy="2370" r="26" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="1872" y1="2353" x2="1872" y2="2387" stroke="#12305B" stroke-width="2.6"/>
+<line x1="1840" y1="2370" x2="1872" y2="2370" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1872" y1="2361" x2="1901" y2="2346" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1901" y1="2346" x2="1901" y2="2320" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1872" y1="2379" x2="1901" y2="2394" stroke="#12305B" stroke-width="1.8"/>
+<line x1="1901" y1="2394" x2="1901" y2="2600" stroke="#12305B" stroke-width="1.8"/>
+<polygon points="1894.6,2391 1884.0,2390 1887.8,2383" fill="#12305B"/>
+<circle cx="1901" cy="2600" r="3.4" fill="#12305B"/>
+<circle cx="1901" cy="2320" r="3.4" fill="#B03A3E"/>
+<text x="1919" y="2338" font-size="9" fill="#12305B" font-weight="bold">C</text>
+<text x="1919" y="2410" font-size="9" fill="#12305B" font-weight="bold">E</text>
+<text x="1885" y="2436" font-size="10" fill="#12305B" text-anchor="middle" font-weight="bold">Q4  PN2222A</text>
+<polyline points="1840,2370 1795,2370" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="1789" y="2374" font-size="9" fill="#B03A3E" text-anchor="end" font-weight="bold">base &#8592; 470 &#8486; &#8592; D10</text>
+<text x="1789" y="2388" font-size="8.5" fill="#5A6472" text-anchor="end">block D</text>
+<rect x="140" y="2440" width="230" height="96" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6" rx="5"/>
+<rect x="140" y="2440" width="5" height="96" fill="#B03A3E"/>
+<text x="156" y="2459" font-size="12.5" fill="#B03A3E" font-weight="bold">TRACTION PACK</text>
+<text x="156" y="2473" font-size="9.5" fill="#5A6472">4 &#215; AA NiMH &#183; 4.8 V</text>
+<line x1="255" y1="2440" x2="255" y2="2110" stroke="#B03A3E" stroke-width="2.4"/>
+<circle cx="255" cy="2110" r="3.4" fill="#B03A3E"/>
+<line x1="255" y1="2536" x2="255" y2="2600" stroke="#12305B" stroke-width="2.4"/>
+<circle cx="255" cy="2600" r="3.4" fill="#12305B"/>
+<text x="156" y="2556" font-size="9" fill="#B03A3E" font-weight="bold">switch here = e-stop</text>
+<rect x="430" y="2440" width="230" height="96" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.6" rx="5"/>
+<rect x="430" y="2440" width="5" height="96" fill="#6B3FA0"/>
+<text x="446" y="2459" font-size="12.5" fill="#6B3FA0" font-weight="bold">LOGIC PACK</text>
+<text x="446" y="2473" font-size="9.5" fill="#5A6472">9 V &#183; 6 &#215; AA alkaline</text>
+<polyline points="545,2440 545,2400 620,2400" fill="none" stroke="#6B3FA0" stroke-width="2.4" stroke-linejoin="round"/>
+<text x="628" y="2404" font-size="9" fill="#6B3FA0" font-weight="bold">&#8594; BUCK &#8594; MCX J3-10 (block A) + ESP32 VIN (block B)</text>
+<line x1="470" y1="2536" x2="470" y2="2600" stroke="#12305B" stroke-width="2.4"/>
+<circle cx="470" cy="2600" r="3.4" fill="#12305B"/>
+<text x="446" y="2556" font-size="9" fill="#6B3FA0" font-weight="bold">logic pack −</text>
+<polyline points="900,2600 900,2560" fill="none" stroke="#12305B" stroke-width="2" stroke-linejoin="round"/>
+<text x="900" y="2552" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">servo V+ (block C)</text>
+<polyline points="1180,2600 1180,2560" fill="none" stroke="#12305B" stroke-width="2" stroke-linejoin="round"/>
+<text x="1180" y="2552" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">USB grounds &#215;2</text>
+<polyline points="1700,2600 1700,2560" fill="none" stroke="#12305B" stroke-width="2" stroke-linejoin="round"/>
+<text x="1700" y="2552" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">component GNDs</text>
+<polyline points="900,2110 900,2076" fill="none" stroke="#B03A3E" stroke-width="2" stroke-linejoin="round"/>
+<text x="900" y="2068" font-size="8.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">&#8594; servo V+ (block C)</text>
+<rect x="2050" y="2100" width="230" height="96" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6" rx="5"/>
+<rect x="2050" y="2100" width="5" height="96" fill="#B03A3E"/>
+<text x="2066" y="2119" font-size="12.5" fill="#B03A3E" font-weight="bold">FAN &#8212; 12 V type</text>
+<text x="2066" y="2133" font-size="9.5" fill="#5A6472">aim at the four transistors</text>
+<circle cx="2280" cy="2158" r="2.6" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="2280" y1="2158" x2="2300" y2="2158" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="2266" y="2161.5" font-size="11" fill="#B03A3E" text-anchor="end" font-weight="bold">+</text>
+<text x="2306" y="2161.5" font-size="9" fill="#B03A3E" font-style="italic">LOGIC PACK +  (9 V)</text>
+<circle cx="2280" cy="2180" r="2.6" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="2280" y1="2180" x2="2300" y2="2180" stroke="#12305B" stroke-width="1.6"/>
+<text x="2266" y="2183.5" font-size="11" fill="#12305B" text-anchor="end" font-weight="bold">−</text>
+<text x="2306" y="2183.5" font-size="9" fill="#12305B" font-style="italic">★ star point</text>
+<rect x="2050" y="2260" width="230" height="96" fill="#ffffff" stroke="#B03A3E" stroke-width="1.6" rx="5"/>
+<rect x="2050" y="2260" width="5" height="96" fill="#B03A3E"/>
+<text x="2066" y="2279" font-size="12.5" fill="#B03A3E" font-weight="bold">FAN &#8212; 5 V type</text>
+<text x="2066" y="2293" font-size="9.5" fill="#5A6472">aim at the ESP32 regulator</text>
+<circle cx="2280" cy="2318" r="2.6" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<line x1="2280" y1="2318" x2="2300" y2="2318" stroke="#B03A3E" stroke-width="1.6"/>
+<text x="2266" y="2321.5" font-size="11" fill="#B03A3E" text-anchor="end" font-weight="bold">+</text>
+<text x="2306" y="2321.5" font-size="9" fill="#B03A3E" font-style="italic">TRACTION PACK +  (4.8 V)</text>
+<circle cx="2280" cy="2340" r="2.6" fill="#ffffff" stroke="#12305B" stroke-width="1.4"/>
+<line x1="2280" y1="2340" x2="2300" y2="2340" stroke="#12305B" stroke-width="1.6"/>
+<text x="2266" y="2343.5" font-size="11" fill="#12305B" text-anchor="end" font-weight="bold">−</text>
+<text x="2306" y="2343.5" font-size="9" fill="#12305B" font-style="italic">★ star point</text>
+<text x="2060" y="2450" font-size="10" fill="#B03A3E" font-weight="bold">WHY THE FANS ARE NOT DECORATION</text>
+<text x="2060" y="2466" font-size="8.5" fill="#5A6472">A stalled PN2222A dissipates 0.5&#8211;1.0 W in a TO-92 rated 0.625 W.</text>
+<text x="2060" y="2478" font-size="8.5" fill="#5A6472">In still air that is about +150 &#176;C of rise; with air moving over it,</text>
+<text x="2060" y="2490" font-size="8.5" fill="#5A6472">nearer +68 &#176;C. The 12 V fan is what turns the drive stage from</text>
+<text x="2060" y="2502" font-size="8.5" fill="#5A6472">marginal into comfortable, so mount it where it sees all four.</text>
+<text x="2060" y="2520" font-size="8.5" fill="#5A6472">The 5 V fan lets the ESP32 take 9 V on VIN without its regulator</text>
+<text x="2060" y="2532" font-size="8.5" fill="#5A6472">cooking &#8212; see block B.</text>
+<text x="2060" y="2556" font-size="8.5" fill="#12305B">A 12 V fan on 9 V turns at roughly 70 %. Quieter, still plenty.</text>
+<text x="2060" y="2568" font-size="8.5" fill="#12305B">A 5 V fan on 4.8 V is barely slower. Neither is fussy.</text>
+<text x="2060" y="2586" font-size="8.5" fill="#B03A3E">Wire both permanently on. Switching an inductive load needs a</text>
+<text x="2060" y="2598" font-size="8.5" fill="#B03A3E">flyback diode and there are none spare.</text>
+<text x="2060" y="2616" font-size="8.5" fill="#5A6472">Fan wires carry commutation spikes: run them to the pack</text>
+<text x="2060" y="2628" font-size="8.5" fill="#5A6472">terminals, not through a board's supply, and keep them away</text>
+<text x="2060" y="2640" font-size="8.5" fill="#5A6472">from the UART and I&#178;C runs.</text>
+<rect x="40" y="2770" width="2440" height="220" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
+<rect x="40" y="2770" width="4" height="220" fill="#12305B"/>
+<text x="58" y="2795" font-size="13" fill="#12305B" font-weight="bold">BEFORE YOU APPLY POWER</text>
+<text x="62" y="2821" font-size="10.5" fill="#5A6472">1.  Check all four 1N4001 bands point at PACK +. Backwards, each one is a dead short.</text>
+<text x="62" y="2843" font-size="10.5" fill="#5A6472">2.  Motor − goes to a collector, never straight to ground. The transistor is IN the return path.</text>
+<text x="62" y="2865" font-size="10.5" fill="#5A6472">3.  The 10 k&#8486; pull-downs go base-to-emitter, not base-to-supply.</text>
+<text x="62" y="2887" font-size="10.5" fill="#5A6472">4.  Every ground symbol on this sheet is the same net. Run all four emitters to the star</text>
+<text x="62" y="2909" font-size="10.5" fill="#5A6472">     point in thick wire, and keep signal grounds off that run.</text>
+<text x="62" y="2931" font-size="10.5" fill="#5A6472">5.  ESP32 from the logic pack at VIN, never from an Arduino 3.3 V pin &#8212; that gives</text>
+<text x="62" y="2953" font-size="10.5" fill="#5A6472">     30&#8211;150 mA and the ESP32 wants 500 in a burst.</text>
+<text x="62" y="2975" font-size="10.5" fill="#5A6472">6.  Both fans run permanently &#8212; nothing switches them, so neither needs a flyback</text>
+<text x="62" y="2997" font-size="10.5" fill="#5A6472">     diode. Take both feeds from the pack terminals, not through a board.</text>
+<text x="1280" y="2821" font-size="10.5" fill="#5A6472">7.   Only P3_27 / P3_28 are 5 V tolerant on the MCX. Both Arduino TX lines go through the</text>
+<text x="1280" y="2843" font-size="10.5" fill="#5A6472">      1 k&#8486; / 2 k&#8486; dividers in block A. The two MCX TX lines are plain wire.</text>
+<text x="1280" y="2865" font-size="10.5" fill="#5A6472">8.   TX and RX cross: an MCX TX pin always lands on an Arduino D4.</text>
+<text x="1280" y="2887" font-size="10.5" fill="#5A6472">9.   The 1602A is a bare HD44780 on six ACT pins in 4-bit mode: RW to ground and a</text>
+<text x="1280" y="2909" font-size="10.5" fill="#5A6472">      10 k&#8486; trimpot on V0. It is the only display on the car.</text>
+<text x="1280" y="2931" font-size="10.5" fill="#5A6472">10. Three supplies is fine. One shared ground is mandatory &#8212; without it the links have no</text>
+<text x="1280" y="2953" font-size="10.5" fill="#5A6472">      common zero and nothing works properly.</text>
+<text x="1280" y="2975" font-size="10.5" fill="#5A6472">11. Wheels off the floor until duty 0 and a pulled link have both been seen to stop them.</text>
+</svg>

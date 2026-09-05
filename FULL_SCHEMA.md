@@ -1,280 +1,868 @@
 # Full System Schema — Boards and Components
 
-**Distributed-ECU car · NXP Summer School · built only from parts in the box**
+**Distributed-ECU car · NXP Summer School · PN2222A transistor drive, forward only**
 
 | Sheet | File | Covers |
 |---|---|---|
 | 1 — Signals | [`SCHEMA_SIGNALS.svg`](SCHEMA_SIGNALS.svg) | Every board, every component, every pin |
 | 2 — Power | [`SCHEMA_POWER.svg`](SCHEMA_POWER.svg) | Traction pack, USB logic, star ground |
+| 3 — **Wiring** | [`SCHEMA_WIRING.svg`](SCHEMA_WIRING.svg) | **Every component, every terminal, every wire** |
 
-Anything drawn with a **dashed red border** is not in your box. There are only three such
-items and they are listed in §7.
+Wiring the car? Work from **sheet 3** and the netlist in Appendix A. Sheets 1 and 2 are the
+architecture and the rails — useful for understanding it, not for holding a wire.
 
----
+**Shopping list: twelve resistors, one trimpot, one buck module.** The four flyback diodes and
+the four PN2222A you already have.
 
-## 1. Two things that change the project
+| Qty | Part | For |
+|---|---|---|
+| 4 | 470 Ω resistor | Transistor base drive |
+| 4 | 10 kΩ resistor | Base pull-down — this is what makes the safe state real |
+| 2 + 2 | 1 kΩ and 2 kΩ | The two level dividers on the Arduino TX lines |
+| 1 | **10 kΩ trimpot** | 1602A contrast. Without it the screen is blank or solid blocks |
+| 1 | 220 Ω resistor | 1602A backlight — only if the module has no on-board resistor |
+| 1 | **9 V → 5 V buck module** (MP1584 / LM2596 mini) | The only way to run the MCX off the pack — its `VIN` pin is a dead end. §4 and §11 |
 
-**You have no line sensor.** Not a QTR array, not a TCRT5000, nothing. Line following is
-therefore only possible through the OV7670 — which is the single highest-risk part you own.
-So the demo has to change. What this parts list *is* good at:
+> **Your diodes are 1N4001, so the motor PWM runs at 2 kHz, not 20 kHz.** The ratings are
+> fine (1 A, 50 V against 250 mA running and a 4.8 V pack) — it is the switching speed that
+> sets the frequency. See §1.
 
-> **An obstacle-avoiding rover with heading hold.** Drive straight on IMU yaw + encoder
-> odometry, sweep the ultrasonic across the path, steer or stop for what it finds, and halt
-> when the PIR sees a person. Then inject the fault: unplug PERC mid-run, watch the VCU lose
-> ranging and degrade to a controlled stop instead of driving into a wall.
-
-That keeps the thing that actually makes this an interesting project — distributed nodes,
-fault containment, safe degradation — and drops the one capability the hardware cannot do.
-If the camera works, line following comes back as a bonus, not as the foundation.
-
-**CAN is off the table, permanently.** Yes, the ESP32 has a native CAN controller (TWAI).
-It still needs an external transceiver, you have none, and the MCXA153 has no CAN peripheral
-at all. Two of your four nodes could never join the bus. The transport stays UART + I²C —
-which is what your firmware already implements.
+Two spare PN2222A are still worth having — you have exactly four and no margin.
 
 ---
 
-## 2. Node allocation, and why
+## 1. The drive stage
+
+Four PN2222A as low-side switches, one per motor, driven in two groups of two. All four wheels
+turn one direction only; **you steer on the duty difference between the sides**, and a side at
+zero pivots the car.
+
+That is the whole drive stage: four transistors, four diodes, eight resistors, no bridge and no
+module.
+
+### Sizing, because the PN2222A is a tight part
+
+| | |
+|---|---|
+| PN2222A rating | **600 mA** continuous, 625 mW in TO-92 free air |
+| One motor, running | ~250 mA — **2× margin** |
+| One *pair* on one device | ~500 mA — no margin, do not do this |
+| Base resistor | **470 Ω** → I<sub>B</sub> 8.7 mA, forced β = 29, safely saturated |
+| Arduino pin load | 2 bases × 8.7 mA = **17 mA** — inside the comfortable limit |
+| Dissipation, running | V<sub>CE(sat)</sub> ~0.4 V × 0.25 A = **100 mW**, no heatsink |
+
+**One transistor per motor, not per pair.** A pair on a single 2222 sits at 500 mA against a
+600 mA rating, and TT motors pull more than their free-running current once they are carrying a
+car. Per-motor gives you the margin, and since each device has its own motor there is no
+current-sharing problem between them.
+
+**Two PWM pins, not four.** D9 drives the two left transistors through their own base
+resistors, D10 the two right. Pin load is 2 × 8.7 mA = 17 mA, well inside what an Arduino pin
+will give you.
+
+> ### A stalled motor destroys the transistor
+>
+> Base current is fixed at 8.7 mA, so the transistor can pass at most
+> h<sub>FE</sub> × 8.7 mA — roughly 435 mA with a typical part. It therefore **current-limits**
+> on stall rather than passing the 800 mA the motor would take. That helps, but it is not
+> protection: limiting means it leaves saturation, and it then burns **0.5 to 1.0 W in a package
+> rated 0.625 W** depending on the individual device gain. Marginal to about 1.5× over — it will
+> not die instantly, but it will not survive being held there. With no encoders you cannot
+> detect a stall directly, so use what you have:
+>
+> - **Cap the duty cycle.** You do not need full speed for this demo.
+> - **Watch the ultrasonic.** If range stops changing while you are commanding forward, you are
+>   blocked — cut the motors.
+> - **Watch the accelerometer.** A car that is really moving vibrates; a stalled one is still.
+>   The MPU6050 gives you this for free.
+>
+> None of these is a real current limit. The rule that actually protects the parts is: never
+> let the car sit pushing against something.
+
+**No reverse.** A single transistor conducts one way, so the car drives forward and turns, but
+it cannot back out of a dead end. Plan the course around that — and note that with two
+channels you can always pivot away from an obstacle rather than reversing off it.
+
+### Why the PWM is 2 kHz and not 20 kHz
+
+The 1N4001 is a standard-recovery rectifier: after the transistor turns on, the diode keeps
+conducting **backwards** for a couple of microseconds before it blocks. That is a current spike
+straight through the PN2222A, once per PWM cycle.
+
+| PWM | `ICR1` | Recovery loss in each transistor |
+|---|---|---|
+| 20 kHz | 400 | ~96 mW — **doubles its dissipation** |
+| 8 kHz | 1000 | ~38 mW |
+| **2 kHz** | **4000** | **~10 mW** |
+| 490 Hz | 16327 | ~2 mW |
+
+There is a second, better reason to go low. The motor's L/R time constant is roughly 330 µs, so
+**below about 4 kHz the winding current decays to zero during the OFF time** — the diode is
+already off when the transistor turns back on, and reverse recovery stops happening at all.
+
+**2 kHz, `ICR1 = 4000`.** You will hear a whine from the motors; that is expected, not a fault.
+At 2 kHz the torque ripple is far above the gearbox's mechanical bandwidth, so it does not
+affect how the car drives. If a transistor ever runs warm, drop to 1 kHz (`ICR1 = 8000`) rather
+than going up.
+
+**The 0.4 V drop is real.** Out of a 4.8 V pack that is about 8 % of your voltage, so the
+motors run slightly slower than the same pack would give a MOSFET. Not a problem, just
+something to know when you calibrate speed.
+
+## 2. How the car navigates without encoders
+
+With no optocouplers there is no wheel feedback anywhere in the vehicle. That is a real
+constraint, and it moves the control loop:
+
+```
+MPU6050 gyro ─> VCU: heading PID ──> (speed, yaw_rate) ──> ACT: two PWM duties
+                                                                 (open loop, no feedback)
+```
+
+- **Heading is closed loop**, on the gyro, at the VCU. This is now the only feedback loop in
+  the car — which makes the MPU6050 the single most important sensor you own.
+- **Distance is open loop**: commanded speed × time, calibrated once by driving a measured
+  two metres and adjusting the constant.
+- **Wheel speed is open loop.** A motor at 60 % duty turns at whatever the load and the pack
+  voltage allow. Expect the car to slow on carpet and to slow further as the cells sag.
+
+This is honest dead reckoning and it is fine for the demo, because the ultrasonic and the gyro
+are what actually drive the behaviour. It would not be fine for anything needing repeatable
+position.
+
+> **The upgrade path is already wired.** ACT's D2 and D3 (INT0/INT1) are deliberately left
+> empty. If you ever buy two LM393 slot sensors, they drop straight in with no rewiring and no
+> schema change — the encoder disks are already on the wheels.
+
+---
+
+## 3. Node allocation
 
 | Node | Board | Job | Attached |
 |---|---|---|---|
-| **VCU** | FRDM-MCXA153 | Fusion, state machine, arbitration, safety supervisor, hub | HW-123 IMU (on its I²C bus), on-board RGB LED + SW2/SW3 |
-| **PERC** | Arduino 1 | Perception + driver display | Scanning head (HC-SR04P on 2 × MG90S), HC-SR501 PIR, SFM-27, 8×8 matrix |
-| **ACT** | Arduino 2 | Motor PWM, encoders, speed PID, local safe state | Motor driver → 4 motors, 2 encoders, 7-segment, 16×2 LCD |
-| **VIS** | ESP32 | Camera + WiFi gateway | OV7670 |
+| **VCU** | FRDM-MCXA153 | Fusion, state machine, **heading PID**, safety supervisor, hub | MPU6050 IMU on its I²C bus, on-board RGB LED + SW2/SW3 |
+| **PERC** | Arduino 1 | Perception | 2 × HC-SR04P (fixed, one front one back), HC-SR501 PIR, SFM-27 buzzer |
+| **ACT** | Arduino 2 | Motor PWM, safe state, status readout | 4 × PN2222A → 4 DC motors, 1602A LCD |
+| **GW** | ESP32 | WiFi gateway — the laptop's only route in | — |
 
-Four nodes is genuinely justified here, and not because of CPU load:
+Still genuinely four nodes, and not because of CPU load:
 
-- **PERC blocks.** A servo sweep takes hundreds of milliseconds and an ultrasonic ping takes
-  up to 25 ms. Neither belongs anywhere near a control loop.
-- **ACT is timing-critical.** 20 kHz PWM plus encoder interrupts plus a 100 Hz speed PID.
-- **VIS is bursty and unreliable.** Camera DMA and WiFi retries must not be able to touch
-  the wheels. This is the fault-containment argument, and it is the honest one.
-- **VCU decides.** It holds the state machine and supervises the other three.
+- **PERC is timing-sensitive.** An ultrasonic echo has to be measured to the microsecond, and
+  two sensors alternating means the node is mid-measurement most of the time. The ranging is
+  interrupt-driven so it no longer *blocks* — but it still owns INT0 and INT1, and it would be
+  the first thing a control loop on the same chip interfered with.
+- **ACT owns Timer1.** The 2 kHz motor PWM needs the only 16-bit timer on an ATmega328P, and
+  nothing else on that board may touch it.
+- **GW is bursty and unreliable.** WiFi retries must never be able to reach the wheels. This is
+  the fault-containment argument, and it is the honest one.
+- **VCU decides**, holds the only control loop, and supervises the other three.
 
-### The two allocation decisions worth defending
+**Two range sensors, both fixed — one forward, one rearward.** No servo, no sweep, and nine
+times the update rate the swept single sensor managed. The front one is the only sensor in the
+car that can override the driver; the back one is a readout, because there is no reverse for it
+to protect. See §5.
 
-**Servos on PERC, motors on ACT — this is forced.** The Arduino `Servo` library takes over
-Timer1, and Timer1 is the only 16-bit timer on an ATmega328P, so it is also the only way to
-get 20 kHz motor PWM. One Uno cannot do both. Splitting them across the two Arduinos costs
-nothing and makes the conflict disappear.
-
-**The IMU hangs off the MCX's I²C bus, not an Arduino.** `LPI2C0` already runs to the ESP32
-gateway; I²C is multi-drop, so the HW-123 joins it as a second slave for free. Three
-benefits: the VCU gets yaw rate with no link in the path (it is a safety input), the module
-is 3.3 V native so it matches the MCX exactly, and **its on-board 2.2 kΩ pull-ups to 3.3 V
-are the bus pull-ups** — so you need no resistors, which matters because you have none.
+**The IMU hangs off the MCX's I²C bus, not an Arduino.** `LPI2C0` already runs to the ESP32;
+I²C is multi-drop, so the MPU6050 joins as a second slave for free. Three reasons: the heading
+loop gets its sensor with no link in the path, the module is 3.3 V native so it matches the
+MCX exactly, and **its on-board 2.2 kΩ pull-ups are the bus pull-ups** — so the I²C bus needs
+no resistors at all.
 
 ---
 
-## 3. VCU — FRDM-MCXA153
+---
 
-| Function | MCU pin | Header | Dir | To | Wiring |
-|---|---|---|---|---|---|
-| LPUART2_TXD | `P3_15` | **J2 pin 2** | → | PERC **D4** | Direct wire |
-| LPUART2_RXD | `P3_14` | **J2 pin 4** | ← | PERC **D5** | **1 kΩ + 2 kΩ divider** |
-| LPUART1_TXD | `P1_9` | **J2 pin 20** | → | ACT **D4** | Direct wire |
-| LPUART1_RXD | `P1_8` | **J2 pin 18** | ← | ACT **D5** | **1 kΩ + 2 kΩ divider** |
-| LPI2C0_SCL | `P3_27` | **mikroBUS J6** | ↔ | ESP32 GPIO22 **+ HW-123 SCL** | No pull-ups to add |
-| LPI2C0_SDA | `P3_28` | **mikroBUS J6** | ↔ | ESP32 GPIO21 **+ HW-123 SDA** | |
-| 3.3 V | — | **J3 pin 8** (`LDO_3V3`) | → | HW-123 VCC | **Not 5 V** |
-| GND | — | **J3 pin 12 / 14** | — | star ground | |
+## 4. VCU — FRDM-MCXA153
+
+Every pin on this board has **three** names and they are all different. The connector pin is
+what you count to, the `Pn_m` is what the datasheet calls it, and the silkscreen is what is
+actually printed beside the header — that last one is the quickest way to find it with a wire
+in your hand.
+
+| Connector pin | MCU pin | Printed on the board | Function | Goes to |
+|---|---|---|---|---|
+| **J2-2** | `P3_15` | **D8** | LPUART2_TXD | PERC **D4** — direct |
+| **J2-4** | `P3_14` | **D9** | LPUART2_RXD | PERC **D5** — **through the divider** |
+| **J2-20** | `P1_9` | **D19** | LPUART1_TXD | ACT **D4** — direct |
+| **J2-18** | `P1_8` | **D18** | LPUART1_RXD | ACT **D5** — **through the divider** |
+| **J6 SCL** | `P3_27` | **SCL** on the mikroBUS socket | LPI2C0_SCL | ESP32 GPIO22 **+** MPU6050 SCL |
+| **J6 SDA** | `P3_28` | **SDA** on the mikroBUS socket | LPI2C0_SDA | ESP32 GPIO21 **+** MPU6050 SDA |
+| **J3-8** | — | **3V3** | `LDO_3V3` out | MPU6050 **VCC** — 3.3 V, not 5 V |
+| **J3-12** *(or J3-14)* | — | **GND** | ground | ★ star point |
+| **J3-10** | — | **5V** | `SYS_5V0` | **Buck module out, 5 V** — see §11 |
+
+> ### Do not power this board from J3-16, whatever the silkscreen says
+>
+> `J3-16` is marked **VIN** and the net is `P5-9V_VIN`, so it looks like the obvious place for
+> the 9 V pack. **It does nothing on a stock board.** UM12012 Rev 2.0 Table 7 traces it:
+>
+> ```
+> J3-16  P5-9V_VIN (5–9 V)
+>    └─> J22   ✗ 1×3-pin footprint for a 5 V regulator module — NOT POPULATED
+>        └─> P5V_HDR_IN (5 V)
+>            ✗ "third power source option (disabled by default)" for SYS_5V0
+>            └─> SYS_5V0 → U2 → LDO_3V3 → MCU
+> ```
+>
+> Two independent breaks, and the manual says so outright: *"By default, the option to produce
+> the SYS_5V0 supply from the P5V_HDR_IN supply is disabled."* Nine volts on J3-16 feeds an
+> empty footprint. The board will not come up and nothing is wrong with it.
+>
+> **So the 9 V goes through a buck module to 5 V and into `J3-10` (`SYS_5V0`) instead** — the
+> rail both USB inputs already land on. §11 has the wiring.
+
+> **`J2-2` means connector J2, pin 2.** J1–J4 are the Arduino-form headers and are laid out as
+> two-row footprints, so count carefully — UM12012 Figures 11–12 show the numbering. If in
+> doubt, find the silkscreen name instead: J2-2 is the pin marked **D8**.
+
+> **A trap worth knowing.** `P1_8` / `P1_9` are the Arduino header's *I²C* pins — that is why
+> they are silkscreened D18 and D19 next to SDA/SCL markings on many boards. **Here they are
+> LPUART1**, not I²C. The real I²C is `P3_27`/`P3_28` on the mikroBUS socket.
 
 On-board, nothing to wire (verified in `distributed_ecu/frdmmcxa153/frdmmcxa153/board.h`):
-`P3_12` red LED, `P3_13` green, `P3_0` blue, `P3_29` SW2, `P1_7` SW3, `P0_2`/`P0_3` →
-MCU-Link VCOM. This schema uses no J1 pins, so all of it is free for state indication.
+`P3_12` red LED, `P3_13` green, `P3_0` blue, `P3_29` SW2, `P1_7` SW3, `P0_2`/`P0_3` → VCOM.
+This schema uses no J1 pins, so all of it is free for state indication.
 
 ---
 
-## 4. PERC — Arduino 1
+## 5. PERC — Arduino 1
 
 | Pin | Net | Component | Notes |
 |---|---|---|---|
 | D0 / D1 | — | — | **Leave free** — CH340 bootloader |
-| D2 | ECHO | HC-SR04P | **INT0** |
-| D3 | PIR OUT | HC-SR501 | **INT1** |
+| D2 | ECHO_B | HC-SR04P **back** | **INT0** |
+| D3 | ECHO_F | HC-SR04P **front** | **INT1** |
 | **D4** | LINK_RX | ← MCX `P3_15` | Direct |
 | **D5** | LINK_TX | → MCX `P3_14` | **Through the divider** |
-| D6 | SERVO_PAN | MG90S #1 | Signal only — V+ from the pack |
-| D7 | SERVO_TILT | MG90S #2 | Signal only — V+ from the pack |
-| D8 | TRIG | HC-SR04P | |
-| D10 | MATRIX_CS | 8×8 matrix | |
-| D11 | MATRIX_DIN | 8×8 matrix | Hardware SPI MOSI |
-| D13 | MATRIX_CLK | 8×8 matrix | Hardware SPI SCK |
-| A0 / A1 | SFM-27 | reserved | Analog + digital, until you identify it |
-| D9, D12, A2–A5 | — | — | Spare |
+| D6 | TRIG_B | HC-SR04P **back** | |
+| D7 | TRIG_F | HC-SR04P **front** | |
+| D8 | PIR OUT | HC-SR501 | Slow signal — poll it, no interrupt needed |
+| D9 | BUZZER | SFM-27 | 220 Ω in series until you have measured it |
+| D10–D13, A0–A5 | — | — | **Spare — ten pins**, both I²C among them |
 
-**The scanning head is the interesting part.** You have exactly one range sensor and two
-servos. Mount the HC-SR04P on the pan/tilt and sweep it: one sensor becomes a left / centre
-/ right picture, and you get a coarse obstacle map that a fixed sensor could never give you.
-The blocking sweep is precisely why PERC is its own node.
+### One forward, one rearward
 
-Power the HC-SR04P from the Arduino's **5 V**. The "P" variant's 3.3–5 V range earns you
-nothing on a 5 V node — it would only matter if you ever moved it onto the MCX.
+**`D3`/`D7` is the front sensor and `D2`/`D6` is the back one.** That mapping exists in exactly
+one place — the pin constants at the top of `perc.ino` — and nothing above PERC knows the pin
+numbers. The VCU asks for "front" and "back"; move the sensors on the chassis and you edit two
+lines in one file.
+
+This replaced an earlier pair splayed 25° left and right. That arrangement gave a left/right
+comparison for autonomous obstacle avoidance, which is the right answer for a car that steers
+itself. It is the wrong answer for one a human drives: the driver already knows which way to
+go, and what they cannot see is what is directly ahead and what is behind them. So one sensor
+covers the direction of travel and the other covers the end you cannot watch.
+
+Two consequences worth being straight about:
+
+- **There is no left/right range comparison any more.** The autonomous avoidance logic that
+  argument was built for is not in this build, and if it comes back it needs a third sensor or
+  the splayed pair returned.
+- **The back sensor cannot stop anything**, because the car has no reverse. It is a readout —
+  how close you are to the wall behind you when you pivot — and nothing else acts on it.
+
+The front sensor does act. The VCU refuses forward throttle under `GUARD_STOP_CM`, 25 cm by
+default, and keeps allowing a pivot, because with no reverse turning away is the only escape.
+See §5 of [`FIRMWARE.md`](FIRMWARE.md).
+
+**They must fire alternately.** Two HC-SR04 pinging at the same moment hear each other's burst
+and both report nonsense — and pointing them in opposite directions does not fix that, because
+the burst reaches the other sensor through the chassis as much as through the air. Front, wait
+60 ms, back, wait 60 ms.
+
+| | Update rate |
+|---|---|
+| One sensor swept 120° on a servo | 0.9 Hz |
+| **Two fixed, fired alternately** | **8.3 Hz each** |
+
+**Nine times faster, with nothing moving.** That is why the servos came out: the sweep existed
+only to compensate for having one sensor, and a second sensor does the job better. It also frees
+`D6`/`D7`, releases Timer1 on this node, and takes the last load off the traction pack.
+
+**Neither ping blocks.** `pulseIn()` would tie this node up for up to 10 ms per reading; the
+echo is timed on INT0/INT1 instead, which is what those two pins were held open for. Not
+blocking is the whole reason PERC is a separate node, so do not undo it.
+
+Power the HC-SR04P from the Arduino's **5 V**. The "P" variant's 3.3–5 V range earns you nothing
+on a 5 V node — it would only matter if you moved one onto the MCX.
+
+### The SFM-27 buzzer
+
+Identify it before you rely on it. There are two kinds and they need opposite drive:
+
+| Drive | Active buzzer | Passive buzzer |
+|---|---|---|
+| Steady DC (`digitalWrite HIGH`) | Buzzes at its own fixed pitch | One click, then silence |
+| 2 kHz square (`tone()`) | Warbles or rattles | Clean 2 kHz tone |
+
+`test_perc.ino` has both as `b1` and `b2` — whichever sounds right tells you which you have.
+
+**Fit a 220 Ω in series until you have measured the current.** A magnetic buzzer can pull
+30–40 mA, which is over what an AVR pin should source; the resistor costs volume and protects
+the pin. If it turns out to draw under 20 mA, take it out.
+
+Use it for the **safe state**, not for every obstacle. An alarm that is always sounding is an
+alarm nobody listens to.
 
 ---
 
-## 5. ACT — Arduino 2
+## 6. ACT — Arduino 2
 
 | Pin | Net | Component | Notes |
 |---|---|---|---|
 | D0 / D1 | — | — | **Leave free** — bootloader |
-| D2 | ENC_L | Left optocoupler | **INT0** |
-| D3 | ENC_R | Right optocoupler | **INT1** |
+| D2 / D3 | — | — | **Held open for encoders** (INT0/INT1) |
 | **D4** | LINK_RX | ← MCX `P1_9` | Direct |
 | **D5** | LINK_TX | → MCX `P1_8` | **Through the divider** |
-| D6 / D7 | IN1 / IN2 | Motor driver | Left pair direction |
-| D8 / D12 | IN3 / IN4 | Motor driver | Right pair direction |
-| **D9** | ENA | Motor driver | **Timer1 OC1A — 20 kHz** |
-| **D10** | ENB | Motor driver | **Timer1 OC1B — 20 kHz** |
-| A0 / A1 | CLK / DIO | 7-segment | Bit-banged; kept off D13 because the on-board LED loads it |
-| A4 / A5 | SDA / SCL | 16×2 LCD | **5 V bus, ACT-local** |
-| D11, D13, A2, A3 | — | — | Spare |
+| **D9** | PWM_L | Bases of the two left transistors | **Timer1 OC1A — 2 kHz** |
+| **D10** | PWM_R | Bases of the two right transistors | **Timer1 OC1B — 2 kHz** |
+| D6 / D7 | RS / E | **1602A** | 4-bit mode |
+| D8 / D11 / D12 / A2 | DB4 / DB5 / DB6 / DB7 | **1602A** | DB0–DB3 stay unconnected |
+| D13, A0, A1, A3, A4, A5 | — | — | Spare — A4/A5 stay free, so I²C is still available later |
 
-**Four motors, two channels, two encoders.** Wire the left pair in parallel to one output
-and the right pair to the other. The wheels on each side are mechanically locked together,
-so a second encoder per side would measure the same thing — you need 2 of your 4 disks, and
-that is why two external interrupts are enough.
+For 2 kHz on D9/D10: phase-correct PWM, prescaler 1, `ICR1 = 16e6 / (2 × 2000) = 4000`.
+Not `analogWrite()` — its 490 Hz is fixed and you want the 16-bit resolution around low duty.
 
-For 20 kHz on D9/D10: phase-correct PWM, prescaler 1, `ICR1 = 16e6 / (2 × 20000) = 400`.
-`analogWrite()`'s default 490 Hz is audible and puts torque ripple through the gearbox.
+The `(speed, yaw_rate)` command from the VCU maps to two duties:
 
-> **Known limitation.** `SoftwareSerial` disables interrupts while transmitting, so a link
-> message can swallow an encoder edge. At ~200 RPM with a 20-slot disk that is roughly 67
-> edges/s per wheel against ~4 ms blocked per 50 ms window — under half a percent. Harmless
-> for the speed PID, which measures rate; it accumulates in absolute odometry. If odometry
-> drift bothers you, move ACT's link to the hardware UART on D0/D1 and give up the USB
-> serial monitor on that board.
+```
+duty_L = k * (speed - yaw_rate * track/2)
+duty_R = k * (speed + yaw_rate * track/2)
+```
 
----
+Both clamped to `[0, duty_max]`. There is no negative side — that is the forward-only
+constraint showing up in the maths. A hard turn is one side at `duty_max` and the other near
+zero; that is your pivot.
 
-## 6. VIS — ESP32 and the camera
-
-I²C to the VCU on **GPIO21 (SDA) / GPIO22 (SCL)**, slave `0x42`, 400 kHz — unchanged from
-[`esp32_gateway.ino`](arduino_codes/esp32_gateway/esp32_gateway.ino).
-
-| OV7670 | ESP32 | | OV7670 | ESP32 |
-|---|---|---|---|---|
-| D0 | GPIO5 | | XCLK | **GPIO0** |
-| D1 | GPIO18 | | PCLK | GPIO25 |
-| D2 | GPIO19 | | HREF | GPIO26 |
-| D3 | GPIO23 | | VSYNC | GPIO27 |
-| D4 | GPIO36 *(in only)* | | SIOC | GPIO32 |
-| D5 | GPIO39 *(in only)* | | SIOD | GPIO33 |
-| D6 | GPIO34 *(in only)* | | RESET | tie to 3.3 V |
-| D7 | GPIO35 *(in only)* | | PWDN | tie to GND |
-
-Three ESP32 facts this map is built around: **GPIO6–11 are wired to the flash** and must
-stay unused; **GPIO34–39 are input-only**, which is exactly what eight camera data lines
-want; and **GPIO0 is a strapping pin** — if the camera holds it low at boot the ESP32 will
-not start, so unplug the camera before flashing.
-
-`esp32-camera` lists OV7670 support. At **QQVGA grayscale** a frame is 160 × 120 = 19 KB,
-which fits in internal RAM with no PSRAM. Expect around 10 fps.
-
-> **Treat this as the part that might not work.** No frame buffer, ~14 wires, and the ESP32
-> is also running WiFi. Build the car so that everything works with the camera unplugged,
-> and add it last. If it defeats you, the ESP32 goes back to being a pure gateway — which is
-> what your current firmware already does.
+**The safe state is in hardware.** Duty 0 stops the motors, and the 10 kΩ base pull-downs hold
+all four transistors off while the Arduino is in reset or has crashed. That is a genuine
+hardware off-state, and it is the main thing the 10 kΩ resistors buy you.
 
 ---
 
-## 7. What is not in your box
+## 7. Wiring one drive channel
 
-Three items. The first is a hard blocker.
+Build this four times. Two share D9, two share D10.
 
-| # | Part | Why | Consequence if missing |
+```
+                    PACK +
+                      |
+          +-----------+-----------+
+          |                       |
+      [ motor ]              [ 1N4001 ]      band (cathode) to PACK +
+          |                       |          anode to the collector
+          +-----------+-----------+
+                      |
+                      C
+   D9 --[470R]--+--- B  PN2222A
+                |     E
+             [10k]    |
+                |     |
+               GND   GND  -> star point, thick wire
+```
+
+### How the switch actually works
+
+The transistor is a **low-side (common-emitter) switch**: emitter to ground, collector to the
+motor's negative terminal, motor's positive terminal to PACK +. Current flows
+`PACK + → motor → collector → emitter → star ground`, so the transistor sits *in the return
+path*. That is what "low side" means, and it is why all four emitters want thick wire.
+
+**Why the emitter has to be the grounded end.** An NPN conducts when its base is ~0.7 V above
+its *emitter*. With the emitter at 0 V the base needs 0.7 V, and an Arduino pin gives 5 V —
+easy. Put the transistor on the high side instead and its emitter would sit near 4.4 V, so the
+base would need ~5.1 V, which is more than the pack itself. That is why a high-side NPN cannot
+work without a charge pump, and why every simple transistor motor switch is low-side.
+
+**It is a switch, not an amplifier — and that is deliberate.** A BJT in its active region gives
+`I_C = β × I_B`. Here `I_B = (5 − 0.9) / 470 = 8.7 mA`, so with a real h<sub>FE</sub> of ~50 the
+transistor *could* pass 436 mA. The motor only draws 250 mA, so it cannot use all that gain —
+it runs out of collector current and collapses into **saturation**, where V<sub>CE</sub> falls to
+~0.35 V and it behaves like a closed switch dissipating about 90 mW.
+
+The ratio that matters is the **forced β**: `250 mA / 8.7 mA = 29`. As long as that is
+comfortably below the real h<sub>FE</sub>, the transistor is hard on. Under-drive the base and it
+stops being a switch:
+
+| Base resistor | I<sub>B</sub> | Can pass | Result |
 |---|---|---|---|
-| 1 | **Dual H-bridge — L298N or TB6612FNG** | You have four motors and nothing to drive them | **The car cannot move.** No substitute exists in the box |
-| 2 | **2 × slotted optocoupler (LM393 IR speed sensor)** | Your four "speed encoder disks" are chopper wheels — passive plastic | No encoder signal at all: no odometry, no speed PID |
-| 3 | **Resistors: 2 × 1 kΩ, 2 × 2 kΩ, 2 × 10 kΩ** | The two level dividers, plus pull-downs on ENA/ENB | The 5 V Arduino TX lines **destroy `P3_14` and `P1_8`** |
+| **470 Ω** | 8.7 mA | 436 mA | Saturated. V<sub>CE</sub> 0.35 V, **90 mW** |
+| 2.2 kΩ | 1.9 mA | 93 mA | Not saturated — acts as a resistor. V<sub>CE</sub> ~3 V, **750 mW**, and the motor only sees 1.8 V |
 
-Item 3 is unavoidable. The MCX is 3.3 V and only `P3_27`/`P3_28` tolerate 5 V, so every
-Arduino→MCX line needs dividing, and there is no way to build the hub without those two
-lines. A €2 resistor assortment covers all six.
+That second row is the failure mode to understand: a too-large base resistor does not make the
+motor "a bit slower", it makes the transistor a heater. Over-driving the base is free; under-
+driving it is what cooks TO-92 parts.
 
-The 10 kΩ pair is not strictly required but is strongly recommended: the driver's enable
-inputs float while an Arduino is in reset, and floating CMOS inputs mean the wheels can
-twitch. Until you fit them, **keep the wheels off the floor during every reset.**
+**The base resistor is not a precision part.** Anything from about **410 Ω to 570 Ω** works —
+below that an Arduino pin driving two bases exceeds 20 mA, above it the forced β climbs out of
+saturation. **480 Ω is fine**: I<sub>B</sub> 8.5 mA instead of 8.7 mA, forced β 29.3 instead of
+28.7. Nothing in this circuit can tell them apart.
 
-Optional, later: a **5 V USB power bank** so the car can run untethered. Not needed for
-bench work — see §9.
+PWM does not change any of this — the transistor is only ever fully on or fully off, 2000 times
+a second, and duty cycle sets speed.
+
+> **Check the pinout before you solder.** The usual PN2222A TO-92 arrangement is **E–B–C** left
+> to right with the flat face toward you and the leads down — but parts sold as "2N2222" in
+> TO-92 are sometimes C–B–E. Confirm with a multimeter's diode test: from the **base**, both
+> other pins read like a forward diode (~0.7 V); the pin with the *slightly higher* reading is
+> the emitter.
+
+Four things that matter, in order of how badly they bite:
+
+1. **The diode's band goes to PACK +.** Backwards, it is a dead short across the pack the
+   moment you power up.
+2. **Motor − goes to the collector, never straight to ground.** The transistor is *in* the
+   return path; that is what "low side" means.
+3. **The 10 kΩ goes base-to-emitter**, not base-to-supply. It holds the transistor off when the
+   Arduino pin is floating — during reset, during upload, and if the sketch crashes.
+4. **All four emitters go to the star point in thick wire.** On a low-side switch the full
+   motor current returns through the ground net, so give it its own thick run rather than
+   sharing a thin wire with the signal grounds.
+
+Test one channel on the bench before you build the other three. A single miswired diode is
+cheap to find at that point and expensive to find with four of them installed.
 
 ---
 
-## 8. Assumptions you should check before wiring
+## 7b. The 1602A display
 
-Five unknowns. Four are cheap to resolve and one may change the design.
+It is a **bare HD44780**, not an I²C backpack — so it costs six Arduino pins instead of two,
+and it needs three things that a backpack would have handled for you.
+
+| Pin | Goes to | Note |
+|---|---|---|
+| 1 **VSS** | ★ | |
+| 2 **VDD** | ACT 5 V | |
+| 3 **V0** | **10 kΩ trimpot wiper** | Contrast. Pot ends to +5 V and ★ |
+| 4 **RS** | ACT **D6** | |
+| 5 **RW** | **★** | Write-only. Leave it floating and the display drives the data bus back at you |
+| 6 **E** | ACT **D7** | |
+| 7–10 **DB0–DB3** | *unconnected* | 4-bit mode |
+| 11–14 **DB4–DB7** | ACT **D8, D11, D12, A2** | |
+| 15 **A** | +5 V **through 220 Ω** | Backlight anode |
+| 16 **K** | ★ | Backlight cathode |
+
+**The contrast pot is not optional.** With V0 floating or tied to a rail the display is either
+blank or a row of solid blocks, and it looks exactly like a dead display or a wiring fault.
+This is the single most common way a first 1602A build "fails".
+
+**Check the backlight resistor before you connect A.** Many modules carry one on board (often
+marked R8); many do not, and connecting the LED straight to 5 V kills it. Measure between pin
+15 and the 5 V pin with the module unpowered — a few tens of ohms means it is fitted, open
+circuit means fit your own 220 Ω.
+
+Use `LiquidCrystal lcd(6, 7, 8, 11, 12, A2);` — that is `(RS, E, DB4, DB5, DB6, DB7)`, and it
+is in the core, no library to install.
+
+---
+
+## 8. GW — the ESP32 gateway
+
+Four wires. I²C to the VCU on **GPIO21 (SDA) / GPIO22 (SCL)**, slave `0x42`, 400 kHz; **VIN**
+from the 9 V logic pack directly (see §11 — check the regulator, and point the 5 V fan at it)
+with a 470 µF beside it;
+**GND** to the star point. No sensors, no
+display — this node is the route between the laptop and the VCU and nothing else.
+
+**It is a gateway, not a controller.** Everything the laptop sends arrives at the VCU as a
+*request*, and the VCU decides what to act on. That is what stops a dropped WiFi link being a
+safety problem, and it is what makes the fault-injection demo worth watching: you can pull this
+node out mid-run and the car keeps driving, blind to the laptop but not to the world.
+
+Nothing else hangs off it. **Roughly 30 GPIO are unused** — by a wide margin the emptiest
+board in the project, so if anything later needs pins, this is where they are.
+
+Pins to avoid on any ESP32 DevKit: **GPIO6–11** (wired to the SPI flash — using one stops the
+board booting), **GPIO34/35/36/39** (input only, they cannot drive anything), and
+**GPIO0/2/5/12/15** (strapping pins that decide how the chip boots; GPIO12 pulled high at
+reset sets the flash to 1.8 V and the board will not start).
+
+---
+
+## 9. The parts you still have to buy
+
+**The 1 kΩ / 2 kΩ dividers.** The MCX is 3.3 V and **only `P3_27`/`P3_28` tolerate 5 V**. Both
+Arduino TX lines run into `P3_14` and `P1_8`, which do not. Without dividing them you destroy
+those pins, and the hub cannot exist without those two lines.
+
+```
+Arduino D5 ----[ 1 kOhm ]----+---- MCX RX
+                             |
+                        [ 2 kOhm ]      5 V x 2/(1+2) = 3.33 V
+                             |
+                            GND
+```
+
+The MCX→Arduino direction is plain wire: 3.3 V clears the AVR's 3.0 V V<sub>IH</sub>.
+
+**The base resistors and pull-downs.** 4 × 470 Ω and 4 × 10 kΩ. See §7.
+
+**The LCD contrast trimpot**, 10 kΩ, and a 220 Ω for its backlight if the module has no
+on-board resistor. See §7b.
+
+**The flyback diodes are done — 1N4001, four of them, already in hand.** Ratings are
+comfortable: 1 A against 250 mA running and 800 mA at stall, 50 V against a 4.8 V pack. The
+only consequence is the PWM frequency, covered in §1.
+
+---
+
+## 10. Assumptions to check before wiring
 
 | Item | Assumed | How to check | If wrong |
 |---|---|---|---|
-| **SFM-27** | Unknown — A0 + A1 held for it | Read the silkscreen and count the pins | May need I²C (A4/A5 are free on PERC) or more pins |
-| **8×8 matrix** | MAX7219 module, 3 pins | Is there a 24-pin DIP behind the matrix? | A bare 1088AS needs 16 pins and will not fit — it would have to move to the ESP32 or be dropped |
-| **7-segment** | TM1637 module, 2 pins | Count the header pins: 4 = TM1637 | A bare display needs 8–12 pins; ACT has 4 spare, so it would have to be a single digit |
-| **16×2 LCD** | PCF8574 I²C backpack, 2 pins | Is there a small board soldered to the back? | Bare HD44780 needs 6 pins — ACT has 4 spare, so something else moves to PERC |
-| **HW-123** | MPU6050 at 0x68 | Read `WHO_AM_I` (reg `0x75`) | `0x70` = MPU6500 — different register map, different driver |
-| **Battery holders** | 4 × AA in series = 6 V | Count the cells | Two 4-cell packs in series = 12 V, too much for MG90S and for the TT motors |
+| ~~SFM-27~~ | **Resolved: a buzzer on D9** | `b1` / `b2` in test_perc.ino | Active vs passive needs opposite drive — see §5 |
+| ~~16×2 LCD~~ | **Resolved: it is a 1602A**, bare HD44780 | — | Six pins on ACT, plus a contrast pot — see §7b |
+| ~~HW-123~~ | **Resolved: it is an MPU6050** | — | HW-123 is a common silkscreen on GY-521 MPU6050 boards. `WHO_AM_I` (reg `0x75`) reads `0x68` |
+| **Battery holders** | 4 × AA in series | Count the cells | Two 4-cell packs in series = 12 V, which cooks the TT motors and cooks the buck module's output setting along with them |
 
 ---
 
-## 9. Power
+## 11. Power — three supplies, one star point
 
-Detail on [`SCHEMA_POWER.svg`](SCHEMA_POWER.svg). Two supplies:
+Detail on [`SCHEMA_POWER.svg`](SCHEMA_POWER.svg).
 
 ```
-4 × AA pack (6 V alkaline / 4.8 V NiMH) ──┬──> motor driver VM ──> 4 × DC gear motor
-                                          └──> MG90S V+ (both servos)
+TRACTION PACK  4 × AA NiMH 4.8 V ────> 4 × DC motor, each via its PN2222A
 
-USB 5 V (laptop, or one power bank later) ──> VCU, PERC, ACT, ESP32 — each on its own port
+LOGIC PACK     9 V ................ ┬──> BUCK 9->5 V ──> MCX J3-10 (SYS_5V0)
+                                    │                   NOT J3-16 - see below
+                                    ├──> ESP32 VIN              direct, fan on the regulator
+                                    └──> 12 V fan               runs at ~70 % on 9 V
 
-                    PACK NEGATIVE  ══════  BOARD GROUND      <-- the one wire everyone forgets
+TRACTION PACK ...................... └──> 5 V fan                runs at ~96 % on 4.8 V
+
+USB 5 V        laptop / power bank ─┬──> PERC Arduino
+                                    └──> ACT Arduino
+
+     ALL THREE NEGATIVES ══════ STAR POINT      <-- the only thing that must be shared
 ```
 
-**You have no regulator, so logic runs from USB.** That is not a compromise — it is the
-correct bring-up configuration. Every board has a USB port and its own regulator, and you
-need all four serial monitors open anyway. The pack powers motion only.
+### Linking boards that run on different supplies
 
-Two things follow from that:
+**Independent supplies are fine. A shared ground is not optional.** A UART line is a voltage
+*relative to ground*; if two boards do not agree on where zero is, the receiver sees noise, or
+current finds a path back through the signal wires. So: traction pack −, logic pack −, USB
+ground, all four board grounds, all four transistor emitters and every component GND meet at
+one point.
 
-1. **The two grounds must be tied.** Battery negative to board ground. Without it the motor
-   driver has no reference for its logic inputs and nothing works — and it looks exactly
-   like a firmware bug.
-2. **Never feed 6 V into an Arduino 5 V pin or into the MCX.** The pack goes to the driver's
-   VM and the servos' V+, and nowhere else.
+**Nothing else changes.** Logic levels do not depend on which supply feeds a board — an
+Arduino still drives 5 V, the MCX still needs 3.3 V — so **both 1 kΩ / 2 kΩ dividers stay
+exactly as they are.**
 
-**Servos on the traction pack, not the Arduino.** An MG90S stalls at ~700 mA; two of them
-will brown out a board fed from a USB port. They also share the pack with the motors, so
-expect the scanning head to twitch when the motors start — if that matters, a second pack
-fixes it.
+### Do not run the ESP32 from an Arduino 3.3 V pin
 
-**Prefer NiMH.** The MG90S window is 4.8–6.0 V. Four NiMH cells sit at 4.8 V, right in it.
-Four fresh alkalines sit at ~6.4 V, just over.
+| An Arduino 3.3 V pin gives | | An ESP32 needs | |
+|---|---|---|---|
+| Uno R3 (LP2985) | 150 mA | idle | 40 mA |
+| Nano (FT232RL) | 50 mA | WiFi average | **100 mA** |
+| CH340 clone | 30 mA | WiFi TX burst | **500 mA** |
+
+Even the *average* exceeds what a CH340 board's 3.3 V pin can give. This is not marginal — the
+ESP32 would brown out and reset in a loop, and you would be cooking the Arduino's regulator
+while it happened.
+
+**Feed it from the logic pack at VIN instead**, with a 470 µF close to the board to absorb the
+transmit bursts. Its on-board AMS1117 makes the 3.3 V. That also puts the ESP32 on the same
+supply as the MCX — which is tidy, because they are the two ends of the same I²C link.
+
+*(If you would rather not add the pack yet: an Arduino's **5 V** pin into ESP32 **VIN** does
+work, with the same 470 µF. You are then limited by that Arduino's USB port.)*
+
+### Feeding the ESP32 from 9 V
+
+**Two things to settle before the pack goes anywhere near the board.**
+
+#### 1. Check which regulator your DevKit has
+
+`VIN` goes to an on-board linear regulator, and not all DevKits fit the same one:
+
+| What you see next to the USB socket | Part | Max input | 9 V? |
+|---|---|---|---|
+| Fat 4-pin tab package (SOT-223) | **AMS1117-3.3** | **15 V** | Fine |
+| Tiny 5-pin (SOT-23-5) | ME6211, RT9013 and friends | **~6 V** | **Destroys it** |
+
+Most ESP32 DevKit V1 boards use the AMS1117. **Look before you connect the pack** — this is not
+a recoverable mistake.
+
+#### 2. A divider is not the answer, and it is worth knowing why
+
+It is the obvious-looking fix and it does not work. A divider sets its output by *ratio*, and
+the ratio only holds while nothing draws from it. Put a load on the tap and it sits in parallel
+with the lower resistor and the voltage collapses. Sized for 6 V (`R1 = R2/2`), the tap behaves
+like a 6 V source behind `R2/3`:
+
+| R2 | R1 | Idle current | Burnt idle | V at 100 mA | V at 500 mA |
+|---|---|---|---|---|---|
+| 3 kΩ | 1.5 kΩ | 2 mA | 0.02 W | **0 V** | **0 V** |
+| 300 Ω | 150 Ω | 20 mA | 0.18 W | **0 V** | **0 V** |
+| 30 Ω | 15 Ω | 200 mA | 1.8 W | 5.0 V | **1.0 V** |
+| 15 Ω | 7.5 Ω | 400 mA | **3.6 W** | 5.5 V | **3.5 V** |
+
+The ESP32 pulls ~100 mA average and ~500 mA in a WiFi burst, and needs about **4.4 V** at VIN.
+So the only divider that even boots it wastes **400 mA continuously into 3.6 W of resistors**
+and *still* resets the board on every transmit.
+
+**Four 1N4001 in series would work** — a diode's drop moves only logarithmically with current,
+0.70 V at 100 mA and 0.85 V at 500 mA, giving 6.2 V idle and 5.6 V under burst. Worth doing if
+you ever buy four spare. The four you have are committed to motor flyback.
+
+#### What we do instead: 9 V direct, and cool it
+
+9 V on VIN is inside the AMS1117's rating. The only real objection is heat — and you have fans.
+
+| VIN | Regulator dissipation | Still air | With the 5 V fan on it |
+|---|---|---|---|
+| 6.2 V (via diodes) | 0.32 W | +32 °C | +14 °C |
+| **9 V direct** | **0.68 W** | +68 °C — hot | **+31 °C — fine** |
+
+Moving air roughly halves the rise on a SOT-223, which takes 9 V direct from *marginal* to
+*comfortable* and costs nothing you do not already own.
+
+### The two fans
+
+They are not decoration. **They fix the one genuinely marginal thermal spot in the build.**
+
+| Fan | Supply | Aim it at | Why |
+|---|---|---|---|
+| **12 V type** | **Logic pack +, 9 V** | The four PN2222A | A stalled transistor puts 0.5–1.0 W into a TO-92 rated 0.625 W |
+| **5 V type** | **Traction pack +, 4.8 V** | The ESP32's regulator | Lets VIN take 9 V without cooking, as above |
+
+```
+PN2222A, stalled   0.75 W in TO-92    still air  +150 °C      forced air  +68 °C
+AMS1117 at 9 V     0.68 W in SOT-223  still air   +68 °C      forced air  +31 °C
+```
+
+That +150 °C is the number that matters. The drive stage has always been the weakest thermal
+point here — §7 — and the 12 V fan is what turns it from *do not hold it stalled* into
+*comfortable*.
+
+**Neither fan runs at its rated voltage, and neither cares.** A 12 V brushless fan on 9 V turns
+at roughly 70 % — quieter, still plenty of air. A 5 V fan on 4.8 V is barely slower.
+
+> **Wire both permanently on.** Switching an inductive load needs a flyback diode across it, and
+> there are none spare. Permanently-on needs nothing.
+
+> **Take the fan supplies from the pack terminals**, not by daisy-chaining through a board's
+> supply pin. Brushless fans put commutation spikes on their supply wires, and you do not want
+> those arriving at the MCX's VIN. Keep the fan wiring away from the UART and I²C runs too.
+
+### Supply windows — what the input can be, per board
+
+| Board | Input | Absolute | Use | Why that ceiling |
+|---|---|---|---|---|
+| **FRDM-MCXA153** | `J3-10` SYS_5V0 | 5 V ±5 % | **5.0 V** | **This is the one.** Regulated 5 V only, no headroom — that is what the buck module is for |
+| | `J3-16` P5-9V_VIN | — | **never** | Dead end: J22 not populated, path to SYS_5V0 disabled by default. See §4 |
+| | MCU-Link USB | 5 V | 5 V | The only input that also gives you VCOM |
+| **Arduino Uno / Nano** | VIN pin or barrel | 6 – 20 V | **7 – 9 V** | Below 7 V the 5 V rail sags on regulator dropout |
+| | 5V pin | 4.8 – 5.2 V | 5.0 V | Bypasses the regulator — never with USB as well |
+| | USB | 5 V | 5 V | What this design uses |
+| **ESP32 DevKit** | VIN / 5V pin | 4.75 – 12 V | **5 – 9 V** | AMS1117 heat, not the datasheet, sets this. 9 V is fine **with the fan on it** |
+| | 3V3 pin | 3.0 – 3.6 V | 3.3 V | Bypasses AMS1117 — needs a solid 500 mA |
+| | micro-USB | 5 V | 5 V | Fine, but then it is a fourth cable |
+
+**The upper limit is thermal, not electrical.** A linear regulator burns
+`(Vin − Vout) × I` as heat, so what the datasheet allows and what the board survives are
+different numbers. For the ESP32's AMS1117-3.3 at ~120 mA WiFi average:
+
+| VIN | Dissipation | Junction rise (SOT-223, ~100 °C/W) |
+|---|---|---|
+| 5 V | 0.20 W | +20 °C |
+| **6 V** | **0.32 W** | **+32 °C** — fine |
+| 9 V | 0.68 W | +68 °C — hot |
+| 12 V | 1.04 W | +104 °C — thermal shutdown |
+
+Transmit bursts are far worse instantaneously (1.35 W at 6 V) but last milliseconds, so they
+do not set the junction temperature; the average does. That is also what the 470 µF is for.
+
+> **The 9 V logic pack feeds the MCX and the ESP32 directly.** The Arduinos stay on USB; if you
+> ever want them off a pack too, take them from the same 9 V — their regulators want 7 V or
+> more, so 9 V suits them and 6 V would not.
+
+### Two packs, two chemistries
+
+This is the non-obvious part — the packs want **opposite** cells:
+
+| Pack | Cells | Why |
+|---|---|---|
+| **Traction** | 4 × AA **NiMH** (4.8 V) | Either chemistry works now the servos are gone — the TT motors take 3–6 V. NiMH still holds its voltage under a stall where alkalines sag |
+| **Logic** | **9 V** (6 × AA alkaline preferred) | Top of the MCX 5–9 V window, taken directly; the ESP32 takes the same 9 V with a fan on its regulator. Also runs the 12 V fan. **Not a PP3 block** — too little capacity and too much internal resistance |
+
+Same holder, different cells. Label them.
+
+### The MCX needs a buck module, and 9 V direct will not do
+
+The FRDM's own `VIN` pin is not wired to anything that works (§4). So the 9 V pack reaches the
+MCX through a **9 V → 5 V step-down module** — an MP1584 or LM2596 mini board, whatever the kit
+has — and its output goes to `J3-10`:
+
+| Buck module | To |
+|---|---|
+| IN + | **Logic pack +**, 9 V |
+| IN − | ★ star point |
+| **OUT +** | MCX **J3-10** (`SYS_5V0`) |
+| OUT − | ★ star point |
+
+**Set the output to 5.0 V with the board disconnected, and measure it.** Most of these modules
+ship with the trimpot wherever it landed, and `SYS_5V0` is a 5 V ±5 % rail with no headroom —
+it goes straight into the LDO that feeds a 3.3 V MCU. Anything much over 5.25 V is out of
+spec, and a module wound up to 12 V from a previous project will destroy the board on contact.
+A linear 7805 works too: the board draws well under 200 mA, so about 0.8 W in a TO-220, warm
+but survivable and one less thing to set wrong.
+
+> ### Never both at once
+>
+> `SYS_5V0` is the same rail the two USB connectors feed. Putting the buck module on it while
+> a USB cable is plugged in back-feeds one source into the other, and that is how boards and
+> laptop USB ports die. **USB in, pack off. Pack on, USB out.** No exceptions, and a switch on
+> the pack is worth fitting for exactly this reason.
+
+### What the MCX pack costs you
+
+Running the MCX from the pack instead of MCU-Link USB means **no VCOM**: no console, no
+FreeMASTER, no debugger. With no cable in J15 the LPC55S69 that provides them is unpowered.
+During development keep the USB cable in and the pack switched off; the pack is for the
+untethered demo run, when the browser is your only interface anyway.
+
+Wire the pack now anyway — the ESP32 needs it for that run.
+
+### Power-up order
+
+Logic pack first, or everything together. A powered Arduino driving an unpowered MCX pushes
+current through the MCX's ESD diodes; the 1 kΩ series resistor in each divider limits it to a
+harmless few mA, which is a second reason those dividers are not optional.
 
 ---
 
-## 10. Bring-up order
+## 12. Bring-up order
 
 ```
 [ ] Tie the pack negative to board ground. Verify continuity across all four boards
 [ ] UART links + both dividers, both directions            <- you already have this working
-[ ] I2C scan from the MCX: expect 0x42 (ESP32) and 0x68 or 0x69 (HW-123)
-[ ] HW-123: read WHO_AM_I before writing a single driver line
-[ ] Scanning head: servos first, sweep with no ultrasonic mounted. Then add ranging
-[ ] PIR: it needs ~1 minute to settle. Do not debug it in the first minute
-[ ] Displays: matrix, 7-seg, LCD — each alone, each confirmed
+[ ] I2C scan from the MCX: expect 0x42 (ESP32) and 0x68 (MPU6050)
+[ ] MPU6050: confirm WHO_AM_I (reg 0x75) reads 0x68 before writing driver code
+[ ] Build ONE drive channel on a breadboard. Check the diode band before power
+[ ] That channel: duty 0, 30 %, 100 %, then pull the Arduino reset with the motor
+    spinning and confirm it stops and stays stopped. Only then build the other three
+[ ] All four channels, WHEELS OFF THE FLOOR. Watch for a warm transistor
+[ ] Link timeout: pull the ACT cable, confirm all four motors stop
+[ ] Both sonars: one at a time, then alternating. Watch for cross-talk
+[ ] PIR — give it a full minute to settle before you debug it
+[ ] LCD alone: banner, then the contrast pot until it is readable
 [ ] SFM-27: identify it. Only then wire it
-[ ] Motors ON BLOCKS. Prove STBY / ENA-low stops them BEFORE anything else
-[ ] Encoders: turn each wheel by hand, check direction and count
-[ ] Only then put it on the floor
+[ ] Gyro heading hold on blocks, then on the floor
+[ ] Gateway: I2C reads climbing on the ESP32, browser reaches 192.168.4.1
 ```
-
-Note on odometry: this is a 4WD skid-steer chassis, so every turn scrubs the tyres and your
-encoder odometry degrades during rotation. Trust it going straight, trust the IMU for
-heading, and do not expect dead reckoning through a turn to be accurate.
 
 ---
 
-## 11. Sources
+## Appendix A — Complete netlist
+
+Every wire in the vehicle. Tick them off as you go. `★` = star ground (§11).
+
+### A.1 Inter-board links
+
+| From | | To | Wire |
+|---|---|---|---|
+| MCX **J2-2** | `P3_15`, marked **D8** | PERC **D4** | Direct |
+| PERC **D5** | | 1 kΩ → MCX **J2-4** (`P3_14`, marked **D9**); 2 kΩ from the junction to ★ | **Divider** |
+| MCX **J2-20** | `P1_9`, marked **D19** | ACT **D4** | Direct |
+| ACT **D5** | | 1 kΩ → MCX **J2-18** (`P1_8`, marked **D18**); 2 kΩ from the junction to ★ | **Divider** |
+| MCX **J6 SCL** | `P3_27`, mikroBUS | ESP32 **GPIO22** *and* MPU6050 **SCL** | Shared, 3.3 V |
+| MCX **J6 SDA** | `P3_28`, mikroBUS | ESP32 **GPIO21** *and* MPU6050 **SDA** | Shared, 3.3 V |
+| MCX **J3-12** or **J3-14** | marked **GND** | ★ | |
+
+### A.2 VCU — FRDM-MCXA153 and the MPU6050
+
+| From | | To |
+|---|---|---|
+| MCX **J3-8** | marked **3V3**, `LDO_3V3` | MPU6050 **VCC** — 3.3 V, **not** 5 V |
+| MPU6050 **GND** | | ★ |
+| MPU6050 **AD0** | | ★ — this is what selects address 0x68 |
+| MPU6050 **XDA**, **XCL**, **INT** | | *leave unconnected* |
+| MCX **MCU-Link USB** | the micro-B socket | Laptop — VCOM, debug, and the board's 5 V during development |
+| MCX **J3-10** | marked **5V**, `SYS_5V0` | **BUCK MODULE OUT +**, set to 5.0 V and measured — for the untethered run. **Never with a USB cable also in the board** |
+| MCX **J3-16** | marked **VIN**, `P5-9V_VIN` | **nothing.** Dead end on a stock board — §4 |
+
+The MPU6050's pin names are printed on the module itself, so that side needs no decoding —
+it is only the MCX end that has three names for everything.
+
+### A.3 PERC — Arduino 1
+
+| From | To |
+|---|---|
+| PERC **D3** | HC-SR04P **front ECHO** |
+| PERC **D7** | HC-SR04P **front TRIG** |
+| PERC **D2** | HC-SR04P **back ECHO** |
+| PERC **D6** | HC-SR04P **back TRIG** |
+| PERC **D8** | HC-SR501 **OUT** |
+| PERC **D9** | 220 Ω → SFM-27 **IN** |
+| PERC **5V** | both HC-SR04P **VCC**, HC-SR501 **VCC** |
+| PERC **GND**, both HC-SR04P **GND**, HC-SR501 **GND**, SFM-27 **GND** | ★ |
+
+Nothing on this node touches the traction pack. With the servos gone it is entirely USB-powered.
+
+### A.4 ACT — Arduino 2
+
+| From | To |
+|---|---|
+| ACT **D9** | 470 Ω → **Q1 base**, and a second 470 Ω → **Q2 base** (left pair) |
+| ACT **D10** | 470 Ω → **Q3 base**, and a second 470 Ω → **Q4 base** (right pair) |
+| ACT **D6** | 1602A **RS** (pin 4) |
+| ACT **D7** | 1602A **E** (pin 6) |
+| ACT **D8** | 1602A **DB4** (pin 11) |
+| ACT **D11** | 1602A **DB5** (pin 12) |
+| ACT **D12** | 1602A **DB6** (pin 13) |
+| ACT **A2** | 1602A **DB7** (pin 14) |
+| ACT **5V** | 1602A **VDD** (pin 2), trimpot end 1 |
+| ACT **5V** | 220 Ω → 1602A **A** (pin 15) *— skip if the module has its own* |
+| 1602A **V0** (pin 3) | **Trimpot wiper** |
+| ACT **GND** | ★ |
+| 1602A **VSS** (1), **RW** (5), **K** (16), trimpot end 3 | ★ |
+| 1602A **DB0–DB3** (7–10) | *unconnected* |
+
+### A.5 Drive — build four times, Q1…Q4
+
+| From | To |
+|---|---|
+| **PACK +** | Motor *n* terminal 1 |
+| Motor *n* terminal 2 | **Q*n* collector** |
+| **Q*n* collector** | 1N4001 **anode** |
+| 1N4001 **cathode** (banded end) | **PACK +** |
+| **Q*n* base** | 470 Ω from ACT D9 or D10 (see A.4) |
+| **Q*n* base** | 10 kΩ to **Q*n* emitter** |
+| **Q*n* emitter** | ★ — thick wire |
+
+Q1, Q2 = left pair (from D9). Q3, Q4 = right pair (from D10).
+
+### A.6 GW — ESP32
+
+| From | To |
+|---|---|
+| ESP32 **GPIO22** | MCX **J6 SCL** — see A.1 |
+| ESP32 **GPIO21** | MCX **J6 SDA** — see A.1 |
+| ESP32 **VIN** | **LOGIC PACK +** (9 V) directly. **Not** the 3V3 pin, not an Arduino, and **not through a divider** — see §11. Confirm the board has an AMS1117 first, and put the 5 V fan on it |
+| ESP32 **VIN** ↔ **GND** | 470 µF, as close to the board as you can get it |
+| ESP32 **GND** | ★ |
+
+### A.7 Power
+
+| From | To |
+|---|---|
+| **Traction pack +** (NiMH 4.8 V) | 4 × motor terminal 1, 4 × diode cathode, **5 V fan +** |
+| **Logic pack +** (9 V) | **Buck module IN +**, ESP32 **VIN**, **12 V fan +** |
+| **Buck module OUT +** (5.0 V) | MCX **J3-10** — never while a USB cable is in the MCX |
+| **USB 5 V** | PERC and ACT, one cable each |
+| **Traction pack −** | ★ |
+| **Logic pack −** | ★ |
+| **USB ground** (via the boards) | ★ |
+| ★ | MCX GND, PERC GND, ACT GND, ESP32 GND, 4 × transistor emitter, **both fan −**, every component GND |
+
+Three supplies, one reference. Miss the star point and the UART links and I²C have no common
+zero — which looks exactly like a firmware bug.
+
+---
+
+## 13. Sources
 
 - [UM12012 FRDM-MCXA153 Board User Manual Rev. 2.0](https://akizukidenshi.com/goodsaffix/FRDM-MCXA153_User%20Manual.pdf) — pinouts, Figures 11–12 and Table 14
 - `distributed_ecu/frdmmcxa153/frdmmcxa153/board.h` — LED and switch pins, verified in-tree
