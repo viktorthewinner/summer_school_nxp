@@ -1313,8 +1313,18 @@ int main(void)
     s_actAt  = s_keyAt;
     s_percAt = s_keyAt;
 
-    (void)imu_wake();   /* absent is fine - imu_service() keeps retrying */
-
+    /* SAY SOMETHING BEFORE TOUCHING THE I2C BUS.
+     *
+     * This banner used to come after the IMU wake-up, and that was a real
+     * bug: an LPI2C transfer on a stuck bus does not fail, it waits, so a
+     * missing MPU6050 module - which is also the bus's only pull-up - hung
+     * the board here with NOTHING printed. Identical, from the outside, to a
+     * board that was never flashed or never powered.
+     *
+     * The retry limit in CMakeLists.txt means it can no longer hang at all.
+     * The ordering stays anyway: the first thing this node does should be to
+     * prove it is alive, and no diagnostic should sit behind the thing it is
+     * meant to diagnose. */
     PRINTF("\r\n");
     PRINTF("=============================================================\r\n");
     PRINTF(" FRDM-MCXA153 hub   -   MCX + ARD1 + ARD2 + ESP32 gateway\r\n");
@@ -1334,6 +1344,21 @@ int main(void)
     PRINTF(" Duty is capped at %u %%. WHEELS OFF THE FLOOR until proven.\r\n",
            (unsigned)DRIVE_DUTY_MAX);
     PRINTF(" Self-test: i2c  imu  led  btn  tx1  tx2\r\n");
+    PRINTF("-------------------------------------------------------------\r\n");
+
+    /* Now the bus, with the banner already out. A failure here is reported,
+     * not fatal - the two UART links and the drive loop do not need I2C. */
+    if (imu_wake())
+    {
+        PRINTF(" IMU  : MPU6050 awake at 0x%02X\r\n", (unsigned int)IMU_ADDR);
+    }
+    else
+    {
+        PRINTF(" IMU  : NO ANSWER at 0x%02X.\r\n", (unsigned int)IMU_ADDR);
+        PRINTF("        Its 2.2k are the ONLY pull-ups on this bus, so if the\r\n");
+        PRINTF("        module is unplugged the ESP32 gateway is dead too.\r\n");
+        PRINTF("        Run 'i2c' to scan. The Arduino links work regardless.\r\n");
+    }
     PRINTF("-------------------------------------------------------------\r\n");
     PRINTF("> ");
 

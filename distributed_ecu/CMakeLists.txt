@@ -16,6 +16,23 @@ include(${SdkRootDirPath}/CMakeLists.txt)
 
 include(${board}/board_files.cmake)
 
+# Bound every LPI2C wait.
+#
+# The SDK default is I2C_RETRY_TIMES = 0, which its own header documents as
+# "keep waiting until the flag is assert/deassert" - an UNBOUNDED wait. On this
+# board the I2C bus has no pull-ups of its own: it borrows the 2.2k on the
+# MPU6050 module. Unplug that module, or drop one of the two wires, and SCL or
+# SDA sits low - so LPI2C_MasterTransferBlocking() never returns and the whole
+# vehicle control loop stops dead, silently, with no console output at all.
+#
+# A car must not be one loose wire away from a hang. 100000 polls is far longer
+# than any real transaction at 400 kHz and still returns in well under a
+# millisecond, so a dead bus degrades to "the gateway and the IMU are absent"
+# instead of taking the drive loop with it.
+mcux_add_macro(
+    CC "-DI2C_RETRY_TIMES=100000"
+)
+
 mcux_add_source(
     SOURCES led_blinky.c
             link.c

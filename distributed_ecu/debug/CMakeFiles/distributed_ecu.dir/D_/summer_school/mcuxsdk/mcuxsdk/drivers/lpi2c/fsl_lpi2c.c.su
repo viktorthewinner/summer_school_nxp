@@ -21,7 +21,7 @@ D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.h:1170:20:LPI2C_SlaveDi
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:242:10:LPI2C_GetInstance	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:270:17:LPI2C_GetCyclesForWidth	40	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:315:10:LPI2C_MasterCheckAndClearError	24	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:382:17:LPI2C_MasterWaitForTxReady	32	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:382:17:LPI2C_MasterWaitForTxReady	40	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:430:10:LPI2C_CheckForBusyBus	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:471:6:LPI2C_MasterGetDefaultConfig	16	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:504:6:LPI2C_MasterInit	56	static
@@ -29,7 +29,7 @@ D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:606:6:LPI2C_MasterDei
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:631:6:LPI2C_MasterConfigureDataMatch	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:662:6:LPI2C_MasterSetBaudRate	72	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:812:10:LPI2C_MasterStart	24	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:853:10:LPI2C_MasterStop	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:853:10:LPI2C_MasterStop	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:917:10:LPI2C_MasterReceive	48	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1000:10:LPI2C_MasterSend	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1040:10:LPI2C_MasterTransferBlocking	56	static
@@ -49,8 +49,8 @@ D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1784:6:LPI2C_SlaveGet
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1823:6:LPI2C_SlaveInit	48	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1897:6:LPI2C_SlaveDeinit	24	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1924:17:LPI2C_SlaveCheckAndClearError	24	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1968:10:LPI2C_SlaveSend	40	static
-D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:2059:10:LPI2C_SlaveReceive	40	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:1968:10:LPI2C_SlaveSend	48	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:2059:10:LPI2C_SlaveReceive	48	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:2157:6:LPI2C_SlaveTransferCreateHandle	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:2219:10:LPI2C_SlaveTransferNonBlocking	32	static
 D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c:2283:10:LPI2C_SlaveTransferGetCount	32	static
