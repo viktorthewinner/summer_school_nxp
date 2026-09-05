@@ -65,6 +65,21 @@ bool LINK_PollLine(link_id_t id, char *out, size_t outSize);
 uint32_t LINK_GetDroppedCount(link_id_t id);
 
 /*!
+ * @brief Take ONE raw byte from a UART channel, bypassing line assembly.
+ *
+ * For debugging only. LINK_PollLine() throws away anything that never
+ * terminates - a stream of garbage from a baud mismatch, or a floating pin
+ * chattering - so a channel that is receiving nonsense looks exactly like one
+ * receiving nothing. This is how you tell them apart.
+ *
+ * Bytes taken here do not reach LINK_PollLine(), so do not run both on the
+ * same channel at once. Not valid for LINK_GW.
+ *
+ * @retval true  a byte was available and copied to @p byte
+ */
+bool LINK_PollByte(link_id_t id, uint8_t *byte);
+
+/*!
  * @brief Did the most recent gateway I2C transaction succeed?
  *
  * The gateway produces no bytes both when it is idle and when it is not

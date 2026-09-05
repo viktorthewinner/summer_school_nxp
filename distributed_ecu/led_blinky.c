@@ -207,9 +207,90 @@ static int      s_wasAct  = -1;
 static int      s_wasGw   = -1;
 static int      s_wasKeys = -1;
 
+/* Raw byte view, per channel. While on, that channel's bytes go to the
+ * console instead of being assembled into lines - so it stops working as
+ * a link for as long as it is on. That is the point. */
+static bool     s_raw[2];
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
+
+/* ===========================================================================
+ * Hard fault reporter
+ *
+ * The SDK's HardFault_Handler is `b .` - an infinite loop. Under a debugger
+ * that lands you on that instruction in startup_MCXA153.S, which tells you a
+ * fault happened and nothing whatsoever about where or why. Without a
+ * debugger it looks identical to a board that is simply dead.
+ *
+ * This replaces it (the SDK's is .weak) and prints the fault status registers
+ * and the stacked return address over the VCOM before parking. Feed the PC it
+ * prints to:
+ *
+ *     arm-none-eabi-addr2line -e debug/distributed_ecu.elf <pc>
+ *
+ * and you have the source line that faulted.
+ *
+ * The naked wrapper picks the right stack - MSP or PSP, from bit 2 of the
+ * EXC_RETURN value in LR - and hands the exception frame to the C function.
+ * Getting that wrong is the classic way to print convincing nonsense.
+ * ======================================================================== */
+
+extern uint32_t __StackLimit;   /* from the linker script */
+
+void hard_fault_report(uint32_t *frame)
+{
+    uint32_t cfsr = SCB->CFSR;
+
+    PRINTF("\r\n\r\n*** HARD FAULT ***\r\n");
+    PRINTF("  PC   %08X   <- addr2line this one\r\n", (unsigned int)frame[6]);
+    PRINTF("  LR   %08X   caller\r\n", (unsigned int)frame[5]);
+    PRINTF("  PSR  %08X\r\n", (unsigned int)frame[7]);
+    PRINTF("  R0-R3 %08X %08X %08X %08X   R12 %08X\r\n",
+           (unsigned int)frame[0], (unsigned int)frame[1],
+           (unsigned int)frame[2], (unsigned int)frame[3],
+           (unsigned int)frame[4]);
+    PRINTF("  HFSR %08X   CFSR %08X\r\n",
+           (unsigned int)SCB->HFSR, (unsigned int)cfsr);
+
+    /* The bits that actually name the fault. */
+    if ((cfsr & (1u << 0))  != 0u) { PRINTF("  IACCVIOL  - fetched from a bad address\r\n"); }
+    if ((cfsr & (1u << 1))  != 0u) { PRINTF("  DACCVIOL  - data access to a bad address\r\n"); }
+    if ((cfsr & (1u << 7))  != 0u) { PRINTF("  MMARVALID - at %08X\r\n", (unsigned int)SCB->MMFAR); }
+    if ((cfsr & (1u << 8))  != 0u) { PRINTF("  IBUSERR   - instruction bus error\r\n"); }
+    if ((cfsr & (1u << 9))  != 0u) { PRINTF("  PRECISERR - bad data address\r\n"); }
+    if ((cfsr & (1u << 10)) != 0u) { PRINTF("  IMPRECISERR - late bus error, PC is approximate\r\n"); }
+    if ((cfsr & (1u << 15)) != 0u) { PRINTF("  BFARVALID - at %08X\r\n", (unsigned int)SCB->BFAR); }
+    if ((cfsr & (1u << 16)) != 0u) { PRINTF("  UNDEFINSTR - undefined instruction\r\n"); }
+    if ((cfsr & (1u << 17)) != 0u) { PRINTF("  INVSTATE  - bad execution state, usually a corrupt LR\r\n"); }
+    if ((cfsr & (1u << 18)) != 0u) { PRINTF("  INVPC     - bad return, usually a smashed stack\r\n"); }
+    if ((cfsr & (1u << 24)) != 0u) { PRINTF("  UNALIGNED - unaligned access\r\n"); }
+    if ((cfsr & (1u << 25)) != 0u) { PRINTF("  DIVBYZERO - divide by zero\r\n"); }
+
+    /* A frame pointer near the bottom of the stack means it overflowed, and
+     * then everything above is suspect - including the PC just printed. */
+    PRINTF("  SP   %08X   limit %08X%s\r\n",
+           (unsigned int)(uint32_t)frame, (unsigned int)(uint32_t)&__StackLimit,
+           ((uint32_t)frame < ((uint32_t)&__StackLimit + 64u))
+               ? "   <- STACK OVERFLOW" : "");
+
+    PRINTF("\r\n  Halted. Reset the board.\r\n");
+
+    for (;;)
+    {
+    }
+}
+
+__attribute__((naked)) void HardFault_Handler(void)
+{
+    __asm volatile(
+        "  tst   lr, #4          \n" /* EXC_RETURN bit 2: which stack? */
+        "  ite   eq              \n"
+        "  mrseq r0, msp         \n"
+        "  mrsne r0, psp         \n"
+        "  b     hard_fault_report\n");
+}
 
 /* 1 kHz. Everything timed in this file hangs off s_ms.
  *
@@ -514,6 +595,31 @@ static void test_extra_pins_init(void)
     const gpio_pin_config_t gpioOut = { kGPIO_DigitalOutput, 1 };
     const gpio_pin_config_t gpioIn  = { kGPIO_DigitalInput, 0 };
 
+    /* Ungate and un-reset GPIO1 and GPIO3 BEFORE touching either of them.
+     *
+     * GPIO_PinInit() looks like it does this for you - it calls
+     * GPIO_PortClockEnable() and then releases the reset. The clock part
+     * works. The reset part does not, on this part:
+     *
+     *     fsl_gpio.c:  #if defined(GPIO_RSTS)   -> GPIO_RESETS_ARRAY
+     *     MCXA153:     #define GPIO_RSTS_N ...
+     *
+     * The names do not match, so GPIO_RESETS_ARRAY is never defined and the
+     * release is compiled out. GPIO1 therefore stays in reset, and the first
+     * write to its PDDR is a bus fault at 0x40103054 - which is exactly what
+     * the hard fault handler reported.
+     *
+     * pin_mux.c releases PORT1 and PORT3, which are different modules from
+     * GPIO1 and GPIO3 and do not cover this. GPIO3 happens to be released
+     * already by the board's red-LED init, which is why only SW3 on P1_7
+     * ever tripped it - and why this looked like a link problem for so long.
+     * Both are listed here anyway: relying on someone else's side effect is
+     * how this stayed hidden. */
+    CLOCK_EnableClock(kCLOCK_GateGPIO1);
+    CLOCK_EnableClock(kCLOCK_GateGPIO3);
+    RESET_ReleasePeripheralReset(kGPIO1_RST_SHIFT_RSTn);
+    RESET_ReleasePeripheralReset(kGPIO3_RST_SHIFT_RSTn);
+
     PORT_SetPinConfig(PORT3, 13U, &out);   /* green LED */
     PORT_SetPinConfig(PORT3, 0U,  &out);   /* blue  LED */
     PORT_SetPinConfig(PORT3, 29U, &in);    /* SW2 */
@@ -561,6 +667,148 @@ static void test_buttons(void)
     }
 
     PRINTF("   done.\r\n");
+}
+
+/* =========================================================================
+ * Link debugging
+ *
+ * Three tools, in the order you should reach for them. Between them they cut
+ * the link into pieces that can each be blamed or cleared on their own,
+ * which is what "the link does not work" never lets you do.
+ * ====================================================================== */
+
+/* --- 1. LOOPBACK. The only test that needs no Arduino and no assumptions.
+ *
+ * One jumper from this board's TX straight to its own RX, and the whole
+ * question becomes "can this MCU talk to itself". If that fails, no amount of
+ * looking at wires or Arduinos will help: it is the pin mux, the clock or the
+ * LPUART setup, all of which are on this board.
+ *
+ * That matters here more than it usually would. LPUART2's ALT2 comes from
+ * NXP's own generated example, but LPUART1's was worked out by elimination
+ * and never actually proven - so "LPUART2 loops, LPUART1 does not" is a real
+ * possible outcome, and it means the ALT is wrong, not the wiring.
+ * ------------------------------------------------------------------------ */
+static bool test_loopback(link_id_t id)
+{
+    static const char probe[] = "LOOPBACK.0123456789.abcdefghij";
+    char     line[LINK_LINE_MAX];
+    uint32_t t0;
+    bool     heard = false;
+
+    PRINTF("\r\n== loopback on %s ==========================================\r\n",
+           LINK_GetName(id));
+    PRINTF("   Jumper this board's TX straight to its own RX:\r\n");
+    if (id == LINK_ARD1)
+    {
+        PRINTF("      J2-2 (P3_15, marked D8)  ->  J2-4 (P3_14, marked D9)\r\n");
+    }
+    else
+    {
+        PRINTF("      J2-20 (P1_9, marked D19) ->  J2-18 (P1_8, marked D18)\r\n");
+    }
+    PRINTF("   Unplug that Arduino's two wires first - its divider would\r\n");
+    PRINTF("   fight the jumper. Both ends are 3.3 V, so no divider here.\r\n\r\n");
+
+    while (LINK_PollLine(id, line, sizeof(line))) { }   /* drain */
+
+    LINK_SendLine(id, probe);
+
+    t0 = now_ms();
+    while ((now_ms() - t0) < 300u)
+    {
+        if (LINK_PollLine(id, line, sizeof(line)))
+        {
+            if (strcmp(line, probe) == 0)
+            {
+                PRINTF("   PASS - this MCU transmits and receives on %s.\r\n",
+                       LINK_GetName(id));
+                PRINTF("   Mux, clock and LPUART are all good. Everything left\r\n");
+                PRINTF("   is outside this board: the wire, the divider, the\r\n");
+                PRINTF("   ground, or the Arduino.\r\n");
+                PRINTF("===========================================================\r\n");
+                return true;
+            }
+            heard = true;
+            PRINTF("   got back: \"%s\"\r\n", line);
+        }
+    }
+
+    if (heard)
+    {
+        PRINTF("   FAIL - bytes came back, but not the ones sent.\r\n");
+        PRINTF("   Both directions work, so this is a BAUD or clock problem,\r\n");
+        PRINTF("   not a pin. Check CLOCK_AttachClk for this LPUART.\r\n");
+    }
+    else
+    {
+        PRINTF("   FAIL - nothing came back at all.\r\n");
+        PRINTF("   With the jumper really in place this is ON THIS BOARD:\r\n");
+        PRINTF("     - the ALT setting for these pins in pin_mux.c\r\n");
+        PRINTF("     - the LPUART clock attach in hardware_init.c\r\n");
+        PRINTF("   Try the other channel: if one loops and the other does not,\r\n");
+        PRINTF("   compare their two pin_mux entries - that is your answer.\r\n");
+        PRINTF("   Measure the TX pin with a meter too: idle UART sits at\r\n");
+        PRINTF("   3.3 V. Reading 0 V means the pin is not muxed to the\r\n");
+        PRINTF("   LPUART at all, and 'mark' below makes that easy to see.\r\n");
+    }
+    PRINTF("===========================================================\r\n");
+    return false;
+}
+
+/* --- 2. MARK. Transmit continuously so a meter can see it.
+ *
+ * 0x55 is alternating bits, so the line spends half its time low: a 3.3 V pin
+ * reads about 1.8 V average on any cheap multimeter while this runs, against
+ * 3.3 V when idle and 0 V when dead. Three clearly different numbers, no
+ * oscilloscope needed. ------------------------------------------------- */
+static void test_mark(link_id_t id)
+{
+    uint32_t t0 = now_ms();
+
+    PRINTF("\r\n-- %s: transmitting 0x55 for 5 seconds.\r\n", LINK_GetName(id));
+    PRINTF("   Measure %s against GND with a meter now:\r\n",
+           (id == LINK_ARD1) ? "J2-2 (marked D8)" : "J2-20 (marked D19)");
+    PRINTF("      ~1.8 V  transmitting - the pin and mux are fine\r\n");
+    PRINTF("       3.3 V  idle - muxed, but nothing is coming out\r\n");
+    PRINTF("       0.0 V  not muxed to the LPUART, or the pin is dead\r\n");
+
+    while ((now_ms() - t0) < 5000u)
+    {
+        LINK_SendLine(id, "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+    }
+
+    PRINTF("   done.\r\n");
+}
+
+/* --- 3. RAW. Show every byte, not every line.
+ *
+ * link.c assembles lines and silently discards anything that never ends, so a
+ * channel receiving garbage - wrong baud, no common ground, a floating pin -
+ * looks identical to one receiving nothing at all. This shows the difference:
+ * silence is silence, and garbage is visible as garbage. */
+static void raw_service(link_id_t id)
+{
+    uint8_t  byte;
+    unsigned n = 0;
+
+    while (LINK_PollByte(id, &byte))
+    {
+        if (n == 0u)
+        {
+            PRINTF("\r\n  [raw %s]", LINK_GetName(id));
+        }
+        PRINTF(" %02X", (unsigned)byte);
+        if ((byte >= 0x20u) && (byte < 0x7Fu)) { PRINTF("'%c'", (char)byte); }
+        n++;
+        if (n >= 16u) { PRINTF("\r\n"); n = 0u; }
+    }
+
+    if (n > 0u)
+    {
+        PRINTF("\r\n");
+        console_redraw_prompt();
+    }
 }
 
 /* How long to wait for a reply. A 12-byte round trip at 38400 is about 6 ms,
@@ -1130,6 +1378,23 @@ static bool drive_try_command(const char *line)
         return true;
     }
 
+    if (strcmp(line, "loop1") == 0) { (void)test_loopback(LINK_ARD1); return true; }
+    if (strcmp(line, "loop2") == 0) { (void)test_loopback(LINK_ARD2); return true; }
+    if (strcmp(line, "mark1") == 0) { test_mark(LINK_ARD1); return true; }
+    if (strcmp(line, "mark2") == 0) { test_mark(LINK_ARD2); return true; }
+
+    if ((strcmp(line, "raw1") == 0) || (strcmp(line, "raw2") == 0))
+    {
+        link_id_t id = (line[3] == '1') ? LINK_ARD1 : LINK_ARD2;
+
+        s_raw[id] = !s_raw[id];
+        PRINTF("\r\n  raw byte view on %s %s.%s\r\n", LINK_GetName(id),
+               s_raw[id] ? "ON" : "off",
+               s_raw[id] ? " That channel is not a link while this is on."
+                         : "");
+        return true;
+    }
+
     if (strcmp(line, "diag") == 0)
     {
         s_diagLoud = !s_diagLoud;
@@ -1174,6 +1439,14 @@ static bool drive_try_command(const char *line)
                "\r\n  led         cycle the RGB LED       btn   watch SW2 / SW3"
                "\r\n  tx1 / tx2   round-trip test one link (needs test_link_*.ino)"
                "\r\n  link        round-trip test both, with a verdict"
+               "\r\n"
+               "\r\n  LINK DEBUGGING - use these in this order:"
+               "\r\n  loop1/loop2 THIS BOARD ONLY. Jumper its TX to its own RX."
+               "\r\n              Fails = mux, clock or LPUART. Nothing external."
+               "\r\n  mark1/mark2 transmit 0x55 for 5 s - measure TX with a meter"
+               "\r\n              ~1.8 V sending, 3.3 V idle, 0 V not muxed"
+               "\r\n  raw1/raw2   show every BYTE received, not every line."
+               "\r\n              Silence and garbage look identical otherwise."
 
                "\r\n  anything else is broadcast to every node as before\r\n");
         return true;
@@ -1413,8 +1686,10 @@ int main(void)
         imu_service();           /* the only feedback in the car   */
         horn_service();          /* horn repeat while sounding     */
         heartbeat_service();     /* V, to both Arduinos, 1 Hz      */
-        link_service(LINK_ARD1); /* PERC -> ranges, PIR            */
-        link_service(LINK_ARD2); /* ACT  -> drive status           */
+        if (s_raw[LINK_ARD1]) { raw_service(LINK_ARD1); }
+        else                  { link_service(LINK_ARD1); }
+        if (s_raw[LINK_ARD2]) { raw_service(LINK_ARD2); }
+        else                  { link_service(LINK_ARD2); }
 
         /* The gateway is polled, not interrupt-driven, and each poll is a
          * blocking I2C transaction. Rate-limit it so the UART channels keep

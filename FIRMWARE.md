@@ -280,6 +280,39 @@ If PERC is silent the guard is off rather than on: you need to be able to drive 
 unflashed while bringing the rest up, and a human is watching the wheels. The page shows PERC's
 age in milliseconds so you can see which of the two it is.
 
+### Debugging a link that does not work
+
+Do not start at the wire. Start by proving each board alone, because a test that
+involves two boards and a cable can only tell you that something is wrong.
+
+| # | Do this | Where | A failure means |
+|---|---|---|---|
+| 1 | `j` — jumper D4 to D5, both link wires off | [`link_debug/`](arduino_codes/link_debug/link_debug.ino) on that Arduino | **That Arduino.** Pins, SoftwareSerial, baud |
+| 2 | `loop1` / `loop2` — jumper the MCX's own TX to its own RX | MCX console | **The MCX.** Pin mux, clock, LPUART setup |
+| 3 | `e` on the Arduino, then `tx1` / `tx2` on the MCX | both | The **wires** — and it tests both at once |
+| 4 | `t` on the Arduino | both | The **return path**: the 1 k/2 k divider |
+
+Steps 1 and 2 involve one board each and no cable at all. Only when both pass is a
+wire worth suspecting — and step 3 then tests both wires in a single round trip,
+because echo mode sends every byte straight back the way it came.
+
+**Flash [`link_debug.ino`](arduino_codes/link_debug/link_debug.ino) to whichever Arduino you
+are chasing.** It is the same sketch for both, and unlike the production sketches it parses
+nothing: every byte arriving on D4 is printed as hex. That matters more than it sounds, because
+a parser throws away anything malformed — so a link carrying garbage looks identical to a
+dead one, and those two faults share no causes.
+
+> **`loop1` and `loop2` are the ones to reach for first if both links are dead.** LPUART2's
+> ALT2 mux value came from NXP's own generated example, but **LPUART1's was worked out by
+> elimination and has never been proven**. So "`loop1` passes, `loop2` fails" is a real
+> possible outcome, and it would mean the ALT value in `pin_mux.c` is wrong — not the loom.
+
+`mark1` / `mark2` transmit `0x55` for five seconds so a multimeter can settle on the TX pin:
+**~1.8 V** while sending, **3.3 V** idle, **0 V** if the pin is not muxed to the LPUART at all.
+Three clearly different readings, no oscilloscope.
+
+`raw1` / `raw2` put a channel into raw byte view on the MCX side, the same way round.
+
 ### Reading the three consoles
 
 Every board now says what it can see, so you can find a dead link without guessing.

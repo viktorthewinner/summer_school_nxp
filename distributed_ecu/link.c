@@ -389,6 +389,15 @@ uint32_t LINK_GetDroppedCount(link_id_t id)
     return (id < LINK_UART_COUNT) ? s_state[id].dropped : 0u;
 }
 
+bool LINK_PollByte(link_id_t id, uint8_t *byte)
+{
+    if ((byte == NULL) || (id >= LINK_UART_COUNT))
+    {
+        return false;
+    }
+    return link_ring_get(&s_state[id], byte);
+}
+
 bool LINK_GwOnline(void)
 {
     return s_gwOnline;

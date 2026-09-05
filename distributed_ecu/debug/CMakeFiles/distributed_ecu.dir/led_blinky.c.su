@@ -1,0 +1,51 @@
+D:/summer_school/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:2555:22:__NVIC_SetPriority	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/arch/arm/CMSIS/Core/Include/core_cm33.h:3108:26:SysTick_Config	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.h:539:20:CLOCK_EnableClock	32	static
+D:/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.h:204:20:RESET_ReleasePeripheralReset	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:346:20:GPIO_PinWrite	24	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:405:20:GPIO_PortToggle	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.h:428:24:GPIO_PinRead	16	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.h:827:23:LPUART_ReadByte	32	static
+D:/summer_school/mcuxsdk/mcuxsdk/drivers/port/fsl_port.h:360:20:PORT_SetPinConfig	32	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:242:6:hard_fault_report	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:285:29:HardFault_Handler	0	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:299:6:SysTick_Handler	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:309:17:now_ms	4	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:316:13:console_redraw_prompt	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:330:13:console_try_read	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:355:13:i2c_probe	48	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:370:13:i2c_read_regs	48	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:386:13:i2c_write_reg	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:412:13:imu_wake	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:429:13:imu_service	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:467:13:test_i2c_scan	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:499:13:test_imu	88	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:564:13:test_extra_pins_init	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:634:13:test_leds	64	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:653:13:test_buttons	32	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:692:13:test_loopback	152	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:765:13:test_mark	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:790:13:raw_service	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:827:13:test_link	408	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:886:13:test_links_both	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:921:13:drive_send	48	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:933:13:drive_apply	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:941:13:drive_set	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:947:13:drive_stop	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:960:13:drive_service	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:980:13:horn_set	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:994:13:horn_service	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1024:13:heartbeat_service	32	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1047:13:teleop_guard	8	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1063:13:teleop_mix	24	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1115:13:teleop_release	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1133:13:teleop_service	16	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1161:13:teleop_keys	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1215:13:telemetry_send	248	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1270:12:diag_edge	32	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1285:13:diag_service	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1337:13:drive_try_command	56	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1459:13:console_service	144	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1521:13:vcu_consume	40	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1591:13:link_service	280	static
+C:/Users/victo/Desktop/nxp project/distributed_ecu/led_blinky.c:1612:5:main	16	static
