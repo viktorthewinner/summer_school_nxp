@@ -94,6 +94,13 @@
  * 20 ms, about 6 % of the bus, and it bounds keypress latency at 20 ms. */
 #define GW_POLL_MS      20u
 
+/* ...but back right off once the gateway stops answering. Every failed
+ * transfer burns the full I2C_RETRY_TIMES wait, and at 12 MHz a dead bus
+ * polled at 50 Hz would eat the loop the wheels depend on. Retry twice a
+ * second instead: it still recovers on its own within half a second of the
+ * wire going back in, and the drive loop never notices. */
+#define GW_RETRY_MS    500u
+
 /* Drive command repeat. ACT's timeout is 300 ms; 20 Hz leaves plenty of margin
  * for a dropped line without the motors stuttering. */
 #define DRIVE_REPEAT_MS 50u
@@ -130,7 +137,7 @@
 #define SENSOR_STALE_MS   500u
 
 #define HORN_REPEAT_MS    250u   /* PERC drops the horn after 500 ms silent */
-#define HORN_IDLE_MS     1000u   /* and a keep-alive so PERC sees the VCU  */
+#define HEARTBEAT_MS     1000u   /* V, line to BOTH Arduinos, always        */
 #define TELEMETRY_MS      100u
 #define IMU_SAMPLE_MS      50u
 
@@ -182,6 +189,7 @@ static bool     s_guard;            /* front sonar is currently vetoing W  */
 
 static bool     s_horn;
 static uint32_t s_hornSentAt;
+static uint32_t s_beatAt;
 
 static uint32_t s_telemetryAt;
 
@@ -733,24 +741,51 @@ static void horn_set(bool on)
     LINK_SendLine(LINK_ARD1, on ? "H,1" : "H,0");
 }
 
-/* Repeat it: fast while sounding, so PERC's 500 ms watchdog stays fed, and
- * slowly the rest of the time.
- *
- * That slow repeat is not about the horn. PERC has nothing else coming down
- * this link - ranges only travel the other way - so without it PERC can
- * never tell a healthy VCU from a dead one, and neither can anyone reading
- * its USB console. One line a second buys that. */
+/* Repeat while sounding, so PERC's 500 ms watchdog stays fed. Silence needs
+ * no repeating - PERC defaults to off. */
 static void horn_service(void)
 {
-    uint32_t period = s_horn ? HORN_REPEAT_MS : HORN_IDLE_MS;
-
-    if ((now_ms() - s_hornSentAt) < period)
+    if (!s_horn)
+    {
+        return;
+    }
+    if ((now_ms() - s_hornSentAt) < HORN_REPEAT_MS)
     {
         return;
     }
 
     s_hornSentAt = now_ms();
-    LINK_SendLine(LINK_ARD1, s_horn ? "H,1" : "H,0");
+    LINK_SendLine(LINK_ARD1, "H,1");
+}
+
+/* One line a second to BOTH Arduinos, whatever else is happening.
+ *
+ * Without this neither node can tell a healthy VCU from a dead one at idle,
+ * and their consoles say so wrongly. PERC only ever hears the horn, which is
+ * usually silent. ACT only hears D, lines, and those stop the moment nobody
+ * is driving - so a perfectly good ACT link reports "VCU NEVER HEARD", which
+ * is exactly the false alarm that sends you looking for a broken wire.
+ *
+ * It carries the VCU's uptime so a board that has silently reset is obvious:
+ * the number goes backwards.
+ *
+ * It is deliberately NOT a drive command. ACT's 300 ms motor timeout must
+ * keep counting through this - a heartbeat proves the wire works, not that
+ * anyone is asking for motion, and confusing the two would defeat the whole
+ * safe state. */
+static void heartbeat_service(void)
+{
+    char line[24];
+
+    if ((now_ms() - s_beatAt) < HEARTBEAT_MS)
+    {
+        return;
+    }
+    s_beatAt = now_ms();
+
+    (void)snprintf(line, sizeof(line), "V,%u", (unsigned)now_ms());
+    LINK_SendLine(LINK_ARD1, line);
+    LINK_SendLine(LINK_ARD2, line);
 }
 
 /* True while the front sonar says the way ahead is blocked.
@@ -939,6 +974,14 @@ static void telemetry_send(void)
         return;
     }
     s_telemetryAt = now_ms();
+
+    /* No gateway, no point: the write would only fail slowly, ten times a
+     * second, and there is nobody at the far end to read it. The poll above
+     * is what notices it coming back. */
+    if (!LINK_GwOnline())
+    {
+        return;
+    }
 
     actAge  = now_ms() - s_actAt;
     percAge = now_ms() - s_percAt;
@@ -1368,7 +1411,8 @@ int main(void)
         teleop_service();        /* keys -> duties, 20 Hz          */
         drive_service();         /* repeat the drive command       */
         imu_service();           /* the only feedback in the car   */
-        horn_service();          /* horn repeat + PERC keep-alive  */
+        horn_service();          /* horn repeat while sounding     */
+        heartbeat_service();     /* V, to both Arduinos, 1 Hz      */
         link_service(LINK_ARD1); /* PERC -> ranges, PIR            */
         link_service(LINK_ARD2); /* ACT  -> drive status           */
 
@@ -1376,7 +1420,8 @@ int main(void)
          * blocking I2C transaction. Rate-limit it so the UART channels keep
          * their share of the loop - and so keypress latency stays bounded
          * by a number rather than by however fast this loop happens to run. */
-        if ((now_ms() - s_gwPollAt) >= GW_POLL_MS)
+        if ((now_ms() - s_gwPollAt) >=
+            (LINK_GwOnline() ? GW_POLL_MS : GW_RETRY_MS))
         {
             s_gwPollAt = now_ms();
             link_service(LINK_GW); /* laptop -> here + both Arduinos */

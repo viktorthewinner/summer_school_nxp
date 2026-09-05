@@ -266,6 +266,14 @@ static void handleLinkLine(const char *s)
     return;
   }
 
+  /* V,<vcu_uptime_ms> - the 1 Hz heartbeat, and emphatically NOT a command.
+   * It proves the wire works while nobody is driving, which is the normal
+   * idle state on this node; g_lastCmdAt is left alone so the 300 ms motor
+   * timeout keeps counting straight through it. Consumed silently. */
+  if ((s[0] == 'V' || s[0] == 'v') && s[1] == ',') {
+    return;
+  }
+
   Serial.print(F("[link] ")); Serial.println(s);
 }
 
@@ -328,7 +336,8 @@ static void diagService(void)
   Serial.print(F("VCU "));
 
   if (g_rxLines == 0) {
-    Serial.println(F("NEVER HEARD. Check D4 <- MCX J2-20, and ground."));
+    Serial.println(F("NEVER HEARD. The VCU beats once a second even when idle,"));
+    Serial.println(F("      so this is the wire: D4 <- MCX J2-20, and ground."));
     return;
   }
 

@@ -25,12 +25,16 @@ include(${board}/board_files.cmake)
 # SDA sits low - so LPI2C_MasterTransferBlocking() never returns and the whole
 # vehicle control loop stops dead, silently, with no console output at all.
 #
-# A car must not be one loose wire away from a hang. 100000 polls is far longer
-# than any real transaction at 400 kHz and still returns in well under a
-# millisecond, so a dead bus degrades to "the gateway and the IMU are absent"
-# instead of taking the drive loop with it.
+# A car must not be one loose wire away from a hang.
+#
+# The count is a flag-wait poll loop, not a transaction, so it only has to
+# cover one byte time: 25 us at 400 kHz. This core runs at 12 MHz, so 10000
+# iterations is several milliseconds - two orders of magnitude of margin over
+# a healthy bus, and a bounded few ms rather than tens of ms when it is dead.
+# Do not raise it: every failed transfer costs this much, and the drive loop
+# pays it. led_blinky.c backs off the polling rate on top.
 mcux_add_macro(
-    CC "-DI2C_RETRY_TIMES=100000"
+    CC "-DI2C_RETRY_TIMES=10000"
 )
 
 mcux_add_source(

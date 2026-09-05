@@ -267,6 +267,13 @@ static void handleLinkLine(const char *s)
     return;
   }
 
+  /* V,<vcu_uptime_ms> - the 1 Hz heartbeat. It exists so this node can tell
+   * a live VCU from a dead one at idle; consumed silently, or it would fill
+   * the console with one line a second. */
+  if ((s[0] == 'V' || s[0] == 'v') && s[1] == ',') {
+    return;
+  }
+
   Serial.print(F("[link] "));
   Serial.println(s);
 }
