@@ -150,7 +150,7 @@
 <text x="970.0" y="730" font-size="10" fill="#5A6472" text-anchor="middle">are leaves; they never talk to each other.</text>
 <rect x="820" y="738" width="300" height="38" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1" rx="5"/>
 <text x="834" y="754" font-size="10" fill="#6B3FA0" font-weight="bold">LPI2C0 slaves: ESP32 0x42 + HW-123 0x68</text>
-<text x="834" y="768" font-size="9" fill="#5A6472">Both 3.3 V. No pull-ups to add.</text>
+<text x="834" y="768" font-size="9" fill="#B03A3E" font-weight="bold">Both 3.3 V. FIT 2 k&#8486; pull-ups on SDA and SCL.</text>
 <text x="814" y="782" font-size="9.5" fill="#0B7A75" font-weight="bold">LPUART2 &#8594; PERC</text>
 <line x1="800" y1="800" x2="786" y2="800" stroke="#0B7A75" stroke-width="1.6"/>
 <circle cx="800" cy="800" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
@@ -177,7 +177,7 @@
 <circle cx="1140" cy="880" r="2.8" fill="#ffffff" stroke="#0B7A75" stroke-width="1.4"/>
 <text x="1127" y="883.6" font-size="11.5" fill="#0B7A75" text-anchor="end" font-weight="bold">GND</text>
 <text x="1086" y="883.6" font-size="9.5" fill="#5A6472" text-anchor="end">J3-14</text>
-<text x="920" y="962" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">LPI2C0 &#183; mikroBUS J6</text>
+<text x="920" y="962" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">LPI2C0 &#183; mikroBUS J5</text>
 <line x1="900" y1="1010" x2="900" y2="1024" stroke="#6B3FA0" stroke-width="1.6"/>
 <circle cx="900" cy="1010" r="2.8" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
 <text x="900" y="990" font-size="9" fill="#6B3FA0" text-anchor="middle" font-weight="bold">P3_27 SCL</text>
@@ -368,7 +368,7 @@
 <circle cx="1360" cy="1064" r="3.4" fill="#6B3FA0"/>
 <line x1="1360" y1="1064" x2="1360" y2="1100" stroke="#6B3FA0" stroke-width="1.8"/>
 <text x="1412" y="1046" font-size="10" fill="#6B3FA0" font-weight="bold">LPI2C0 &#183; 400 kHz &#8212; SCL (upper) and SDA (lower)</text>
-<text x="1412" y="1062" font-size="9.5" fill="#5A6472">Pull-ups: the HW-123 already has 2.2 k&#8486; to 3.3 V on board. Add none.</text>
+<text x="1412" y="1062" font-size="9.5" fill="#B03A3E" font-weight="bold">Pull-ups: FIT 2 k&#8486; from SDA and from SCL to 3V3 (J3-8). Not optional.</text>
 <text x="1412" y="1078" font-size="9.5" fill="#5A6472">GND runs with the pair &#8212; same star net as everything else.</text>
 <polyline points="1100,1024 1100,1024 1600,1024 1600,1372 1490,1372" fill="none" stroke="#41546B" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="5 4" marker-end="url(#a-slate)"/>
 <text x="1340" y="1018" font-size="9" fill="#5A6472" text-anchor="middle">MCU-Link USB &#183; VCOM + debug + power</text>

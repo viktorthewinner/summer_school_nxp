@@ -9,6 +9,7 @@
 #include "fsl_lpi2c.h"
 #include "fsl_common.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /*******************************************************************************
@@ -49,8 +50,15 @@ typedef struct
 
 #define LINK_UART_COUNT 2u   /* LINK_ARD1, LINK_ARD2 - LINK_GW is I2C */
 
-/* Largest payload the gateway will hand back in one read. */
-#define LINK_GW_CHUNK 48u
+/* Consecutive failed gateway transfers before the controller is reset.
+ *
+ * A FIFO error or a lost arbitration leaves the LPI2C in a state the next
+ * transfer inherits, so a single glitch can look permanent. Re-initialising
+ * costs microseconds and clears the state machine and both FIFOs. Six, at the
+ * 500 ms offline retry rate, is three seconds - long enough that a gateway
+ * that is merely unplugged does not churn, short enough to heal itself well
+ * inside a demo. */
+#define LINK_GW_RECOVER_AFTER 6u
 
 static const link_config_t k_config[LINK_UART_COUNT] = {
     [LINK_ARD1] = {LINK_ARD1_LPUART, LINK_ARD1_INSTANCE, LINK_ARD1_IRQN, "ARD1"},
@@ -76,6 +84,9 @@ static size_t   s_gwChunkPos;
 static bool     s_gwOnline;
 static uint32_t s_gwPolls;
 static uint32_t s_gwFails;
+static status_t s_gwLastStatus = kStatus_Success;   /* of the last read */
+static uint32_t s_gwConsecFails;
+static uint32_t s_gwRecoveries;
 
 /*******************************************************************************
  * Code
@@ -125,6 +136,9 @@ void LINK_ARD2_IRQHANDLER(void)
     link_isr(LINK_ARD2);
 }
 
+/* Defined below, next to the other gateway helpers; LINK_Init() needs it. */
+static void link_gw_i2c_init(void);
+
 void LINK_Init(void)
 {
     lpuart_config_t config;
@@ -152,17 +166,24 @@ void LINK_Init(void)
         (void)EnableIRQ(cfg->irqn);
     }
 
-    /* Gateway: LPI2C0 master. Polled, no interrupt. */
-    lpi2c_master_config_t i2cCfg;
-    LPI2C_MasterGetDefaultConfig(&i2cCfg);
-    i2cCfg.baudRate_Hz = LINK_GW_BAUDRATE;
-    /* Only one LPI2C instance on this part, so the accessor takes no index. */
-    LPI2C_MasterInit(LINK_GW_LPI2C, &i2cCfg, CLOCK_GetLpi2cClkFreq());
+    link_gw_i2c_init();
 
     s_gwLen      = 0u;
     s_gwDropped  = 0u;
     s_gwChunkLen = 0u;
     s_gwChunkPos = 0u;
+}
+
+/* Bring up (or reset) the LPI2C master. LPI2C_MasterInit() resets the
+ * peripheral, so calling it again is the cheapest full recovery there is. */
+static void link_gw_i2c_init(void)
+{
+    lpi2c_master_config_t i2cCfg;
+
+    LPI2C_MasterGetDefaultConfig(&i2cCfg);
+    i2cCfg.baudRate_Hz = LINK_GW_BAUDRATE;
+    /* Only one LPI2C instance on this part, so the accessor takes no index. */
+    LPI2C_MasterInit(LINK_GW_LPI2C, &i2cCfg, CLOCK_GetLpi2cClkFreq());
 }
 
 /* Blocking master write of one line to the gateway. */
@@ -208,18 +229,32 @@ static size_t link_gw_read(uint8_t *out, size_t outSize)
     xfer.dataSize     = sizeof(raw);
     xfer.flags        = (uint32_t)kLPI2C_TransferDefaultFlag;
 
-    if (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) != kStatus_Success)
+    s_gwLastStatus = LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer);
+    if (s_gwLastStatus != kStatus_Success)
     {
         /* Worth counting after all. A failed transfer and an idle gateway
          * both produce no bytes, and telling them apart is the difference
          * between "nobody is typing" and "the I2C link is dead" - which is
-         * the first question you ask when the browser shows nothing. */
+         * the first question you ask when the browser shows nothing. The
+         * status is kept too: WHICH way it failed names the wire. */
         s_gwOnline = false;
         s_gwFails++;
+
+        /* A run of failures usually means the controller itself is wedged -
+         * a FIFO error or an aborted transfer leaves state the next attempt
+         * inherits. Reset it rather than waiting for a power cycle. */
+        s_gwConsecFails++;
+        if (s_gwConsecFails >= LINK_GW_RECOVER_AFTER)
+        {
+            s_gwConsecFails = 0u;
+            s_gwRecoveries++;
+            link_gw_i2c_init();
+        }
         return 0u;
     }
 
-    s_gwOnline = true;
+    s_gwOnline      = true;
+    s_gwConsecFails = 0u;
     s_gwPolls++;
 
     n = raw[0];
@@ -407,6 +442,97 @@ void LINK_GwStats(uint32_t *polls, uint32_t *fails)
 {
     if (polls != NULL) { *polls = s_gwPolls; }
     if (fails != NULL) { *fails = s_gwFails; }
+}
+
+const char *LINK_I2CStatusName(int32_t status)
+{
+    static char other[24];
+
+    switch (status)
+    {
+        case kStatus_Success:               return "ok";
+        case kStatus_LPI2C_Busy:            return "BUSY";
+        case kStatus_LPI2C_Idle:            return "IDLE";
+        case kStatus_LPI2C_Nak:             return "NAK";
+        case kStatus_LPI2C_FifoError:       return "FIFO ERROR";
+        case kStatus_LPI2C_BitError:        return "BIT ERROR";
+        case kStatus_LPI2C_ArbitrationLost: return "ARB LOST";
+        case kStatus_LPI2C_PinLowTimeout:   return "PIN LOW";
+        case kStatus_LPI2C_NoTransferInProgress: return "NO TRANSFER";
+        case kStatus_LPI2C_DmaRequestFail:  return "DMA FAIL";
+        case kStatus_LPI2C_Timeout:         return "TIMEOUT";
+        default:
+            (void)snprintf(other, sizeof(other), "status %ld", (long)status);
+            return other;
+    }
+}
+
+const char *LINK_I2CStatusHint(int32_t status)
+{
+    switch (status)
+    {
+        case kStatus_Success:
+            return "that transfer succeeded";
+
+        case kStatus_LPI2C_Nak:
+            return "the bus clocked but NOTHING ACKED that address. For 0x42: the "
+                   "ESP32 is unpowered, not running esp32_gateway.ino, or its "
+                   "GPIO21/GPIO22 are not on the two pins the MCX is driving";
+
+        case kStatus_LPI2C_FifoError:
+            /* This is the one worth spelling out. The SDK ranks NAK above FIFO
+             * error, so this status means NDF was NOT set: the slave answered
+             * its address and the transfer came apart afterwards. Sending
+             * someone to check wiring on this is sending them the wrong way. */
+            return "NOT a wiring fault - a NAK would outrank this, so the slave DID "
+                   "ACK and the DATA phase then broke. Suspect the far end's timing: "
+                   "an ESP32 that stretches SCL while its onRequest runs, or a "
+                   "previous odd-sized read leaving it out of frame. Try "
+                   "LINK_GW_BAUDRATE at 100000, and check the ESP32's own 'i' "
+                   "counters - reads climbing there proves it is being addressed";
+
+        case kStatus_LPI2C_Busy:
+            return "SDA or SCL read LOW before the START: a missing pull-up, a wire "
+                   "on the wrong header pin, or no common ground with the ESP32";
+
+        case kStatus_LPI2C_Timeout:
+        case kStatus_LPI2C_PinLowTimeout:
+            return "a line did not come back HIGH in time: the 2k pull-ups are "
+                   "missing or not on these pins, or a slave is holding SCL down";
+
+        case kStatus_LPI2C_BitError:
+        case kStatus_LPI2C_ArbitrationLost:
+            return "the level driven was not seen back on the pin: a short, another "
+                   "master, or the wire is not on P3_27/P3_28 at all";
+
+        default:
+            return "unexpected LPI2C status - look it up in fsl_lpi2c.h";
+    }
+}
+
+const char *LINK_GwFailReason(void)
+{
+    return LINK_I2CStatusName((int32_t)s_gwLastStatus);
+}
+
+const char *LINK_GwFailHint(void)
+{
+    return LINK_I2CStatusHint((int32_t)s_gwLastStatus);
+}
+
+uint32_t LINK_GwRecoveries(void)
+{
+    return s_gwRecoveries;
+}
+
+void LINK_GwResync(void)
+{
+    link_gw_i2c_init();
+
+    s_gwChunkLen    = 0u;
+    s_gwChunkPos    = 0u;
+    s_gwLen         = 0u;
+    s_gwConsecFails = 0u;
 }
 
 const char *LINK_GetName(link_id_t id)

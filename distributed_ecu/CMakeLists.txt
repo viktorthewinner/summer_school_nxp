@@ -19,11 +19,11 @@ include(${board}/board_files.cmake)
 # Bound every LPI2C wait.
 #
 # The SDK default is I2C_RETRY_TIMES = 0, which its own header documents as
-# "keep waiting until the flag is assert/deassert" - an UNBOUNDED wait. On this
-# board the I2C bus has no pull-ups of its own: it borrows the 2.2k on the
-# MPU6050 module. Unplug that module, or drop one of the two wires, and SCL or
-# SDA sits low - so LPI2C_MasterTransferBlocking() never returns and the whole
-# vehicle control loop stops dead, silently, with no console output at all.
+# "keep waiting until the flag is assert/deassert" - an UNBOUNDED wait. The
+# I2C bus here has no pull-ups on any board; they are two resistors in the
+# loom. Leave them out, or drop one of the two wires, and SCL or SDA sits low
+# - so LPI2C_MasterTransferBlocking() never returns and the whole vehicle
+# control loop stops dead, silently, with no console output at all.
 #
 # A car must not be one loose wire away from a hang.
 #

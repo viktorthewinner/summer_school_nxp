@@ -43,9 +43,9 @@
 <text x="310" y="710" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">LDO_3V3</text>
 <text x="310" y="727" text-anchor="end" font-size="10.5" fill="#5A6472">J3 pin 8</text>
 <text x="310" y="785" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_27 / LPI2C0_SCL</text>
-<text x="310" y="802" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J6</text>
+<text x="310" y="802" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J5</text>
 <text x="310" y="845" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">P3_28 / LPI2C0_SDA</text>
-<text x="310" y="862" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J6</text>
+<text x="310" y="862" text-anchor="end" font-size="10.5" fill="#5A6472">mikroBUS J5</text>
 <text x="310" y="915" text-anchor="end" font-size="12.5" font-weight="bold" fill="#12305B">GND</text>
 <text x="310" y="932" text-anchor="end" font-size="10.5" fill="#5A6472">J3 pin 12 or 14</text>
 <line x1="80" y1="445" x2="300" y2="445" stroke="#C3CEDC" stroke-width="1"/>

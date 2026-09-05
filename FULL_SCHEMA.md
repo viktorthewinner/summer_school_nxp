@@ -11,7 +11,7 @@
 Wiring the car? Work from **sheet 3** and the netlist in Appendix A. Sheets 1 and 2 are the
 architecture and the rails — useful for understanding it, not for holding a wire.
 
-**Shopping list: twelve resistors, one trimpot, one buck module.** The four flyback diodes and
+**Shopping list: fourteen resistors, one trimpot, one buck module.** The four flyback diodes and
 the four PN2222A you already have.
 
 | Qty | Part | For |
@@ -21,6 +21,7 @@ the four PN2222A you already have.
 | 2 + 2 | 1 kΩ and 2 kΩ | The two level dividers on the Arduino TX lines |
 | 1 | **10 kΩ trimpot** | 1602A contrast. Without it the screen is blank or solid blocks |
 | 1 | 220 Ω resistor | 1602A backlight — only if the module has no on-board resistor |
+| **2** | **2 kΩ resistor** | **I²C pull-ups**, SDA and SCL up to 3V3. Without these nothing on the bus can answer — §3 |
 | 1 | **9 V → 5 V buck module** (MP1584 / LM2596 mini) | The only way to run the MCX off the pack — its `VIN` pin is a dead end. §4 and §11 |
 
 > **Your diodes are 1N4001, so the motor PWM runs at 2 kHz, not 20 kHz.** The ratings are
@@ -163,10 +164,33 @@ car that can override the driver; the back one is a readout, because there is no
 to protect. See §5.
 
 **The IMU hangs off the MCX's I²C bus, not an Arduino.** `LPI2C0` already runs to the ESP32;
-I²C is multi-drop, so the MPU6050 joins as a second slave for free. Three reasons: the heading
-loop gets its sensor with no link in the path, the module is 3.3 V native so it matches the
-MCX exactly, and **its on-board 2.2 kΩ pull-ups are the bus pull-ups** — so the I²C bus needs
-no resistors at all.
+I²C is multi-drop, so the MPU6050 joins as a second slave for free. Two reasons: the heading
+loop gets its sensor with no link in the path, and the module is 3.3 V native so it matches
+the MCX exactly.
+
+> ### The bus has its own pull-ups. Fit them.
+>
+> | | |
+> |---|---|
+> | **J5-5 SCL** → `[ 2 kΩ ]` → **J3-8** | 3.3 V, never 5 V |
+> | **J5-6 SDA** → `[ 2 kΩ ]` → **J3-8** | 3.3 V, never 5 V |
+>
+> This schema used to say the opposite — that the MPU6050's on-board 2.2 kΩ were the bus
+> pull-ups and no resistors were needed. That was true electrically and wrong as a design.
+> It made a **sensor breakout a hard dependency for the WiFi gateway**: unplug the IMU, or
+> have one of its four wires off, and SDA and SCL float, nothing can ACK, and the browser
+> link dies for a reason nothing in the gateway can report. That is what a scan returning
+> `nothing answered` means, and it cost a long evening to find.
+>
+> Two resistors make the bus stand on its own. The IMU's 2.2 kΩ then sit in parallel, giving
+> about 1.05 kΩ and a 2.8 mA sink at V<sub>OL</sub> — inside the 3 mA the I²C spec allows, so
+> leaving the module fitted is fine.
+>
+> **The MCU's internal pull-ups are not an option here.** `P3_27`/`P3_28` are the only 5 V
+> tolerant pins on the chip and their weak internal pull-up will not hold a bus at rail —
+> measured, it reached 2.3 V with nothing else attached. Enabling them is worth doing anyway
+> (`i2c_pullups_init()` in `led_blinky.c`) so the lines idle high rather than float, which
+> makes a meter reading and a bus scan mean something. It is not a substitute for the 2 kΩ.
 
 ---
 
@@ -185,8 +209,8 @@ in your hand.
 | **J2-4** | `P3_14` | **D9** | LPUART2_RXD | PERC **D5** — **through the divider** |
 | **J2-20** | `P1_9` | **D19** | LPUART1_TXD | ACT **D4** — direct |
 | **J2-18** | `P1_8` | **D18** | LPUART1_RXD | ACT **D5** — **through the divider** |
-| **J6 SCL** | `P3_27` | **SCL** on the mikroBUS socket | LPI2C0_SCL | ESP32 GPIO22 **+** MPU6050 SCL |
-| **J6 SDA** | `P3_28` | **SDA** on the mikroBUS socket | LPI2C0_SDA | ESP32 GPIO21 **+** MPU6050 SDA |
+| **J5-5** | `P3_27` | **SCL** on the mikroBUS socket | LPI2C0_SCL | ESP32 GPIO22 **+** MPU6050 SCL |
+| **J5-6** | `P3_28` | **SDA** on the mikroBUS socket | LPI2C0_SDA | ESP32 GPIO21 **+** MPU6050 SDA |
 | **J3-8** | — | **3V3** | `LDO_3V3` out | MPU6050 **VCC** — 3.3 V, not 5 V |
 | **J3-12** *(or J3-14)* | — | **GND** | ground | ★ star point |
 | **J3-10** | — | **5V** | `SYS_5V0` | **Buck module out, 5 V** — see §11 |
@@ -767,9 +791,31 @@ Every wire in the vehicle. Tick them off as you go. `★` = star ground (§11).
 | PERC **D5** | | 1 kΩ → MCX **J2-4** (`P3_14`, marked **D9**); 2 kΩ from the junction to ★ | **Divider** |
 | MCX **J2-20** | `P1_9`, marked **D19** | ACT **D4** | Direct |
 | ACT **D5** | | 1 kΩ → MCX **J2-18** (`P1_8`, marked **D18**); 2 kΩ from the junction to ★ | **Divider** |
-| MCX **J6 SCL** | `P3_27`, mikroBUS | ESP32 **GPIO22** *and* MPU6050 **SCL** | Shared, 3.3 V |
-| MCX **J6 SDA** | `P3_28`, mikroBUS | ESP32 **GPIO21** *and* MPU6050 **SDA** | Shared, 3.3 V |
+| MCX **J5-5 SCL** | `P3_27`, mikroBUS | ESP32 **GPIO22** *and* MPU6050 **SCL** | Shared, 3.3 V |
+| MCX **J5-6 SDA** | `P3_28`, mikroBUS | ESP32 **GPIO21** *and* MPU6050 **SDA** | Shared, 3.3 V |
+| **J5-5 SCL** | | **2 kΩ** → MCX **J3-8** (3V3) | **Pull-up — not optional** |
+| **J5-6 SDA** | | **2 kΩ** → MCX **J3-8** (3V3) | **Pull-up — not optional** |
 | MCX **J3-12** or **J3-14** | marked **GND** | ★ | |
+
+> **The I²C pins are on J5, not J6.** An earlier revision of this appendix said the
+> opposite, and warned you off J5 — that was wrong. NXP's own LPI2C example readme for this
+> board puts **SDA on J5 pin 6, SCL on J5 pin 5, GND on J5 pin 8**. J5 is the mikroBUS half
+> that carries PWM · INT · RX · TX · SCL · SDA · 5V · GND, in that order from pin 1. J6 is the
+> other half (AN · RST · CS · SCK · MISO · MOSI · 3V3 · GND): its pins 5 and 6 are `P1_2`/`P1_0`,
+> unconfigured SPI pins, and a meter on them reads a floating couple of volts that looks
+> exactly like a half-pulled-up bus. Go by the **silkscreen**, which prints `SCL` and `SDA`
+> beside the socket, and confirm with continuity to the ESP32 end.
+>
+> One more trap on the same header: **J5 pins 3 and 4 (RX / TX) are `P3_14` / `P3_15`** — the
+> same nets as J2-4 / J2-2, i.e. the PERC link. Count J5 from the wrong end and "pins 5 and 6"
+> become pins 4 and 3: the ESP32 lands on PERC's UART and takes both links down at once.
+>
+> **A bus that idles at about 2.3 V on both lines is not a missing pull-up.** A missing
+> pull-up floats; 2.3 V on both lines at once, steady, is a 3.3 V pull-up minus a diode drop —
+> the signature of a device on the bus whose VDD is off or whose ground is not the star
+> point. Its input clamp diodes conduct the pull-up current into its dead rail. Measure the
+> ESP32's 3V3 pin and the MPU6050's VCC against the **MCX** ground: 3.3 V, or that is the
+> fault. A dev board fed 9 V into a SOT-23-5 regulator (§11) fails exactly this way.
 
 ### A.2 VCU — FRDM-MCXA153 and the MPU6050
 
@@ -779,6 +825,7 @@ Every wire in the vehicle. Tick them off as you go. `★` = star ground (§11).
 | MPU6050 **GND** | | ★ |
 | MPU6050 **AD0** | | ★ — this is what selects address 0x68 |
 | MPU6050 **XDA**, **XCL**, **INT** | | *leave unconnected* |
+| MPU6050 **SDA** / **SCL** | | the shared bus — see A.1. Its own 2.2 kΩ now parallel the fitted 2 kΩ, which is fine |
 | MCX **MCU-Link USB** | the micro-B socket | Laptop — VCOM, debug, and the board's 5 V during development |
 | MCX **J3-10** | marked **5V**, `SYS_5V0` | **BUCK MODULE OUT +**, set to 5.0 V and measured — for the untethered run. **Never with a USB cable also in the board** |
 | MCX **J3-16** | marked **VIN**, `P5-9V_VIN` | **nothing.** Dead end on a stock board — §4 |
@@ -838,8 +885,8 @@ Q1, Q2 = left pair (from D9). Q3, Q4 = right pair (from D10).
 
 | From | To |
 |---|---|
-| ESP32 **GPIO22** | MCX **J6 SCL** — see A.1 |
-| ESP32 **GPIO21** | MCX **J6 SDA** — see A.1 |
+| ESP32 **GPIO22** | MCX **J5-5 SCL** — see A.1 |
+| ESP32 **GPIO21** | MCX **J5-6 SDA** — see A.1 |
 | ESP32 **VIN** | **LOGIC PACK +** (9 V) directly. **Not** the 3V3 pin, not an Arduino, and **not through a divider** — see §11. Confirm the board has an AMS1117 first, and put the 5 V fan on it |
 | ESP32 **VIN** ↔ **GND** | 470 µF, as close to the board as you can get it |
 | ESP32 **GND** | ★ |

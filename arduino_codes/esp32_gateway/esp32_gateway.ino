@@ -27,18 +27,25 @@
  * ---------------------------------------------------------------------------
  * WIRING - see SCHEMA_WIRING.svg, blocks B and F
  *
- *   ESP32 GPIO22 (SCL)  <->  MCX J6 SCL (P3_27, mikroBUS)
- *   ESP32 GPIO21 (SDA)  <->  MCX J6 SDA (P3_28, mikroBUS)
+ *   ESP32 GPIO22 (SCL)  <->  MCX J5 pin 5, SCL (P3_27, mikroBUS)
+ *   ESP32 GPIO21 (SDA)  <->  MCX J5 pin 6, SDA (P3_28, mikroBUS)
+ *                              J5, NOT J6 - J6 is the SPI half of the socket
+ *                              and its pins 5/6 are P1_2/P1_0. Go by the
+ *                              silkscreen, which prints SCL and SDA.
  *   ESP32 GND           <->  MCX GND    (J3 pin 12 or 14), star point
  *   ESP32 VIN           <-   9 V logic pack DIRECT, 470 uF close by.
  *                              Board must have an AMS1117 (SOT-223), not a
  *                              SOT-23-5 LDO - those stop at ~6 V. Put the
  *                              5 V fan on the regulator: 0.68 W at 9 V in.
  *
- *   DO NOT fit your own I2C pull-ups. The bus already borrows the 2.2 kOhm on
- *   the MPU6050 module, which is the ONLY pull-up anywhere on it - unplug that
- *   module and this link dies too. Adding 4.7k in parallel is survivable but
- *   pointless; the schema assumes the 2.2k alone.
+ *   FIT THE I2C PULL-UPS: 2 kOhm from SDA to 3V3 and 2 kOhm from SCL to 3V3,
+ *   at the MCX end (J3-8). They are not optional and they are not on any
+ *   board here.
+ *
+ *   This schema used to borrow the 2.2 kOhm on the MPU6050 module instead,
+ *   which made a sensor breakout a hard dependency for this WiFi link: with
+ *   the IMU unplugged, or one of its wires off, SDA and SCL float, nothing
+ *   can ACK, and this node goes silent for a reason it cannot report.
  *
  * ---------------------------------------------------------------------------
  * BOARD SETUP
@@ -502,9 +509,9 @@ void onWsEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t len)
  * Two commands, and 'i' is the one that matters. The MCX is the I2C master
  * here, so this node never speaks first: READS CLIMBING MEANS THE VCU IS
  * POLLING AND THE LINK WORKS. Reads stuck at zero with the MCX running is a
- * wiring fault, and remember the bus has no pull-ups of its own - it borrows
- * the 2.2 kOhm on the MPU6050 module, so that module has to be present for
- * anything on the bus to work at all.
+ * wiring fault. Check the two 2 kOhm pull-ups to 3V3 are fitted and that the
+ * bus idles at 3.3 V: a floating bus cannot ACK, and that is indistinguishable
+ * from this node being dead.
  * ------------------------------------------------------------------------ */
 
 static void consoleService()
@@ -557,8 +564,8 @@ static void diagService()
     } else {
       Serial.println(F("[i2c] VCU NOT POLLING. Either it is not running this"));
       Serial.println(F("      firmware, or SDA/SCL are wrong - and remember the"));
-      Serial.println(F("      bus borrows the MPU6050's 2.2k as its ONLY pull-up,"));
-      Serial.println(F("      so an unplugged IMU kills this link too."));
+      Serial.println(F("      bus needs its 2k pull-ups to 3V3 fitted - a"));
+      Serial.println(F("      floating bus cannot ACK and looks just like this."));
     }
   }
 

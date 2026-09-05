@@ -53,11 +53,11 @@
 <text x="312" y="400" font-size="8" fill="#5A6472">P1_8 &#183; silkscreen D18</text>
 <circle cx="550" cy="268" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
 <line x1="550" y1="268" x2="562" y2="268" stroke="#6B3FA0" stroke-width="1.4"/>
-<text x="538" y="269" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J6 SCL</text>
+<text x="538" y="269" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J5-5 SCL</text>
 <text x="538" y="280" font-size="8" fill="#5A6472" text-anchor="end">P3_27 &#183; mikroBUS, marked SCL</text>
 <circle cx="550" cy="308" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
 <line x1="550" y1="308" x2="562" y2="308" stroke="#6B3FA0" stroke-width="1.4"/>
-<text x="538" y="309" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J6 SDA</text>
+<text x="538" y="309" font-size="10.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">J5-6 SDA</text>
 <text x="538" y="320" font-size="8" fill="#5A6472" text-anchor="end">P3_28 &#183; mikroBUS, marked SDA</text>
 <circle cx="550" cy="348" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
 <line x1="550" y1="348" x2="562" y2="348" stroke="#6B3FA0" stroke-width="1.4"/>
@@ -153,6 +153,20 @@
 <text x="1020" y="576" font-size="9.5" fill="#6B3FA0" text-anchor="middle" font-weight="bold">LOGIC 9V</text>
 <polyline points="562,268 688,268" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
 <polyline points="562,308 688,308" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
+<line x1="583" y1="230" x2="637" y2="230" stroke="#B03A3E" stroke-width="2"/>
+<text x="610" y="224" font-size="8.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">3V3 &#183; J3-8</text>
+<line x1="600" y1="230" x2="600" y2="240" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="595.5" y="240" width="9" height="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<line x1="600" y1="260" x2="600" y2="268" stroke="#B03A3E" stroke-width="1.4"/>
+<circle cx="600" cy="268" r="3.2" fill="#6B3FA0"/>
+<text x="591" y="253" font-size="8.5" fill="#B03A3E" text-anchor="end" font-weight="bold">2 k&#8486;</text>
+<line x1="622" y1="230" x2="622" y2="240" stroke="#B03A3E" stroke-width="1.4"/>
+<rect x="617.5" y="240" width="9" height="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
+<line x1="622" y1="260" x2="622" y2="308" stroke="#B03A3E" stroke-width="1.4"/>
+<circle cx="622" cy="308" r="3.2" fill="#6B3FA0"/>
+<text x="631" y="253" font-size="8.5" fill="#B03A3E" font-weight="bold">2 k&#8486;</text>
+<text x="700" y="660" font-size="9" fill="#B03A3E" font-weight="bold">FIT BOTH PULL-UPS. Nothing on this bus can ACK without them, and a floating</text>
+<text x="700" y="672" font-size="9" fill="#B03A3E" font-weight="bold">bus looks exactly like every device on it being dead. They are not on any board here.</text>
 <text x="566" y="383.5" font-size="9" fill="#6B3FA0" font-style="italic">this pair also runs to ESP32 &#8212; block B</text>
 <polyline points="562,348 600,348" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
 <circle cx="600" cy="348" r="3.2" fill="#6B3FA0"/>
@@ -179,11 +193,11 @@
 <text x="690" y="432" font-size="10" fill="#B03A3E" font-weight="bold">MPU6050 &#8212; WHERE EACH PIN GOES</text>
 <text x="690" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">SCL</text>
 <text x="726" y="452" font-size="9" fill="#5A6472">&#8594;</text>
-<text x="742" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J6 SCL</text>
+<text x="742" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J5-5 SCL</text>
 <text x="838" y="452" font-size="8.5" fill="#5A6472">P3_27 on mikroBUS &#183; shared with the ESP32</text>
 <text x="690" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">SDA</text>
 <text x="726" y="468" font-size="9" fill="#5A6472">&#8594;</text>
-<text x="742" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J6 SDA</text>
+<text x="742" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J5-6 SDA</text>
 <text x="838" y="468" font-size="8.5" fill="#5A6472">P3_28 on mikroBUS &#183; shared with the ESP32</text>
 <text x="690" y="484" font-size="9" fill="#6B3FA0" font-weight="bold">VCC</text>
 <text x="726" y="484" font-size="9" fill="#5A6472">&#8594;</text>
@@ -222,9 +236,9 @@
 <text x="1570" y="298.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">VIN</text>
 <text x="1340" y="313" font-size="8.5" fill="#5A6472">I&#178;C slave 0x42 &#183; 400 kHz</text>
 <polyline points="1318,269 1278,269" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
-<text x="1272" y="272.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J6 SCL  (block A)</text>
+<text x="1272" y="272.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J5-5 SCL  (block A)</text>
 <polyline points="1318,295 1278,295" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
-<text x="1272" y="298.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J6 SDA  (block A)</text>
+<text x="1272" y="298.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">&#8596; MCX J5-6 SDA  (block A)</text>
 <rect x="1760" y="215" width="250" height="118" fill="#ffffff" stroke="#41546B" stroke-width="2.2" rx="6"/>
 <rect x="1760" y="215" width="250" height="40" fill="#41546B" rx="6"/>
 <rect x="1760" y="247" width="250" height="8" fill="#41546B"/>

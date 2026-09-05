@@ -12,7 +12,7 @@
  * ---------------------------------------------------------------------------
  * PINS   (SCHEMA_WIRING.svg block B)
  *
- *   GPIO21 SDA   GPIO22 SCL   -> MCX P3_28 / P3_27, 3.3 V, no pull-ups to add
+ *   GPIO21 SDA   GPIO22 SCL   -> MCX P3_28 / P3_27, 3.3 V, 2k pull-ups at MCX
  *   VIN          9 V logic pack direct, 470 uF close by. Needs an AMS1117
  *                (SOT-223) on the board, and the 5 V fan pointed at it.
  *   GND          star point
@@ -105,8 +105,8 @@ static void i2cReport(void)
     Serial.println(F("  Nothing yet. Normal until the MCX is powered and running;"));
     Serial.println(F("  it polls this node rather than the other way round."));
     Serial.println(F("  If it stays at zero with the MCX up, check the two I2C wires"));
-    Serial.println(F("  and remember the bus has no pull-ups of its own - it borrows"));
-    Serial.println(F("  the 2.2k on the MPU6050 board, so that module must be present."));
+    Serial.println(F("  and check the two 2k pull-ups to 3V3 are fitted - a floating"));
+    Serial.println(F("  bus cannot ACK, which looks exactly like a dead slave."));
   } else if (g_i2cReads > 0) {
     Serial.println(F("  Reads climbing = the VCU is polling. The link works."));
   }

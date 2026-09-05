@@ -53,9 +53,12 @@ link   round-trip test both, with a verdict
 Flat and still, `imu` should show `az` near **+16384** and all three gyro axes near zero. Turn
 the board about its vertical axis and `gz` should swing.
 
-> **The I²C bus has no pull-ups of its own** — it borrows the 2.2 kΩ on the MPU6050 board.
-> Unplug that module and the whole bus goes dead, the ESP32 included. If `i2c` finds nothing at
-> all, check the IMU is connected before suspecting anything else.
+> **The I²C bus needs its two 2 kΩ pull-ups to 3V3 fitted** — SDA and SCL to `J3-8`. They are
+> not on any board here. Without them both lines float, nothing can ACK, and `i2c` returns
+> `nothing answered` — which looks exactly like a dead ESP32 and a dead IMU at once.
+>
+> This used to borrow the 2.2 kΩ on the MPU6050 module instead, making a sensor breakout a
+> hard dependency for the WiFi gateway. If your bus predates that change, fit the resistors.
 
 `led` and `btn` need `P3_13`, `P3_0`, `P3_29` and `P1_7` muxed, which the generated `pin_mux.c`
 does not do. That setup lives in `led_blinky.c` on purpose: Config Tools would regenerate
@@ -103,7 +106,7 @@ e   queue a line for the VCU     ?   help
 
 `i` is the useful one. **Reads climbing means the VCU is polling and the link works** — the MCX
 is the master here, so this node never speaks first. If reads stay at zero with the MCX
-running, check the two I²C wires, and remember the bus has no pull-ups of its own: it borrows
+running, check the two I²C wires, and check the 2 kΩ pull-ups are fitted: without them
 the 2.2 kΩ on the MPU6050 board, so that module has to be present for anything on the bus to
 work at all.
 
@@ -338,9 +341,9 @@ return no bytes, so the failure count is the only thing that tells them apart.
 ```
 
 **Reads climbing means the VCU is alive and the I²C wiring is good.** The MCX is the master, so
-this node never speaks first. Frozen reads mean the MCX is not running this firmware, or SDA/SCL
-are wrong, or — the one people miss — the MPU6050 is unplugged, since its 2.2 kΩ are the bus's
-only pull-ups.
+this node never speaks first. Frozen reads mean the MCX is not running this firmware, SDA/SCL
+are wrong, or the bus is floating — measure both lines against the star point, they must idle
+at **3.3 V** through the two 2 kΩ pull-ups.
 
 **PERC and ACT, 115200** — each says whether the VCU is reaching it, and what its own hardware
 is doing:
@@ -366,8 +369,9 @@ is doing:
 | horn will not stop | it already has: PERC drops it 500 ms after the last `H,1` |
 | keys do nothing | the page does not have focus, or the cursor is in the message box |
 
-Remember the I²C bus borrows the 2.2 kΩ pull-ups on the MPU6050 module. Unplug the IMU and
-the browser link dies with it.
+If the gateway is silent, measure SDA and SCL at **J5 pins 6 / 5** against the star point before touching
+software: both must idle at **3.3 V**. A floating bus cannot ACK, and it looks identical to
+every device on it being dead — the scan just says `nothing answered`.
 
 ---
 

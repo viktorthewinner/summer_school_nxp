@@ -58,8 +58,10 @@
 /* ---------------------------------------------------------------------------
  * Link to the ESP32 gateway - LPI2C0 on P3_27 (SCL) / P3_28 (SDA), ALT2.
  *
- * These are the mikroBUS/Pmod I2C pins and the only 5 V-tolerant pins on the
- * chip. Pull-ups go to 3.3 V: the ESP32 is not 5 V tolerant.
+ * These are the mikroBUS I2C pins: J5 pin 5 (SCL) and J5 pin 6 (SDA), with
+ * GND on J5 pin 8 - per NXP's own lpi2c example readme for this board. NOT
+ * J6: that is the SPI/analog half of the socket, and its pins 5/6 are
+ * P1_2/P1_0. Pull-ups go to 3.3 V: the ESP32 is not 5 V tolerant.
  *
  * I2C is master-polled, so the gateway cannot initiate. The VCU reads it
  * every cycle; a remote command waits at most one poll period.

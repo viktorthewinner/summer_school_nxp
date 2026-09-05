@@ -5,7 +5,7 @@
  *
  *   LINK_ARD1   LPUART2   P3_15 TX / P3_14 RX   J2 pin 2  / J2 pin 4
  *   LINK_ARD2   LPUART1   P1_9  TX / P1_8  RX   J2 pin 20 / J2 pin 18
- *   LINK_GW     LPI2C0    P3_27 SCL / P3_28 SDA  mikroBUS J6  (ESP32)
+ *   LINK_GW     LPI2C0    P3_27 SCL / P3_28 SDA  mikroBUS J5 pins 5 / 6  (ESP32)
  *
  * The two UART channels receive under interrupt into a ring. The gateway is
  * an I2C slave and cannot initiate, so LINK_PollLine(LINK_GW, ...) performs a
@@ -29,6 +29,12 @@
 
 /* Longest line accepted or produced, including the terminator. */
 #define LINK_LINE_MAX 128u
+
+/* Largest payload the gateway hands back in one read. MUST match GW_CHUNK in
+ * esp32_gateway.ino: the slave writes exactly LINK_GW_CHUNK + 1 bytes on every
+ * request, so a master that reads a different number leaves the slave's
+ * transmit buffer out of step - see LINK_GwResync(). */
+#define LINK_GW_CHUNK 48u
 
 typedef enum
 {
@@ -91,6 +97,43 @@ bool LINK_GwOnline(void);
 
 /*! @brief Gateway transaction counters. Either pointer may be NULL. */
 void LINK_GwStats(uint32_t *polls, uint32_t *fails);
+
+/*!
+ * @brief Name any LPI2C status_t in one word: "NAK", "FIFO ERROR", "ok", ...
+ *
+ * The count of failures cannot say WHY, but the status can, and the SDK ranks
+ * the error flags so the word is meaningful: a NAK outranks a FIFO error, so
+ * "FIFO ERROR" means no NAK was seen - the slave DID acknowledge and the
+ * transfer broke afterwards. That is a completely different fault from
+ * silence, and it is the difference between suspecting a wire and suspecting
+ * the far end's timing.
+ */
+const char *LINK_I2CStatusName(int32_t status);
+
+/*! @brief One sentence of what to check for that status. */
+const char *LINK_I2CStatusHint(int32_t status);
+
+/*! @brief LINK_I2CStatusName() of the most recent gateway transaction. */
+const char *LINK_GwFailReason(void);
+
+/*! @brief One sentence of what to check for the current LINK_GwFailReason(). */
+const char *LINK_GwFailHint(void);
+
+/*! @brief How many times the LPI2C controller has been re-initialised to
+ *         recover from a run of failed transfers. Climbing means the bus is
+ *         breaking repeatedly rather than being simply absent. */
+uint32_t LINK_GwRecoveries(void);
+
+/*!
+ * @brief Reset the controller and drop any half-read gateway chunk.
+ *
+ * The gateway answers every read with a fixed LINK_GW_CHUNK + 1 bytes. Read a
+ * different number - as a one-byte bus probe does - and the bytes it queued
+ * but did not get to send stay queued, so every later read is one frame behind
+ * for as long as the board is powered. Anything that touches the gateway
+ * outside the normal poll must call this afterwards.
+ */
+void LINK_GwResync(void);
 
 /*! @brief Short printable name of a channel, e.g. "ARD1". */
 const char *LINK_GetName(link_id_t id);

@@ -14,7 +14,7 @@
  *   LPUART0  P0_2  / P0_3    MCU-Link VCOM, 115200   this terminal
  *   LPUART2  P3_14 / P3_15   Arduino 1,      38400   J2 pins 4 / 2
  *   LPUART1  P1_8  / P1_9    Arduino 2,      38400   J2 pins 18 / 20
- *   LPI2C0   P3_27 / P3_28   ESP32 gateway, 400 kHz  mikroBUS J6
+ *   LPI2C0   P3_27 / P3_28   ESP32 gateway, 400 kHz  mikroBUS J5 pins 5 / 6
  *
  * Wire format: "[SRC] text", SRC being MCX, ARD1, ARD2 or GW.
  *
@@ -352,19 +352,54 @@ static bool console_try_read(uint8_t *byte)
 
 /* LPI2C0 is already a configured master - LINK_Init() did it for the gateway,
  * so these helpers just borrow it. */
+/* Status of the last i2c_probe(), so the scan can report ITS OWN result
+ * instead of whatever the background gateway poll last saw. */
+static status_t s_probeStatus = kStatus_Success;
+
+/* Presence check: START, address, ONE byte, STOP.
+ *
+ * Two things this must not be, both learned the hard way on this bus.
+ *
+ * NOT a one-byte READ. The ESP32 answers every request with a fixed
+ * LINK_GW_CHUNK + 1 bytes; take one and the other 48 stay in its transmit
+ * buffer, so every later poll reads a frame behind until that board is power
+ * cycled. The scan you run BECAUSE the link looks broken would break it.
+ *
+ * NOT a zero-length write either, which is the textbook scan and what this
+ * tried next. LPI2C answers an address-only transfer with
+ * kStatus_LPI2C_FifoError - measured, against a gateway that was at that
+ * moment serving five thousand successful reads - so every address came back
+ * a FIFO error and the scan reported an empty bus while the link was provably
+ * up. This command FIFO wants a data phase to go with the START.
+ *
+ * So: write one byte, and make it a newline. On the gateway it lands in
+ * onI2CReceive(), where a newline with an empty assembly buffer does nothing
+ * at all and with a partial line merely terminates it. On the MPU6050 a lone
+ * byte only sets the register pointer; no register is written. Harmless to
+ * both, and an absent device still NAKs its address, which is all a scan
+ * needs to see. */
 static bool i2c_probe(uint8_t addr)
 {
     lpi2c_master_transfer_t xfer;
-    uint8_t                 dummy;
+    uint8_t                 quiet = (uint8_t)'\n';
 
     (void)memset(&xfer, 0, sizeof(xfer));
     xfer.slaveAddress = addr;
-    xfer.direction    = kLPI2C_Read;
-    xfer.data         = &dummy;
+    xfer.direction    = kLPI2C_Write;
+    xfer.data         = &quiet;
     xfer.dataSize     = 1u;
     xfer.flags        = (uint32_t)kLPI2C_TransferDefaultFlag;
 
-    return (LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer) == kStatus_Success);
+    s_probeStatus = LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer);
+
+    /* A FIFO error leaves the controller wedged and the next probe inherits
+     * it, which is how one bad address turns into a whole empty bus. */
+    if (s_probeStatus == kStatus_LPI2C_FifoError)
+    {
+        LINK_GwResync();
+    }
+
+    return (s_probeStatus == kStatus_Success);
 }
 
 static bool i2c_read_regs(uint8_t addr, uint8_t reg, uint8_t *buf, size_t len)
@@ -483,17 +518,103 @@ static void test_i2c_scan(void)
         }
     }
 
+    /* Probe the gateway once more on its own, so what is reported below is
+     * THIS scan's verdict on THAT address - not the background poll's, which
+     * is what made a failed scan print "the gateway is answering". */
+    (void)i2c_probe(LINK_GW_ADDR);
+
     if (found == 0u)
     {
+        uint32_t polls, fails;
+
+        LINK_GwStats(&polls, &fails);
+
         PRINTF("   nothing answered.\r\n");
-        PRINTF("   The bus has no pull-ups of its own - it relies on the 2.2k on the\r\n");
-        PRINTF("   MPU6050 board. With that module unplugged the bus is dead, which\r\n");
-        PRINTF("   also explains a scan that finds the ESP32 but nothing else.\r\n");
+        PRINTF("   Probing 0x%02X on its own gives %s:\r\n",
+               (unsigned int)LINK_GW_ADDR, LINK_I2CStatusName((int32_t)s_probeStatus));
+        PRINTF("   %s.\r\n", LINK_I2CStatusHint((int32_t)s_probeStatus));
+
+        /* Believe the poll loop over this scan. It runs continuously, against
+         * the real gateway, with the real transfer size. If it is succeeding
+         * then the bus, the pull-ups, the pins and the address are all proven,
+         * and an empty scan is this tool being wrong - not the link. */
+        if (LINK_GwOnline() || (polls > 0u))
+        {
+            PRINTF("   BUT the gateway poll loop has %u successful reads%s.\r\n",
+                   (unsigned)polls, LINK_GwOnline() ? " and is up right now" : "");
+            PRINTF("   The bus therefore WORKS - trust that over this scan, and\r\n");
+            PRINTF("   use 'gw', which reads the gateway the way the poll does.\r\n");
+        }
+
+        if (s_probeStatus == kStatus_LPI2C_Nak)
+        {
+            PRINTF("   A NAK is the electrical case: SDA is mikroBUS J5 pin 6 and SCL\r\n");
+            PRINTF("   is J5 pin 5 (silkscreen SDA / SCL). Both must idle at 3.3 V\r\n");
+            PRINTF("   against the star point, through the two 2k pull-ups to J3-8.\r\n");
+            PRINTF("   About 2.3 V on BOTH is a device on the bus with no VDD - its\r\n");
+            PRINTF("   clamp diodes eat the pull-up. Unplug one node at a time.\r\n");
+        }
     }
     else
     {
         PRINTF("   %u device(s).\r\n", found);
     }
+
+    /* Scanning walks every address on the bus the gateway lives on. Put the
+     * controller and the line assembly back to a known state before the poll
+     * loop resumes. */
+    LINK_GwResync();
+}
+
+/* One raw gateway read, printed. The poll path cannot show this: it yields
+ * lines or nothing, so a slave that answers with the WRONG BYTES looks the
+ * same as one that answers with none. The first byte is the payload length
+ * and must be 0 (idle) or 1..LINK_GW_CHUNK. Anything else - 0xFF, a stuck
+ * value, ASCII - means the ESP32 is out of frame or not running the sketch. */
+static void test_gw_read(void)
+{
+    lpi2c_master_transfer_t xfer;
+    uint8_t                 raw[LINK_GW_CHUNK + 1u];
+    status_t                s;
+
+    PRINTF("\r\n-- gateway raw read, 0x%02X, %u bytes\r\n",
+           (unsigned int)LINK_GW_ADDR, (unsigned int)sizeof(raw));
+
+    (void)memset(raw, 0, sizeof(raw));
+    (void)memset(&xfer, 0, sizeof(xfer));
+    xfer.slaveAddress = LINK_GW_ADDR;
+    xfer.direction    = kLPI2C_Read;
+    xfer.data         = raw;
+    xfer.dataSize     = sizeof(raw);
+    xfer.flags        = (uint32_t)kLPI2C_TransferDefaultFlag;
+
+    s = LPI2C_MasterTransferBlocking(LINK_GW_LPI2C, &xfer);
+
+    PRINTF("   status %s - %s.\r\n", LINK_I2CStatusName((int32_t)s),
+           LINK_I2CStatusHint((int32_t)s));
+
+    if (s == kStatus_Success)
+    {
+        PRINTF("   len byte %u %s\r\n", (unsigned)raw[0],
+               (raw[0] == 0u)              ? "(idle - nothing pending, this is normal)" :
+               (raw[0] <= LINK_GW_CHUNK)   ? "(plausible)" :
+                                             "(IMPOSSIBLE - the slave is out of frame)");
+
+        PRINTF("   payload:");
+        for (unsigned i = 1u; i < sizeof(raw); i++)
+        {
+            if (((i - 1u) % 16u) == 0u) { PRINTF("\r\n     "); }
+            PRINTF(" %02X", (unsigned)raw[i]);
+        }
+        PRINTF("\r\n     \"");
+        for (unsigned i = 1u; i < sizeof(raw); i++)
+        {
+            PUTCHAR(((raw[i] >= 0x20u) && (raw[i] < 0x7Fu)) ? (char)raw[i] : '.');
+        }
+        PRINTF("\"\r\n");
+    }
+
+    LINK_GwResync();
 }
 
 static void test_imu(void)
@@ -561,6 +682,41 @@ static void test_imu(void)
 /* The red LED is muxed by the generated pin_mux.c. Green, blue and the two
  * buttons are not, so they are set up here instead - in this file, on purpose,
  * because Config Tools would regenerate pin_mux.c and drop them again. */
+/* Turn on the MCU's own pull-ups on the I2C bus.
+ *
+ * The generated pin_mux.c sets these two pins kPORT_PullDisable, which is the
+ * correct default for a board that has real pull-up resistors on the bus.
+ * This one now does - two 2 kOhm to 3V3, see the schema - so these internal
+ * ones are belt and braces, not the mechanism.
+ *
+ * Internal pull-ups are weak, tens of kOhm against the 2.2 k these want, so
+ * this is insurance and not a substitute: with them alone the bus may need
+ * LINK_GW_BAUDRATE dropped to 100 kHz, and long wires may not work at all.
+ * What it does guarantee is that the bus idles HIGH instead of floating, so
+ * a scan result means something and a meter reads 3.3 V rather than noise.
+ *
+ * In this file rather than pin_mux.c on purpose - Config Tools regenerates
+ * that file and would drop this, along with the six UART pins. */
+static void i2c_pullups_init(void)
+{
+    const port_pin_config_t i2c = {
+        kPORT_PullUp,                /* the point of the whole function */
+        kPORT_LowPullResistor,
+        kPORT_FastSlewRate,
+        kPORT_PassiveFilterDisable,  /* the filter would blunt 400 kHz edges */
+        kPORT_OpenDrainEnable,       /* mandatory for I2C - never push-pull  */
+        kPORT_LowDriveStrength,
+        kPORT_NormalDriveStrength,
+        kPORT_MuxAlt2,               /* keep LPI2C0, do not steal the pin    */
+        kPORT_InputBufferEnable,
+        kPORT_InputNormal,
+        kPORT_UnlockRegister,
+    };
+
+    PORT_SetPinConfig(PORT3, 27U, &i2c);   /* SCL, J5 pin 5 */
+    PORT_SetPinConfig(PORT3, 28U, &i2c);   /* SDA, J5 pin 6 */
+}
+
 static void test_extra_pins_init(void)
 {
     /* Eleven fields, in the order the generated pin_mux.c uses. Supplying
@@ -1293,10 +1449,22 @@ static void diag_service(void)
     keyAge  = now_ms() - s_keyAt;
     gwUp    = LINK_GwOnline();
 
-    s_wasGw   = diag_edge("GW",   s_wasGw,   gwUp,
-                          "ESP32 answering on I2C",
-                          "ESP32 NOT answering - check SDA/SCL, and that the "
-                          "MPU6050 is plugged in (it is the only pull-up)");
+    {
+        int wasGw = s_wasGw;
+
+        s_wasGw = diag_edge("GW", s_wasGw, gwUp,
+                            "ESP32 answering on I2C",
+                            "ESP32 NOT answering on I2C");
+
+        /* The one-word reason names the wire; say it once, on the edge. */
+        if ((wasGw != s_wasGw) && !gwUp)
+        {
+            PRINTF("       %s: %s.\r\n", LINK_GwFailReason(), LINK_GwFailHint());
+            PRINTF("       SDA = J5 pin 6, SCL = J5 pin 5, 2k to 3V3 on each; "
+                   "'i2c' to scan.\r\n");
+            console_redraw_prompt();
+        }
+    }
     s_wasPerc = diag_edge("PERC", s_wasPerc, percAge < DIAG_SILENT_MS,
                           "up - ranges arriving",
                           "SILENT - no P, line. Check J2-2/J2-4 and its divider");
@@ -1319,8 +1487,14 @@ static void diag_service(void)
 
     LINK_GwStats(&polls, &fails);
 
-    PRINTF("\r\n  [diag] GW %s %u ok / %u fail | PERC ", gwUp ? "up  " : "DOWN",
+    PRINTF("\r\n  [diag] GW %s %u ok / %u fail", gwUp ? "up  " : "DOWN",
            (unsigned)polls, (unsigned)fails);
+    if (!gwUp) { PRINTF(" %s", LINK_GwFailReason()); }
+    if (LINK_GwRecoveries() != 0u)
+    {
+        PRINTF(" (%u resets)", (unsigned)LINK_GwRecoveries());
+    }
+    PRINTF(" | PERC ");
     if (percAge < DIAG_SILENT_MS) { PRINTF("%u ms", (unsigned)percAge); }
     else                          { PRINTF("SILENT"); }
     PRINTF(" | ACT ");
@@ -1418,6 +1592,7 @@ static bool drive_try_command(const char *line)
     }
 
     if (strcmp(line, "i2c") == 0)   { test_i2c_scan();        return true; }
+    if (strcmp(line, "gw") == 0)    { test_gw_read();         return true; }
     if (strcmp(line, "imu") == 0)   { test_imu();             return true; }
     if (strcmp(line, "led") == 0)   { test_leds();            return true; }
     if (strcmp(line, "btn") == 0)   { test_buttons();         return true; }
@@ -1435,6 +1610,7 @@ static bool drive_try_command(const char *line)
                "\r\n  diag        toggle the 2 s link summary (up/down msgs stay on)"
                "\r\n"
                "\r\n  i2c         scan the bus - expect 0x42 ESP32, 0x68 MPU6050"
+               "\r\n  gw          one raw read of the gateway, bytes and status"
                "\r\n  imu         MPU6050 WHO_AM_I then 10 samples"
                "\r\n  led         cycle the RGB LED       btn   watch SW2 / SW3"
                "\r\n  tx1 / tx2   round-trip test one link (needs test_link_*.ino)"
@@ -1621,6 +1797,7 @@ int main(void)
     (void)SysTick_Config(SystemCoreClock / 1000u);
 
     test_extra_pins_init();
+    i2c_pullups_init();   /* after LINK_Init muxed them - see the note there */
 
     /* Nothing has spoken yet, so make the ages say so. Left at zero they
      * would read "0 ms old" for the first ten seconds and every link would
@@ -1633,9 +1810,8 @@ int main(void)
      *
      * This banner used to come after the IMU wake-up, and that was a real
      * bug: an LPI2C transfer on a stuck bus does not fail, it waits, so a
-     * missing MPU6050 module - which is also the bus's only pull-up - hung
-     * the board here with NOTHING printed. Identical, from the outside, to a
-     * board that was never flashed or never powered.
+     * bus with no pull-ups fitted hung the board here with NOTHING printed.
+     * Identical, from the outside, to a board never flashed or never powered.
      *
      * The retry limit in CMakeLists.txt means it can no longer hang at all.
      * The ordering stays anyway: the first thing this node does should be to
@@ -1671,8 +1847,9 @@ int main(void)
     else
     {
         PRINTF(" IMU  : NO ANSWER at 0x%02X.\r\n", (unsigned int)IMU_ADDR);
-        PRINTF("        Its 2.2k are the ONLY pull-ups on this bus, so if the\r\n");
-        PRINTF("        module is unplugged the ESP32 gateway is dead too.\r\n");
+        PRINTF("        If the ESP32 is silent too, suspect the bus rather than\r\n");
+        PRINTF("        either device: SDA and SCL must idle at 3.3 V via the\r\n");
+        PRINTF("        two 2k pull-ups to J3-8.\r\n");
         PRINTF("        Run 'i2c' to scan. The Arduino links work regardless.\r\n");
     }
     PRINTF("-------------------------------------------------------------\r\n");
