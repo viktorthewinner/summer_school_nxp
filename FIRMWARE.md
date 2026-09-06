@@ -101,7 +101,8 @@ whole range before assuming anything is broken.
 
 ```
 w   WiFi status and clients      i   I2C slave counters
-e   queue a line for the VCU     ?   help
+p   tug test - hold each I2C line low, the MCX must notice
+?   help
 ```
 
 `i` is the useful one. **Reads climbing means the VCU is polling and the link works** — the MCX
@@ -110,8 +111,19 @@ running, check the two I²C wires, and check the 2 kΩ pull-ups are fitted: with
 the 2.2 kΩ on the MPU6050 board, so that module has to be present for anything on the bus to
 work at all.
 
-`e` queues a line that leaves on the VCU's next poll and should appear on the MCX console as
-`[GW] GW,hello from the ESP32`. That proves the return path end to end.
+**The boot banner already checks the wires for you.** Before the I²C slave starts, the sketch
+reads both pins against an internal pull-down (a line that idles LOW has no wire or no pull-up)
+and then counts falling edges on each pin for one second. A live bus puts nine clock edges on
+SCL per byte and far fewer on SDA, so the pin that sees more edges *is* the clock. The
+`verdict :` line under the counters names the fault in words — including
+`*** SDA AND SCL ARE SWAPPED ***`, which is the one to expect after moving to a different
+DevKit: **on the 30-pin board D21 and D22 are not neighbours, TX0 and RX0 sit between them.**
+
+With the gateway down the MCX only retries twice a second and may not touch the bus at all
+inside that one-second window, so a `SILENT` verdict is not proof. `p` is: it holds SDA low
+for three seconds, then SCL, and the MCX `[diag]` line must switch to `BUSY` for each. A wire
+the MCX never notices is not on its bus, whatever the pull-up says. The node restarts itself
+after the test so the slave comes back clean.
 
 ---
 
@@ -409,6 +421,7 @@ instead of killing the node.
 |---|---|
 | page will not load at all | you are on the wrong WiFi. `w` on the ESP32 console lists connected clients |
 | page loads, everything reads `-` | the VCU is not polling. `i` on the ESP32 console: reads must climb |
+| ESP32 reads stay at 0, MCX says `GW DOWN ... FIFO ERROR`, scan finds `0x68` but not `0x42` | the ESP32 is not ACKing its address. Read the `verdict :` line in the ESP32 boot banner: after a board swap it is almost always `SDA AND SCL ARE SWAPPED` — move SCL to **D22** and SDA to **D21**. On a 30-pin DevKit those two pins are separated by TX0/RX0 |
 | `PERC silent`, `ACT silent` | that Arduino's own console first — the `[link] rx` counters below name the fault. Then `tx1` / `tx2` at the MCX |
 | wheels do nothing, page looks live | `sens` at the MCX console, then ACT's USB monitor |
 | horn will not stop | it already has: PERC drops it 500 ms after the last `H,1` |

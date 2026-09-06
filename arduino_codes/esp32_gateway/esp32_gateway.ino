@@ -32,6 +32,11 @@
  *                              J5, NOT J6 - J6 is the SPI half of the socket
  *                              and its pins 5/6 are P1_2/P1_0. Go by the
  *                              silkscreen, which prints SCL and SDA.
+ *                              On a 30-pin DevKit D21 and D22 are NOT next
+ *                              to each other - TX0 and RX0 sit between them,
+ *                              which is how a board swap ends up with the two
+ *                              wires reversed. The boot banner's "verdict"
+ *                              line catches that; 'p' on the console proves it.
  *   ESP32 GND           <->  MCX GND    (J3 pin 12 or 14), star point
  *   ESP32 VIN           <-   9 V logic pack DIRECT, 470 uF close by.
  *                              Board must have an AMS1117 (SOT-223), not a
@@ -528,9 +533,39 @@ static void consoleService()
     Serial.printf("[wifi] SSID %s  clients %d  http://%s\n",
                   AP_SSID, WiFi.softAPgetStationNum(),
                   WiFi.softAPIP().toString().c_str());
+  } else if (c == 'p') {
+    /* Tug test. Hold SDA low for three seconds. If this wire is really on
+     * the MCX's bus, the MCX console shows every I2C transfer failing with
+     * BUSY or PIN LOW for those three seconds and the IMU scan finds nothing.
+     * If the MCX does not notice, this pin is not on that bus, whatever the
+     * pull-up says. */
+    Serial.println(F("[bus] tug test - watch the MCX [diag] line while this runs"));
+    Wire.end();
+    Serial.println(F("[bus] 1/2  SDA held LOW for 3 s  -> MCX should say BUSY"));
+    pinMode(PIN_SDA, OUTPUT_OPEN_DRAIN);
+    digitalWrite(PIN_SDA, LOW);
+    delay(3000);
+    digitalWrite(PIN_SDA, HIGH);
+    pinMode(PIN_SDA, INPUT);
+    Serial.println(F("[bus]      SDA released, 3 s pause"));
+    delay(3000);
+    Serial.println(F("[bus] 2/2  SCL held LOW for 3 s  -> MCX should say BUSY too"));
+    Serial.println(F("           (the LPI2C calls either line low a busy bus)"));
+    pinMode(PIN_SCL, OUTPUT_OPEN_DRAIN);
+    digitalWrite(PIN_SCL, LOW);
+    delay(3000);
+    digitalWrite(PIN_SCL, HIGH);
+    pinMode(PIN_SCL, INPUT);
+    Serial.println(F("[bus]      SCL released. A wire the MCX never noticed is"));
+    Serial.println(F("           not on its bus. Restarting so the slave comes"));
+    Serial.println(F("           back clean."));
+    Serial.flush();
+    delay(100);
+    ESP.restart();
   } else if (c == '?') {
     Serial.println(F("  i  I2C counters - reads climbing = the VCU is polling"));
     Serial.println(F("  w  WiFi status and connected clients"));
+    Serial.println(F("  p  tug test - hold SDA low 3 s, the MCX must complain"));
   }
 }
 
@@ -580,6 +615,53 @@ static void diagService()
   lastReads = i2cReads;
 }
 
+/* ---- boot-time wiring test ----------------------------------------------
+ * Runs once, before the I2C peripheral owns the pins. Counts falling edges
+ * on each pin for WIRE_TEST_MS while the MCX is (presumably) already
+ * polling the bus - it reads the IMU at 10 Hz and this node several times a
+ * second, so a correctly wired SCL sees well over a thousand edges a second
+ * and SDA a few hundred. The four possible answers each name one fault.
+ * ------------------------------------------------------------------------ */
+
+static const uint32_t WIRE_TEST_MS = 1000;   /* count window, after the first edge */
+static const uint32_t WIRE_WAIT_MS = 5000;   /* how long to wait for that edge      */
+
+static volatile uint32_t edgeSda = 0, edgeScl = 0;
+static void IRAM_ATTR onSdaEdge() { edgeSda++; }
+static void IRAM_ATTR onSclEdge() { edgeScl++; }
+
+static void printWireVerdict(bool sdaUp, bool sclUp, uint32_t sda, uint32_t scl)
+{
+  Serial.printf(" bus test: %lu falling edges on SCL, %lu on SDA (%lu ms after the first)\n",
+                (unsigned long)scl, (unsigned long)sda, (unsigned long)WIRE_TEST_MS);
+
+  if (!sdaUp || !sclUp) {
+    Serial.println(F(" verdict : a line idles LOW - that wire is off, or its"));
+    Serial.println(F("           2k pull-up to 3V3 is missing at the MCX end"));
+  } else if (scl == 0 && sda == 0) {
+    Serial.println(F(" verdict : pulled up but SILENT. Either the MCX is not"));
+    Serial.println(F("           running, or these wires do not reach J5 pins"));
+    Serial.println(F("           5/6 - check they are not on J6, and not on"));
+    Serial.println(F("           the IMU's VCC/AD0/INT pins next to its SDA/SCL."));
+    Serial.println(F("           (With the gateway down the MCX retries only"));
+    Serial.println(F("           twice a second, so a quiet second is not proof."));
+    Serial.println(F("           Type p for the tug test - that one is.)"));
+  } else if (scl == 0 || sda == 0) {
+    Serial.printf(" verdict : only %s carries traffic - the %s wire is off the\n",
+                  scl ? "SCL" : "SDA", scl ? "SDA" : "SCL");
+    Serial.println(F("           bus (a bad jumper, or the wrong header pin)"));
+  } else if (sda > scl) {
+    Serial.println(F(" verdict : *** SDA AND SCL ARE SWAPPED *** - the clock is"));
+    Serial.printf("           arriving on GPIO%u. Move SCL to GPIO%u (D%u) and\n",
+                  PIN_SDA, PIN_SCL, PIN_SCL);
+    Serial.printf("           SDA to GPIO%u (D%u). On the 30-pin board they are\n",
+                  PIN_SDA, PIN_SDA);
+    Serial.println(F("           NOT adjacent: TX0 and RX0 sit between them"));
+  } else {
+    Serial.println(F(" verdict : wiring looks right - clock on SCL, data on SDA"));
+  }
+}
+
 /* ---- setup / loop ------------------------------------------------------- */
 
 void setup()
@@ -589,7 +671,44 @@ void setup()
 
   Wire.onReceive(onI2CReceive);
   Wire.onRequest(onI2CRequest);
-  Wire.begin(GW_I2C_ADDR, PIN_SDA, PIN_SCL, 400000);
+
+  /* Before touching the bus: do the MCX's 2k pull-ups actually reach these
+   * pins? An external 2k to 3V3 beats the ~45k internal pulldown, and a wire
+   * that is not connected cannot. Sampled repeatedly so a poll in progress
+   * cannot read as a dead line. */
+  pinMode(PIN_SDA, INPUT_PULLDOWN);
+  pinMode(PIN_SCL, INPUT_PULLDOWN);
+  bool sdaUp = false, sclUp = false;
+  for (uint8_t n = 0; n < 20u; n++) {
+    if (digitalRead(PIN_SDA)) { sdaUp = true; }
+    if (digitalRead(PIN_SCL)) { sclUp = true; }
+    delay(2);
+  }
+
+  /* A HIGH line only proves a pull-up. It does not prove the wire lands on
+   * the bus the MCX is actually clocking, nor that SDA and SCL are on the
+   * pins this sketch thinks they are - and on the 30-pin DevKit D21 and D22
+   * are not neighbours, TX0/RX0 sit between them. So listen for one second:
+   * a live I2C bus puts nine falling edges per byte on SCL and far fewer on
+   * SDA. Which pin sees the clock names the wiring. */
+  attachInterrupt(digitalPinToInterrupt(PIN_SDA), onSdaEdge, FALLING);
+  attachInterrupt(digitalPinToInterrupt(PIN_SCL), onSclEdge, FALLING);
+  /* With this node down the MCX backs off to a poll every 500 ms and, after
+   * a run of failures, resets its controller - so it may touch the bus only
+   * once every few seconds. Wait for the first edge, up to WIRE_WAIT_MS,
+   * and only then count for WIRE_TEST_MS: one START plus one address byte
+   * is enough to tell which pin has the clock. */
+  uint32_t t0 = millis();
+  while (edgeSda == 0 && edgeScl == 0 && millis() - t0 < WIRE_WAIT_MS) delay(10);
+  delay(WIRE_TEST_MS);
+  detachInterrupt(digitalPinToInterrupt(PIN_SDA));
+  detachInterrupt(digitalPinToInterrupt(PIN_SCL));
+  uint32_t sdaEdges = edgeSda, sclEdges = edgeScl;
+
+  /* Wire.begin() returns false on a failed slave init and reports why only
+   * through log_e, which prints nothing at Core Debug Level "None". Discarding
+   * it is how a dead I2C slave still produces a clean-looking boot. */
+  bool i2cOk = Wire.begin(GW_I2C_ADDR, PIN_SDA, PIN_SCL, 400000);
 
   WiFi.mode(WIFI_AP);
   WiFi.softAP(AP_SSID, AP_PASS);
@@ -611,6 +730,14 @@ void setup()
   Serial.println(WiFi.softAPIP());
   Serial.printf(" I2C     : slave 0x%02X on SDA=%u SCL=%u\n",
                 GW_I2C_ADDR, PIN_SDA, PIN_SCL);
+  Serial.printf(" I2C init: %s\n", i2cOk ? "ok" : "*** Wire.begin FAILED ***");
+  Serial.printf(" SDA line: %s\n",
+                sdaUp ? "HIGH - wire and pull-up present"
+                      : "*** LOW - nothing external on this pin ***");
+  Serial.printf(" SCL line: %s\n",
+                sclUp ? "HIGH - wire and pull-up present"
+                      : "*** LOW - nothing external on this pin ***");
+  printWireVerdict(sdaUp, sclUp, sdaEdges, sclEdges);
   Serial.println(F(" Type i for the I2C counters, w for WiFi, ? for help."));
   Serial.println(F(" Reads climbing means the VCU is polling. It is the"));
   Serial.println(F(" master here, so this node never speaks first."));
