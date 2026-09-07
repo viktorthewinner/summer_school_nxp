@@ -13,9 +13,6 @@
 <rect x="60" y="170" width="5" height="110" fill="#B03A3E"/>
 <text x="76" y="189" font-size="12.5" fill="#B03A3E" font-weight="bold">TRACTION PACK</text>
 <text x="76" y="203" font-size="9.5" fill="#5A6472">4 &#215; AA NiMH &#183; 4.8 V</text>
-<text x="76" y="236" font-size="9" fill="#B03A3E">NiMH preferred</text>
-<text x="76" y="250" font-size="9" fill="#5A6472">it sources amps without</text>
-<text x="76" y="264" font-size="9" fill="#5A6472">sagging under the motors</text>
 <polyline points="290,225 330,225" fill="none" stroke="#B03A3E" stroke-width="3" stroke-linejoin="round"/>
 <line x1="330" y1="225" x2="1100" y2="225" stroke="#B03A3E" stroke-width="4"/>
 <text x="1100" y="213" font-size="12" fill="#B03A3E" text-anchor="end" font-weight="bold">TRACTION  4.8 V</text>
@@ -24,9 +21,6 @@
 <rect x="400" y="332" width="300" height="8" fill="#B03A3E"/>
 <text x="550.0" y="320" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">4 &#215; DC gear motor</text>
 <text x="550.0" y="334" font-size="10.5" fill="#D6E0EC" text-anchor="middle">each via its own PN2222A</text>
-<text x="416" y="375" font-size="9.5" fill="#5A6472">250 mA each running</text>
-<text x="416" y="390" font-size="9.5" fill="#5A6472">1.6 A per pair stalled</text>
-<text x="416" y="405" font-size="9.5" fill="#5A6472">emitters &#8594; star, thick wire</text>
 <circle cx="550" cy="225" r="4" fill="#B03A3E"/>
 <polyline points="550,225 550,300" fill="none" stroke="#B03A3E" stroke-width="2.6" stroke-linejoin="round"/>
 <line x1="550" y1="430" x2="550" y2="460" stroke="#12305B" stroke-width="1.6"/>
@@ -36,9 +30,6 @@
 <rect x="760" y="332" width="300" height="8" fill="#B03A3E"/>
 <text x="910.0" y="320" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">nothing else</text>
 <text x="910.0" y="334" font-size="10.5" fill="#D6E0EC" text-anchor="middle">the motors are the only load</text>
-<text x="776" y="375" font-size="9.5" fill="#5A6472">the servos are gone, so this</text>
-<text x="776" y="390" font-size="9.5" fill="#5A6472">pack has one job and one</text>
-<text x="776" y="405" font-size="9.5" fill="#5A6472">wire leaving it</text>
 <circle cx="910" cy="225" r="4" fill="#B03A3E"/>
 <polyline points="910,225 910,300" fill="none" stroke="#B03A3E" stroke-width="2.6" stroke-linejoin="round"/>
 <line x1="910" y1="430" x2="910" y2="460" stroke="#12305B" stroke-width="1.6"/>
@@ -50,9 +41,6 @@
 <rect x="60" y="500" width="5" height="110" fill="#6B3FA0"/>
 <text x="76" y="519" font-size="12.5" fill="#6B3FA0" font-weight="bold">LOGIC PACK</text>
 <text x="76" y="533" font-size="9.5" fill="#5A6472">9 V &#183; 6 &#215; AA alkaline</text>
-<text x="76" y="566" font-size="9" fill="#B03A3E">NOT a PP3 block battery</text>
-<text x="76" y="580" font-size="9" fill="#5A6472">~500 mAh and ~2 &#8486; inside:</text>
-<text x="76" y="594" font-size="9" fill="#5A6472">it sags on every WiFi burst</text>
 <polyline points="290,555 330,555" fill="none" stroke="#6B3FA0" stroke-width="3" stroke-linejoin="round"/>
 <line x1="330" y1="555" x2="1100" y2="555" stroke="#6B3FA0" stroke-width="4"/>
 <text x="1100" y="543" font-size="12" fill="#6B3FA0" text-anchor="end" font-weight="bold">LOGIC  9 V</text>
@@ -61,10 +49,6 @@
 <rect x="400" y="662" width="300" height="8" fill="#6B3FA0"/>
 <text x="550.0" y="650" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">FRDM-MCXA153</text>
 <text x="550.0" y="664" font-size="10.5" fill="#D6E0EC" text-anchor="middle">&#8594; J3-10  (SYS_5V0)  via BUCK</text>
-<text x="416" y="702" font-size="9.5" fill="#B03A3E" font-weight="bold">NOT J3-16 &#8212; that pin is a dead end:</text>
-<text x="416" y="716" font-size="9.5" fill="#B03A3E" font-weight="bold">J22 unpopulated, path disabled (UM12012)</text>
-<text x="416" y="732" font-size="9.5" fill="#5A6472">9 V &#8594; buck &#8594; 5.0 V &#8594; J3-10. Set and</text>
-<text x="416" y="746" font-size="9.5" fill="#5A6472">MEASURE the module before connecting.</text>
 <circle cx="550" cy="555" r="4" fill="#6B3FA0"/>
 <polyline points="550,555 550,572" fill="none" stroke="#6B3FA0" stroke-width="2.6" stroke-linejoin="round"/>
 <rect x="462" y="572" width="176" height="36" fill="#FFF6E5" stroke="#B26B00" stroke-width="1.8" rx="4"/>
@@ -78,9 +62,6 @@
 <rect x="760" y="662" width="300" height="8" fill="#6B3FA0"/>
 <text x="910.0" y="650" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">ESP32</text>
 <text x="910.0" y="664" font-size="10.5" fill="#D6E0EC" text-anchor="middle">&#8594; VIN, 9 V direct</text>
-<text x="776" y="705" font-size="9.5" fill="#5A6472">confirm it has an AMS1117 first</text>
-<text x="776" y="720" font-size="9.5" fill="#5A6472">0.68 W in that regulator &#8212;</text>
-<text x="776" y="735" font-size="9.5" fill="#5A6472">the 5 V fan is what covers it</text>
 <circle cx="910" cy="555" r="4" fill="#6B3FA0"/>
 <polyline points="910,555 910,630" fill="none" stroke="#6B3FA0" stroke-width="2.6" stroke-linejoin="round"/>
 <line x1="910" y1="760" x2="910" y2="790" stroke="#12305B" stroke-width="1.6"/>
@@ -92,9 +73,6 @@
 <rect x="60" y="830" width="5" height="110" fill="#B26B00"/>
 <text x="76" y="849" font-size="12.5" fill="#B26B00" font-weight="bold">USB 5 V</text>
 <text x="76" y="863" font-size="9.5" fill="#5A6472">laptop, or a power bank</text>
-<text x="76" y="896" font-size="9" fill="#B03A3E">Two cables, not four.</text>
-<text x="76" y="910" font-size="9" fill="#5A6472">You need both serial</text>
-<text x="76" y="924" font-size="9" fill="#5A6472">monitors anyway.</text>
 <polyline points="290,885 330,885" fill="none" stroke="#B26B00" stroke-width="3" stroke-linejoin="round"/>
 <line x1="330" y1="885" x2="1100" y2="885" stroke="#B26B00" stroke-width="4"/>
 <text x="1100" y="873" font-size="12" fill="#B26B00" text-anchor="end" font-weight="bold">LOGIC  5 V (USB)</text>
@@ -104,8 +82,6 @@
 <text x="550.0" y="980" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">PERC &#8212; Arduino 1</text>
 <text x="550.0" y="994" font-size="10.5" fill="#D6E0EC" text-anchor="middle">own USB &#183; CH340</text>
 <text x="416" y="1035" font-size="9.5" fill="#5A6472">+ HC-SR04P, PIR, SFM-27</text>
-<text x="416" y="1050" font-size="9.5" fill="#5A6472">servo signals only</text>
-<text x="416" y="1065" font-size="9.5" fill="#5A6472">5V pin feeds the sensors</text>
 <circle cx="550" cy="885" r="4" fill="#B26B00"/>
 <polyline points="550,885 550,960" fill="none" stroke="#B26B00" stroke-width="2.6" stroke-linejoin="round"/>
 <line x1="550" y1="1090" x2="550" y2="1090" stroke="#12305B" stroke-width="1.6"/>
@@ -116,8 +92,6 @@
 <text x="910.0" y="980" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="bold">ACT &#8212; Arduino 2</text>
 <text x="910.0" y="994" font-size="10.5" fill="#D6E0EC" text-anchor="middle">own USB &#183; CH340</text>
 <text x="776" y="1035" font-size="9.5" fill="#5A6472">+ 1602A LCD</text>
-<text x="776" y="1050" font-size="9.5" fill="#5A6472">4 base resistors only &#8212;</text>
-<text x="776" y="1065" font-size="9.5" fill="#5A6472">no motor current here</text>
 <circle cx="910" cy="885" r="4" fill="#B26B00"/>
 <polyline points="910,885 910,960" fill="none" stroke="#B26B00" stroke-width="2.6" stroke-linejoin="round"/>
 <line x1="910" y1="1090" x2="910" y2="1090" stroke="#12305B" stroke-width="1.6"/>
@@ -136,7 +110,6 @@
 <line x1="230" y1="940" x2="230" y2="1140" stroke="#12305B" stroke-width="2.2"/>
 <circle cx="230" cy="1140" r="3.4" fill="#12305B"/>
 <text x="236" y="962" font-size="8.5" fill="#12305B" font-weight="bold">USB −</text>
-<text x="1660" y="1164" font-size="10" fill="#5A6472" text-anchor="end">Three supplies, one reference. Miss this and the UART links and I&#178;C have no common zero &#8212; which looks exactly like a firmware bug.</text>
 <rect x="1300" y="170" width="400" height="290" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
 <rect x="1300" y="170" width="4" height="290" fill="#B03A3E"/>
 <text x="1318" y="195" font-size="13" fill="#B03A3E" font-weight="bold">WHY NOT THE 3.3 V PIN</text>
@@ -155,17 +128,12 @@
 <text x="1682" y="356" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">100 mA</text>
 <text x="1318" y="373" font-size="9.5" fill="#5A6472">WiFi TX burst</text>
 <text x="1682" y="373" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">500 mA</text>
-<text x="1318" y="407" font-size="9.5" fill="#5A6472">Even the average exceeds a CH340 board's</text>
-<text x="1318" y="422" font-size="9.5" fill="#5A6472">3.3 V pin. This is not marginal &#8212; the ESP32</text>
-<text x="1318" y="437" font-size="9.5" fill="#5A6472">would brown out and reset in a loop, and you</text>
-<text x="1318" y="452" font-size="9.5" fill="#5A6472">would be cooking the Arduino's regulator.</text>
 <rect x="1300" y="500" width="400" height="290" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
 <rect x="1300" y="500" width="4" height="290" fill="#12305B"/>
 <text x="1318" y="525" font-size="13" fill="#12305B" font-weight="bold">WHICH CELLS IN WHICH PACK</text>
 <text x="1318" y="549" font-size="9.5" fill="#5A6472">LOGIC &#8594; 9 V. The MCX takes it through a</text>
 <text x="1318" y="566" font-size="9.5" fill="#5A6472">buck module to 5 V at J3-10 &#8212; its own VIN</text>
 <text x="1318" y="583" font-size="9.5" fill="#5A6472">pin is not wired to work. The ESP32 takes</text>
-<text x="1318" y="600" font-size="9.5" fill="#B03A3E" font-weight="bold">the same 9 V on VIN, with a fan on its regulator.</text>
 <text x="1318" y="617" font-size="9.5" fill="#5A6472">Do NOT use a PP3 block: ~500 mAh, and it sags</text>
 <text x="1318" y="634" font-size="9.5" fill="#5A6472"></text>
 <text x="1318" y="651" font-size="9.5" fill="#5A6472">TRACTION &#8594; either works now. The MG90S</text>
@@ -177,39 +145,6 @@
 <text x="1318" y="753" font-size="9.5" fill="#5A6472">voltage under a stall where alkalines sag.</text>
 <text x="1318" y="770" font-size="9.5" fill="#5A6472"></text>
 <text x="1318" y="787" font-size="9.5" fill="#5A6472">Label the two packs. They are not swappable.</text>
-<rect x="1300" y="830" width="400" height="280" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
-<rect x="1300" y="830" width="4" height="280" fill="#12305B"/>
-<text x="1318" y="855" font-size="13" fill="#12305B" font-weight="bold">WHAT THE MCX PACK COSTS YOU</text>
-<text x="1318" y="879" font-size="9.5" fill="#5A6472">Running the MCX from a pack instead of</text>
-<text x="1318" y="894" font-size="9.5" fill="#5A6472">MCU-Link USB means no VCOM: no console,</text>
-<text x="1318" y="909" font-size="9.5" fill="#5A6472">no FreeMASTER, no debugger.</text>
-<text x="1318" y="924" font-size="9.5" fill="#5A6472"></text>
-<text x="1318" y="939" font-size="9.5" fill="#5A6472">During development, keep the USB cable in</text>
-<text x="1318" y="954" font-size="9.5" fill="#5A6472">and leave the pack off. Check UM12012 for</text>
-<text x="1318" y="969" font-size="9.5" fill="#5A6472">the power-select jumper before feeding both</text>
-<text x="1318" y="984" font-size="9.5" fill="#5A6472">at once.</text>
-<text x="1318" y="999" font-size="9.5" fill="#5A6472"></text>
-<text x="1318" y="1014" font-size="9.5" fill="#5A6472">The pack is for the untethered demo run.</text>
-<text x="1318" y="1029" font-size="9.5" fill="#5A6472">The ESP32 still needs it then, so wire the</text>
-<text x="1318" y="1044" font-size="9.5" fill="#5A6472">pack now and just leave it switched off.</text>
-<text x="1318" y="1059" font-size="9.5" fill="#5A6472"></text>
-<text x="1318" y="1074" font-size="9.5" fill="#5A6472">Nothing else changes: logic levels do not</text>
-<text x="1318" y="1089" font-size="9.5" fill="#5A6472">depend on which supply feeds a board, so</text>
-<text x="1318" y="1104" font-size="9.5" fill="#5A6472">both 1 k&#8486; / 2 k&#8486; dividers stay exactly as</text>
-<text x="1318" y="1119" font-size="9.5" fill="#5A6472">they are.</text>
-<rect x="60" y="1190" width="1640" height="200" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
-<rect x="60" y="1190" width="4" height="200" fill="#12305B"/>
-<text x="78" y="1215" font-size="13" fill="#12305B" font-weight="bold">POWER RULES</text>
-<text x="82" y="1239" font-size="10.5" fill="#5A6472">1.  Every negative meets at the star point: traction pack −, logic pack −, USB ground,</text>
-<text x="82" y="1260" font-size="10.5" fill="#5A6472">     all four board grounds, all four transistor emitters, every component GND.</text>
-<text x="82" y="1281" font-size="10.5" fill="#5A6472">2.  Feed the ESP32 at VIN, never at the 3V3 pin. Its on-board regulator does the rest,</text>
-<text x="82" y="1302" font-size="10.5" fill="#5A6472">     and it wants a 470 &#181;F nearby to absorb the WiFi transmit bursts.</text>
-<text x="82" y="1323" font-size="10.5" fill="#5A6472">3.  Never feed pack voltage into an Arduino 5 V pin, or 6 V into the MCX 3.3 V rail.</text>
-<text x="890" y="1239" font-size="10.5" fill="#5A6472">4.  Power up together, or logic pack first. A powered Arduino driving an unpowered MCX</text>
-<text x="890" y="1260" font-size="10.5" fill="#5A6472">      pushes current through its ESD diodes &#8212; the 1 k&#8486; divider resistor limits it to a</text>
-<text x="890" y="1281" font-size="10.5" fill="#5A6472">      harmless few mA, which is a second reason those dividers are not optional.</text>
-<text x="890" y="1302" font-size="10.5" fill="#5A6472">5.  The MAX7219 at full brightness pulls 300 mA from PERC's USB. Keep intensity low.</text>
-<text x="890" y="1323" font-size="10.5" fill="#5A6472">6.  Motor and servo current never touches an Arduino or the MCX. Only signals and ground.</text>
 <rect x="60" y="1420" width="1640" height="300" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
 <rect x="60" y="1420" width="4" height="300" fill="#12305B"/>
 <text x="78" y="1445" font-size="13" fill="#12305B" font-weight="bold">SUPPLY WINDOWS &#8212; WHAT VIN CAN BE, PER BOARD</text>
@@ -223,11 +158,9 @@
 <text x="330" y="1499" font-size="9.5" fill="#5A6472">J3-10  SYS_5V0</text>
 <text x="610" y="1499" font-size="9.5" fill="#12305B" font-weight="bold">5 V &#177;5 %</text>
 <text x="790" y="1499" font-size="9.5" fill="#6B3FA0" font-weight="bold">5.0 V</text>
-<text x="930" y="1499" font-size="9.5" fill="#5A6472">THIS ONE &#8212; buck module out. No headroom, so measure it</text>
 <text x="330" y="1520" font-size="9.5" fill="#5A6472">J3-16  P5-9V_VIN</text>
 <text x="610" y="1520" font-size="9.5" fill="#12305B" font-weight="bold">&#8212;</text>
 <text x="790" y="1520" font-size="9.5" fill="#B03A3E" font-weight="bold">never</text>
-<text x="930" y="1520" font-size="9.5" fill="#5A6472">dead end: J22 not populated, path to SYS_5V0 disabled</text>
 <text x="330" y="1541" font-size="9.5" fill="#5A6472">MCU-Link USB</text>
 <text x="610" y="1541" font-size="9.5" fill="#12305B" font-weight="bold">5 V</text>
 <text x="790" y="1541" font-size="9.5" fill="#5A6472" font-weight="bold">5 V</text>
@@ -249,7 +182,6 @@
 <text x="330" y="1625" font-size="9.5" fill="#5A6472">VIN / 5V pin</text>
 <text x="610" y="1625" font-size="9.5" fill="#12305B" font-weight="bold">4.75 &#8211; 12 V</text>
 <text x="790" y="1625" font-size="9.5" fill="#B03A3E" font-weight="bold">5 &#8211; 6 V</text>
-<text x="930" y="1625" font-size="9.5" fill="#5A6472">AMS1117 heat, not the datasheet, sets this &#8212; 9 V direct is 0.57 W</text>
 <text x="330" y="1646" font-size="9.5" fill="#5A6472">3V3 pin</text>
 <text x="610" y="1646" font-size="9.5" fill="#12305B" font-weight="bold">3.0 &#8211; 3.6 V</text>
 <text x="790" y="1646" font-size="9.5" fill="#5A6472" font-weight="bold">3.3 V</text>
@@ -259,6 +191,4 @@
 <text x="790" y="1667" font-size="9.5" fill="#5A6472" font-weight="bold">5 V</text>
 <text x="930" y="1667" font-size="9.5" fill="#5A6472">fine, but then it is a fourth cable</text>
 <line x1="78" y1="1695" x2="1682" y2="1695" stroke="#C3CEDC" stroke-width="1"/>
-<text x="82" y="1715" font-size="10" fill="#B03A3E" font-weight="bold">The 9 V logic pack feeds the MCX and the ESP32 directly. It does NOT suit the Arduinos &#8212; their regulator's dropout, so their 5 V rail would sag to about 4.7 V.</text>
-<text x="82" y="1731" font-size="10" fill="#5A6472">If you ever want the Arduinos off a pack too, that pack has to be 7.2 V (6 &#215; NiMH) or 9 V &#8212; or feed their 5V pins from something already regulated to 5 V.</text>
 </svg>

@@ -1035,7 +1035,7 @@ LOAD C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_6
                 0x00000000                __Vectors
                 0x00000180                        . = ALIGN (0x4)
 
-.text           0x00000200     0xc794
+.text           0x00000200     0xc924
                 0x00000200                        . = ALIGN (0x4)
  *(.text)
  .text          0x00000200       0x7c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crt0.o
@@ -1566,430 +1566,434 @@ LOAD C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_6
                 0x000054f4       0x58 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.teleop_guard
                 0x0000554c       0x44 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .text.rear_close
+                0x00005590       0x60 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .text.rear_service
+                0x000055f0       0xf0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.teleop_mix
-                0x00005590      0x124 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x000056e0      0x124 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.teleop_release
-                0x000056b4       0xa0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00005804       0xa0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.teleop_service
-                0x00005754       0x88 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x000058a4       0x88 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.teleop_keys
-                0x000057dc      0x108 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x0000592c      0x108 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.telemetry_send
-                0x000058e4      0x1c4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00005a34      0x1c4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.diag_edge
-                0x00005aa8       0x48 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00005bf8       0x48 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.diag_service
-                0x00005af0      0x2dc CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00005c40      0x2dc CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.drive_try_command
-                0x00005dcc      0x47c CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00005f1c      0x47c CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.console_service
-                0x00006248       0xf4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00006398       0xf4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.vcu_consume
-                0x0000633c      0x170 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x0000648c      0x170 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .text.link_service
-                0x000064ac       0xc4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .text.main     0x00006570      0x1ec CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
-                0x00006570                main
+                0x000065fc       0xc4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .text.main     0x000066c0      0x1f0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x000066c0                main
  .text.__NVIC_EnableIRQ
-                0x0000675c       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000068b0       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.__NVIC_SetPriority
-                0x00006794       0x54 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000068e8       0x54 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.EnableIRQ
-                0x000067e8       0x32 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000693c       0x32 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.GPIO_PinWrite
-                0x0000681a       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000696e       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.GPIO_PinRead
-                0x0000684e       0x22 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000069a2       0x22 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.LPUART_ReadByte
-                0x00006870       0x6c CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000069c4       0x6c CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.PORT_SetPinConfig
-                0x000068dc       0x48 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006a30       0x48 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.link_isr
-                0x00006924       0xf0 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006a78       0xf0 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.LPUART2_IRQHandler
-                0x00006a14        0xe CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006a14                LPUART2_IRQHandler
+                0x00006b68        0xe CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006b68                LPUART2_IRQHandler
  .text.LPUART1_IRQHandler
-                0x00006a22        0xe CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006a22                LPUART1_IRQHandler
+                0x00006b76        0xe CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006b76                LPUART1_IRQHandler
  .text.LINK_Init
-                0x00006a30       0xe8 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006a30                LINK_Init
+                0x00006b84       0xe8 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006b84                LINK_Init
  .text.link_gw_i2c_init
-                0x00006b18       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006c6c       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.link_gw_delay
-                0x00006b4c       0x24 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006ca0       0x24 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.LINK_GwBusRecover
-                0x00006b70      0x15c CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006b70                LINK_GwBusRecover
+                0x00006cc4      0x15c CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006cc4                LINK_GwBusRecover
  .text.link_gw_send
-                0x00006ccc       0xa4 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006e20       0xa4 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.link_gw_read
-                0x00006d70      0x104 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006ec4      0x104 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.LINK_SendLine
-                0x00006e74       0xcc CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006e74                LINK_SendLine
+                0x00006fc8       0xcc CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00006fc8                LINK_SendLine
  .text.LINK_Broadcast
-                0x00006f40       0x3e CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00006f40                LINK_Broadcast
+                0x00007094       0x3e CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007094                LINK_Broadcast
  .text.link_ring_get
-                0x00006f7e       0x58 CMakeFiles/distributed_ecu.dir/link.c.obj
- *fill*         0x00006fd6        0x2 
+                0x000070d2       0x58 CMakeFiles/distributed_ecu.dir/link.c.obj
+ *fill*         0x0000712a        0x2 
  .text.link_gw_poll
-                0x00006fd8       0xe4 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000712c       0xe4 CMakeFiles/distributed_ecu.dir/link.c.obj
  .text.LINK_PollLine
-                0x000070bc      0x100 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x000070bc                LINK_PollLine
+                0x00007210      0x100 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007210                LINK_PollLine
  .text.LINK_GetFrameErrorCount
-                0x000071bc       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x000071bc                LINK_GetFrameErrorCount
+                0x00007310       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007310                LINK_GetFrameErrorCount
  .text.LINK_GetTxTimeoutCount
-                0x000071f4       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x000071f4                LINK_GetTxTimeoutCount
+                0x00007348       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007348                LINK_GetTxTimeoutCount
  .text.LINK_PollByte
-                0x0000722c       0x40 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x0000722c                LINK_PollByte
+                0x00007380       0x40 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007380                LINK_PollByte
  .text.LINK_GwOnline
-                0x0000726c       0x14 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x0000726c                LINK_GwOnline
+                0x000073c0       0x14 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000073c0                LINK_GwOnline
  .text.LINK_GwStats
-                0x00007280       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007280                LINK_GwStats
+                0x000073d4       0x38 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000073d4                LINK_GwStats
  .text.LINK_I2CStatusName
-                0x000072b8       0xd8 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x000072b8                LINK_I2CStatusName
+                0x0000740c       0xd8 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000740c                LINK_I2CStatusName
  .text.LINK_I2CStatusHint
-                0x00007390       0xa0 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007390                LINK_I2CStatusHint
+                0x000074e4       0xa0 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000074e4                LINK_I2CStatusHint
  .text.LINK_GwFailReason
-                0x00007430       0x18 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007430                LINK_GwFailReason
+                0x00007584       0x18 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007584                LINK_GwFailReason
  .text.LINK_GwFailHint
-                0x00007448       0x2c CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007448                LINK_GwFailHint
+                0x0000759c       0x2c CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000759c                LINK_GwFailHint
  .text.LINK_GwRecoveries
-                0x00007474       0x14 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007474                LINK_GwRecoveries
+                0x000075c8       0x14 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000075c8                LINK_GwRecoveries
  .text.LINK_GwResync
-                0x00007488       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x00007488                LINK_GwResync
+                0x000075dc       0x34 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x000075dc                LINK_GwResync
  .text.LINK_GetName
-                0x000074bc       0x40 CMakeFiles/distributed_ecu.dir/link.c.obj
-                0x000074bc                LINK_GetName
+                0x00007610       0x40 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00007610                LINK_GetName
  .text.SysTick_init
-                0x000074fc       0x28 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+                0x00007650       0x28 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
  .text.BOARD_InitPeripherals
-                0x00007524        0xc CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
-                0x00007524                BOARD_InitPeripherals
+                0x00007678        0xc CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+                0x00007678                BOARD_InitPeripherals
  .text.BOARD_InitBootPeripherals
-                0x00007530        0xc CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
-                0x00007530                BOARD_InitBootPeripherals
- .text.exit     0x0000753c       0x24 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-exit.o)
-                0x0000753c                exit
+                0x00007684        0xc CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+                0x00007684                BOARD_InitBootPeripherals
+ .text.exit     0x00007690       0x24 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-exit.o)
+                0x00007690                exit
  .text.sbrk_aligned
-                0x00007560       0x44 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
+                0x000076b4       0x44 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
  .text._malloc_r
-                0x000075a4      0x100 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
-                0x000075a4                _malloc_r
+                0x000076f8      0x100 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
+                0x000076f8                _malloc_r
  .text.__malloc_lock
-                0x000076a4        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
-                0x000076a4                __malloc_lock
+                0x000077f8        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
+                0x000077f8                __malloc_lock
  .text.__malloc_unlock
-                0x000076b0        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
-                0x000076b0                __malloc_unlock
+                0x00007804        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
+                0x00007804                __malloc_unlock
  .text._strtoul_l.isra.0
-                0x000076bc       0xdc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
+                0x00007810       0xdc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
  .text._strtoul_r
-                0x00007798        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
-                0x00007798                _strtoul_r
+                0x000078ec        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
+                0x000078ec                _strtoul_r
  .text.snprintf
-                0x0000779c       0x6c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-snprintf.o)
-                0x0000779c                sniprintf
-                0x0000779c                snprintf
- .text.sscanf   0x00007808       0x58 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sscanf.o)
-                0x00007808                siscanf
-                0x00007808                sscanf
+                0x000078f0       0x6c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-snprintf.o)
+                0x000078f0                sniprintf
+                0x000078f0                snprintf
+ .text.sscanf   0x0000795c       0x58 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sscanf.o)
+                0x0000795c                siscanf
+                0x0000795c                sscanf
  .text.__seofread
-                0x00007860        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-stdio.o)
-                0x00007860                __seofread
- .text.strncmp  0x00007864       0x24 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strncmp.o)
-                0x00007864                strncmp
- .text._sbrk_r  0x00007888       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sbrkr.o)
-                0x00007888                _sbrk_r
- .text.__errno  0x000078a8        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-errno.o)
-                0x000078a8                __errno
+                0x000079b4        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-stdio.o)
+                0x000079b4                __seofread
+ .text.strncmp  0x000079b8       0x24 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strncmp.o)
+                0x000079b8                strncmp
+ .text._sbrk_r  0x000079dc       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sbrkr.o)
+                0x000079dc                _sbrk_r
+ .text.__errno  0x000079fc        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-errno.o)
+                0x000079fc                __errno
  .text.__libc_init_array
-                0x000078b4       0x48 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-init.o)
-                0x000078b4                __libc_init_array
+                0x00007a08       0x48 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-init.o)
+                0x00007a08                __libc_init_array
  .text.__retarget_lock_acquire_recursive
-                0x000078fc        0x2 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
-                0x000078fc                __retarget_lock_acquire_recursive
+                0x00007a50        0x2 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
+                0x00007a50                __retarget_lock_acquire_recursive
  .text.__retarget_lock_release_recursive
-                0x000078fe        0x2 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
-                0x000078fe                __retarget_lock_release_recursive
- .text._free_r  0x00007900       0x94 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-freer.o)
-                0x00007900                _free_r
+                0x00007a52        0x2 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
+                0x00007a52                __retarget_lock_release_recursive
+ .text._free_r  0x00007a54       0x94 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-freer.o)
+                0x00007a54                _free_r
  .text.__ssputs_r
-                0x00007994       0xc0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
-                0x00007994                __ssputs_r
+                0x00007ae8       0xc0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
+                0x00007ae8                __ssputs_r
  .text._svfprintf_r
-                0x00007a54      0x1f8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
-                0x00007a54                _svfiprintf_r
-                0x00007a54                _svfprintf_r
+                0x00007ba8      0x1f8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
+                0x00007ba8                _svfiprintf_r
+                0x00007ba8                _svfprintf_r
  .text._sungetc_r
-                0x00007c4c       0x7a C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
-                0x00007c4c                _sungetc_r
+                0x00007da0       0x7a C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
+                0x00007da0                _sungetc_r
  .text.__ssrefill_r
-                0x00007cc6       0x3a C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
-                0x00007cc6                __ssrefill_r
+                0x00007e1a       0x3a C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
+                0x00007e1a                __ssrefill_r
  .text.__ssvfscanf_r
-                0x00007d00      0x300 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
-                0x00007d00                __ssvfiscanf_r
-                0x00007d00                __ssvfscanf_r
+                0x00007e54      0x300 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
+                0x00007e54                __ssvfiscanf_r
+                0x00007e54                __ssvfscanf_r
  .text._printf_common
-                0x00008000       0xe4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
-                0x00008000                _printf_common
+                0x00008154       0xe4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
+                0x00008154                _printf_common
  .text._printf_i
-                0x000080e4      0x240 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
-                0x000080e4                _printf_i
+                0x00008238      0x240 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
+                0x00008238                _printf_i
  .text._scanf_chars
-                0x00008324       0xb4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
-                0x00008324                _scanf_chars
+                0x00008478       0xb4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+                0x00008478                _scanf_chars
  .text._scanf_i
-                0x000083d8      0x1e0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
-                0x000083d8                _scanf_i
- .text.__sccl   0x000085b8       0x72 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sccl.o)
-                0x000085b8                __sccl
+                0x0000852c      0x1e0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+                0x0000852c                _scanf_i
+ .text.__sccl   0x0000870c       0x72 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sccl.o)
+                0x0000870c                __sccl
  .text.__submore
-                0x0000862a       0x6e C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ungetc.o)
-                0x0000862a                __submore
- .text.memmove  0x00008698       0x32 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memmove.o)
-                0x00008698                memmove
- .text.memchr   0x000086ca       0x1c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memchr-stub.o)
-                0x000086ca                memchr
+                0x0000877e       0x6e C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ungetc.o)
+                0x0000877e                __submore
+ .text.memmove  0x000087ec       0x32 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memmove.o)
+                0x000087ec                memmove
+ .text.memchr   0x0000881e       0x1c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memchr-stub.o)
+                0x0000881e                memchr
  .text._realloc_r
-                0x000086e6       0x5c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reallocr.o)
-                0x000086e6                _realloc_r
- *fill*         0x00008742        0x2 
+                0x0000883a       0x5c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reallocr.o)
+                0x0000883a                _realloc_r
+ *fill*         0x00008896        0x2 
  .text._strtol_l.isra.0
-                0x00008744       0xf4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
+                0x00008898       0xf4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
  .text._strtol_r
-                0x00008838        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
-                0x00008838                _strtol_r
+                0x0000898c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
+                0x0000898c                _strtol_r
  .text._malloc_usable_size_r
-                0x0000883c       0x10 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-msizer.o)
-                0x0000883c                _malloc_usable_size_r
- .text._exit    0x0000884c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libnosys.a(_exit.o)
-                0x0000884c                _exit
+                0x00008990       0x10 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-msizer.o)
+                0x00008990                _malloc_usable_size_r
+ .text._exit    0x000089a0        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libnosys.a(_exit.o)
+                0x000089a0                _exit
  *(.rodata)
- .rodata        0x00008850       0x86 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
- *fill*         0x000088d6        0x2 
- .rodata        0x000088d8       0x6e CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
- *fill*         0x00008946        0x2 
- .rodata        0x00008948       0x97 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
- *fill*         0x000089df        0x1 
- .rodata        0x000089e0      0x2ca CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
- *fill*         0x00008caa        0x2 
- .rodata        0x00008cac      0x28a CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
- *fill*         0x00008f36        0x2 
- .rodata        0x00008f38       0x8b CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
- *fill*         0x00008fc3        0x1 
- .rodata        0x00008fc4       0x3e CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/assert/fsl_assert.c.obj
- *fill*         0x00009002        0x2 
- .rodata        0x00009004      0x10c CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
- .rodata        0x00009110       0x49 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
- *fill*         0x00009159        0x3 
- .rodata        0x0000915c     0x2da0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .rodata        0x0000befc      0x646 CMakeFiles/distributed_ecu.dir/link.c.obj
- *fill*         0x0000c542        0x2 
- .rodata        0x0000c544        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+ .rodata        0x000089a4       0x86 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
+ *fill*         0x00008a2a        0x2 
+ .rodata        0x00008a2c       0x6e CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
+ *fill*         0x00008a9a        0x2 
+ .rodata        0x00008a9c       0x97 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+ *fill*         0x00008b33        0x1 
+ .rodata        0x00008b34      0x2ca CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+ *fill*         0x00008dfe        0x2 
+ .rodata        0x00008e00      0x28a CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+ *fill*         0x0000908a        0x2 
+ .rodata        0x0000908c       0x8b CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
+ *fill*         0x00009117        0x1 
+ .rodata        0x00009118       0x3e CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/assert/fsl_assert.c.obj
+ *fill*         0x00009156        0x2 
+ .rodata        0x00009158      0x10c CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+ .rodata        0x00009264       0x49 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
+ *fill*         0x000092ad        0x3 
+ .rodata        0x000092b0     0x2ddc CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .rodata        0x0000c08c      0x646 CMakeFiles/distributed_ecu.dir/link.c.obj
+ *fill*         0x0000c6d2        0x2 
+ .rodata        0x0000c6d4        0xc C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
  *(.rodata*)
  .rodata.__func__.4
-                0x0000c550       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
- *fill*         0x0000c565        0x3 
+                0x0000c6e0       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
+ *fill*         0x0000c6f5        0x3 
  .rodata.__func__.2
-                0x0000c568       0x12 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
- *fill*         0x0000c57a        0x2 
+                0x0000c6f8       0x12 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
+ *fill*         0x0000c70a        0x2 
  .rodata.__func__.1
-                0x0000c57c       0x19 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
- *fill*         0x0000c595        0x3 
+                0x0000c70c       0x19 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
+ *fill*         0x0000c725        0x3 
  .rodata.__func__.0
-                0x0000c598       0x1b CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
- *fill*         0x0000c5b3        0x1 
+                0x0000c728       0x1b CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
+ *fill*         0x0000c743        0x1 
  .rodata.s_gpioBases
-                0x0000c5b4       0x10 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+                0x0000c744       0x10 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
  .rodata.s_gpioClockName
-                0x0000c5c4       0x10 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+                0x0000c754       0x10 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
  .rodata.__func__.2
-                0x0000c5d4       0x11 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
- *fill*         0x0000c5e5        0x3 
+                0x0000c764       0x11 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+ *fill*         0x0000c775        0x3 
  .rodata.__func__.1
-                0x0000c5e8       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
- *fill*         0x0000c5fd        0x3 
+                0x0000c778       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+ *fill*         0x0000c78d        0x3 
  .rodata.__func__.0
-                0x0000c600        0xd CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
- *fill*         0x0000c60d        0x3 
+                0x0000c790        0xd CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+ *fill*         0x0000c79d        0x3 
  .rodata.__func__.22
-                0x0000c610       0x12 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
- *fill*         0x0000c622        0x2 
+                0x0000c7a0       0x12 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+ *fill*         0x0000c7b2        0x2 
  .rodata.__func__.21
-                0x0000c624       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+                0x0000c7b4       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
  .rodata.__func__.20
-                0x0000c63c       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+                0x0000c7cc       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
  .rodata.__func__.19
-                0x0000c654       0x14 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+                0x0000c7e4       0x14 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
  .rodata.__func__.18
-                0x0000c668       0x11 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
- *fill*         0x0000c679        0x3 
+                0x0000c7f8       0x11 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+ *fill*         0x0000c809        0x3 
  .rodata.__func__.17
-                0x0000c67c       0x1d CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
- *fill*         0x0000c699        0x3 
+                0x0000c80c       0x1d CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+ *fill*         0x0000c829        0x3 
  .rodata.s_lpuartBases
-                0x0000c69c        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+                0x0000c82c        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
  .rodata.s_lpuartClock
-                0x0000c6a8        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+                0x0000c838        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
  .rodata.s_lpuartResets
-                0x0000c6b4        0x6 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
- *fill*         0x0000c6ba        0x2 
+                0x0000c844        0x6 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+ *fill*         0x0000c84a        0x2 
  .rodata.__func__.25
-                0x0000c6bc       0x13 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
- *fill*         0x0000c6cf        0x1 
+                0x0000c84c       0x13 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+ *fill*         0x0000c85f        0x1 
  .rodata.__func__.18
-                0x0000c6d0        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+                0x0000c860        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
  .rodata.__func__.17
-                0x0000c6dc       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+                0x0000c86c       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
  .rodata.__func__.13
-                0x0000c6f4       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
- *fill*         0x0000c709        0x3 
+                0x0000c884       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+ *fill*         0x0000c899        0x3 
  .rodata.__func__.11
-                0x0000c70c       0x14 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+                0x0000c89c       0x14 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
  .rodata.__func__.5
-                0x0000c720       0x1a CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
- *fill*         0x0000c73a        0x2 
+                0x0000c8b0       0x1a CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
+ *fill*         0x0000c8ca        0x2 
  .rodata.__func__.2
-                0x0000c73c       0x28 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
+                0x0000c8cc       0x28 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
  .rodata.s_LpuartAdapterBase
-                0x0000c764        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+                0x0000c8f4        0xc CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
  .rodata.__func__.4
-                0x0000c770        0xd CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
- *fill*         0x0000c77d        0x3 
+                0x0000c900        0xd CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+ *fill*         0x0000c90d        0x3 
  .rodata.__func__.2
-                0x0000c780       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+                0x0000c910       0x18 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
  .rodata.__func__.1
-                0x0000c798       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
- *fill*         0x0000c7ad        0x3 
+                0x0000c928       0x15 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+ *fill*         0x0000c93d        0x3 
  .rodata.__func__.0
-                0x0000c7b0       0x12 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
- *fill*         0x0000c7c2        0x2 
+                0x0000c940       0x12 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
+ *fill*         0x0000c952        0x2 
  .rodata.__func__.5
-                0x0000c7c4       0x12 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- *fill*         0x0000c7d6        0x2 
+                0x0000c954       0x12 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ *fill*         0x0000c966        0x2 
  .rodata.probe.4
-                0x0000c7d8       0x1f CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- *fill*         0x0000c7f7        0x1 
+                0x0000c968       0x1f CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ *fill*         0x0000c987        0x1 
  .rodata.k_config
-                0x0000c7f8       0x20 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000c988       0x20 CMakeFiles/distributed_ecu.dir/link.c.obj
  .rodata.__func__.2
-                0x0000c818       0x12 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000c9a8       0x12 CMakeFiles/distributed_ecu.dir/link.c.obj
  .rodata.newline.1
-                0x0000c82a        0x1 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000c9ba        0x1 CMakeFiles/distributed_ecu.dir/link.c.obj
  .rodata._ctype_
-                0x0000c82b      0x101 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ctype_.o)
-                0x0000c82b                _ctype_
+                0x0000c9bb      0x101 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ctype_.o)
+                0x0000c9bb                _ctype_
  .rodata._svfprintf_r.str1.1
-                0x0000c92c       0x4e C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
+                0x0000cabc       0x4e C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
                                  0x11 (size before relaxing)
  .rodata.__ssvfscanf_r.str1.1
-                0x0000c97a        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
+                0x0000cb0a        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
  .rodata._printf_i.str1.1
-                0x0000c97a       0x22 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
+                0x0000cb0a       0x22 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
  .rodata._scanf_i.str1.1
-                0x0000c97a       0x12 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+                0x0000cb0a       0x12 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
  .rodata.str1.1
-                0x0000c97a        0x9 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+                0x0000cb0a        0x9 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
  *(.glue_7)
- .glue_7        0x0000c97a        0x0 linker stubs
+ .glue_7        0x0000cb0a        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x0000c97a        0x0 linker stubs
+ .glue_7t       0x0000cb0a        0x0 linker stubs
  *(.eh_frame)
- *fill*         0x0000c97a        0x2 
- .eh_frame      0x0000c97c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
+ *fill*         0x0000cb0a        0x2 
+ .eh_frame      0x0000cb0c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
  *(.init)
- .init          0x0000c97c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crti.o
-                0x0000c97c                _init
- .init          0x0000c980        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtn.o
+ .init          0x0000cb0c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crti.o
+                0x0000cb0c                _init
+ .init          0x0000cb10        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtn.o
  *(.fini)
- .fini          0x0000c988        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crti.o
-                0x0000c988                _fini
- .fini          0x0000c98c        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtn.o
-                0x0000c994                        . = ALIGN (0x4)
+ .fini          0x0000cb18        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crti.o
+                0x0000cb18                _fini
+ .fini          0x0000cb1c        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtn.o
+                0x0000cb24                        . = ALIGN (0x4)
 
-.vfp11_veneer   0x0000c994        0x0
- .vfp11_veneer  0x0000c994        0x0 linker stubs
+.vfp11_veneer   0x0000cb24        0x0
+ .vfp11_veneer  0x0000cb24        0x0 linker stubs
 
-.v4_bx          0x0000c994        0x0
- .v4_bx         0x0000c994        0x0 linker stubs
+.v4_bx          0x0000cb24        0x0
+ .v4_bx         0x0000cb24        0x0 linker stubs
 
-.iplt           0x0000c994        0x0
- .iplt          0x0000c994        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
+.iplt           0x0000cb24        0x0
+ .iplt          0x0000cb24        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x0000c994        0x8
-                0x0000c994                        __exidx_start = .
+.ARM            0x0000cb24        0x8
+                0x0000cb24                        __exidx_start = .
  *(.ARM.exidx*)
- .ARM.exidx     0x0000c994        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crt0.o
+ .ARM.exidx     0x0000cb24        0x8 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crt0.o
                                  0x10 (size before relaxing)
- .ARM.exidx     0x0000c99c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strcmp.o)
+ .ARM.exidx     0x0000cb2c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strcmp.o)
                                   0x8 (size before relaxing)
- .ARM.exidx     0x0000c99c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strlen.o)
+ .ARM.exidx     0x0000cb2c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strlen.o)
                                   0x8 (size before relaxing)
-                0x0000c99c                        __exidx_end = .
+                0x0000cb2c                        __exidx_end = .
 
-.rel.dyn        0x0000c99c        0x0
- .rel.iplt      0x0000c99c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
+.rel.dyn        0x0000cb2c        0x0
+ .rel.iplt      0x0000cb2c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
 
-.ctors          0x0000c99c        0x0
-                0x0000c99c                        __CTOR_LIST__ = .
+.ctors          0x0000cb2c        0x0
+                0x0000cb2c                        __CTOR_LIST__ = .
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
  *(SORT_BY_NAME(.ctors.*))
  *(.ctors)
-                0x0000c99c                        __CTOR_END__ = .
+                0x0000cb2c                        __CTOR_END__ = .
 
-.dtors          0x0000c99c        0x0
-                0x0000c99c                        __DTOR_LIST__ = .
+.dtors          0x0000cb2c        0x0
+                0x0000cb2c                        __DTOR_LIST__ = .
  *crtbegin.o(.dtors)
  *crtbegin?.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .dtors)
  *(SORT_BY_NAME(.dtors.*))
  *(.dtors)
-                0x0000c99c                        __DTOR_END__ = .
+                0x0000cb2c                        __DTOR_END__ = .
 
-.preinit_array  0x0000c99c        0x0
-                0x0000c99c                        PROVIDE (__preinit_array_start = .)
+.preinit_array  0x0000cb2c        0x0
+                0x0000cb2c                        PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x0000c99c                        PROVIDE (__preinit_array_end = .)
+                0x0000cb2c                        PROVIDE (__preinit_array_end = .)
 
-.init_array     0x0000c99c        0x4
-                0x0000c99c                        PROVIDE (__init_array_start = .)
+.init_array     0x0000cb2c        0x4
+                0x0000cb2c                        PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x0000c99c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
-                0x0000c9a0                        PROVIDE (__init_array_end = .)
+ .init_array    0x0000cb2c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
+                0x0000cb30                        PROVIDE (__init_array_end = .)
 
-.fini_array     0x0000c9a0        0x4
+.fini_array     0x0000cb30        0x4
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x0000c9a0        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
+ .fini_array    0x0000cb30        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x0000c9a4                        __etext = .
-                0x0000c9a4                        __DATA_ROM = .
+                0x0000cb34                        __etext = .
+                0x0000cb34                        __DATA_ROM = .
 
-.data           0x20000000       0x7c load address 0x0000c9a4
+.data           0x20000000       0x7c load address 0x0000cb34
                 0x20000000                        . = ALIGN (0x4)
                 0x20000000                        __DATA_RAM = .
                 0x20000000                        __data_start__ = .
@@ -2026,21 +2030,21 @@ LOAD C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_6
  *(.jcr*)
                 0x2000007c                        . = ALIGN (0x4)
                 0x2000007c                        __data_end__ = .
-                0x0000ca20                        __DATA_END = (__DATA_ROM + (__data_end__ - __data_start__))
+                0x0000cbb0                        __DATA_END = (__DATA_ROM + (__data_end__ - __data_start__))
                 0x00020000                        text_end = (ORIGIN (m_text) + LENGTH (m_text))
                 0x00000001                        ASSERT ((__DATA_END <= text_end), region m_text overflowed with text and data)
 
 .tm_clone_table
-                0x2000007c        0x0 load address 0x0000ca20
+                0x2000007c        0x0 load address 0x0000cbb0
  .tm_clone_table
                 0x2000007c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
  .tm_clone_table
                 0x2000007c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtend.o
 
-.igot.plt       0x2000007c        0x0 load address 0x0000ca20
+.igot.plt       0x2000007c        0x0 load address 0x0000cbb0
  .igot.plt      0x2000007c        0x0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp/crtbegin.o
 
-.bss            0x2000007c      0x72c load address 0x0000ca20
+.bss            0x2000007c      0x734 load address 0x0000cbb0
                 0x2000007c                        . = ALIGN (0x4)
                 0x2000007c                        __START_BSS = .
                 0x2000007c                        __bss_start__ = .
@@ -2117,83 +2121,89 @@ LOAD C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_6
  .bss.s_throttle
                 0x20000220        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .bss.s_guard   0x20000221        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_horn    0x20000222        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- *fill*         0x20000223        0x1 
- .bss.s_hornSentAt
+ .bss.s_rearAlert
+                0x20000222        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_rearShown
+                0x20000223        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_rearBlinkAt
                 0x20000224        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_beatAt  0x20000228        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_telemetryAt
+ .bss.s_horn    0x20000228        0x1 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ *fill*         0x20000229        0x3 
+ .bss.s_hornSentAt
                 0x2000022c        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_diagAt  0x20000230        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_raw     0x20000234        0x2 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- *fill*         0x20000236        0x2 
- .bss.s_probeStatus
-                0x20000238        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.seq.3     0x2000023c        0x2 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_beatAt  0x20000230        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_telemetryAt
+                0x20000234        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_diagAt  0x20000238        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_raw     0x2000023c        0x2 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  *fill*         0x2000023e        0x2 
- .bss.pressAt.2
+ .bss.s_probeStatus
                 0x20000240        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .bss.s_state   0x20000244      0x328 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwLine  0x2000056c       0x80 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwLen   0x200005ec        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.seq.3     0x20000244        0x2 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ *fill*         0x20000246        0x2 
+ .bss.pressAt.2
+                0x20000248        0x4 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .bss.s_state   0x2000024c      0x328 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.s_gwLine  0x20000574       0x80 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.s_gwLen   0x200005f4        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
  .bss.s_gwDropped
-                0x200005f0        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x200005f8        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
  .bss.s_gwChunk
-                0x200005f4       0x30 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x200005fc       0x30 CMakeFiles/distributed_ecu.dir/link.c.obj
  .bss.s_gwChunkLen
-                0x20000624        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x2000062c        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
  .bss.s_gwChunkPos
-                0x20000628        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwOnline
-                0x2000062c        0x1 CMakeFiles/distributed_ecu.dir/link.c.obj
- *fill*         0x2000062d        0x3 
- .bss.s_gwPolls
                 0x20000630        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwFails
-                0x20000634        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwLastStatus
+ .bss.s_gwOnline
+                0x20000634        0x1 CMakeFiles/distributed_ecu.dir/link.c.obj
+ *fill*         0x20000635        0x3 
+ .bss.s_gwPolls
                 0x20000638        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwConsecFails
+ .bss.s_gwFails
                 0x2000063c        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.s_gwRecoveries
+ .bss.s_gwLastStatus
                 0x20000640        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
- .bss.other.0   0x20000644       0x18 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.s_gwConsecFails
+                0x20000644        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.s_gwRecoveries
+                0x20000648        0x4 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .bss.other.0   0x2000064c       0x18 CMakeFiles/distributed_ecu.dir/link.c.obj
  .bss.__malloc_sbrk_start
-                0x2000065c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
-                0x2000065c                __malloc_sbrk_start
+                0x20000664        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
+                0x20000664                __malloc_sbrk_start
  .bss.__malloc_free_list
-                0x20000660        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
-                0x20000660                __malloc_free_list
- .bss.__sf      0x20000664      0x138 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
-                0x20000664                __sf
+                0x20000668        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
+                0x20000668                __malloc_free_list
+ .bss.__sf      0x2000066c      0x138 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
+                0x2000066c                __sf
  .bss.__stdio_exit_handler
-                0x2000079c        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
-                0x2000079c                __stdio_exit_handler
- .bss.errno     0x200007a0        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reent.o)
-                0x200007a0                errno
+                0x200007a4        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
+                0x200007a4                __stdio_exit_handler
+ .bss.errno     0x200007a8        0x4 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reent.o)
+                0x200007a8                errno
  .bss.__lock___malloc_recursive_mutex
-                0x200007a4        0x1 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
-                0x200007a4                __lock___malloc_recursive_mutex
+                0x200007ac        0x1 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
+                0x200007ac                __lock___malloc_recursive_mutex
  *(COMMON)
-                0x200007a8                        . = ALIGN (0x4)
- *fill*         0x200007a5        0x3 
-                0x200007a8                        __bss_end__ = .
-                0x200007a8                        __END_BSS = .
+                0x200007b0                        . = ALIGN (0x4)
+ *fill*         0x200007ad        0x3 
+                0x200007b0                        __bss_end__ = .
+                0x200007b0                        __END_BSS = .
 
-.heap           0x200007a8      0x400 load address 0x0000d14c
-                0x200007a8                        . = ALIGN (0x8)
-                0x200007a8                        __end__ = .
-                0x200007a8                        PROVIDE (end = .)
-                0x200007a8                        __HeapBase = .
-                0x20000ba8                        . = (. + HEAP_SIZE)
- *fill*         0x200007a8      0x400 
-                0x20000ba8                        __HeapLimit = .
-                0x20000ba8                        __heap_limit = .
+.heap           0x200007b0      0x400 load address 0x0000d2e4
+                0x200007b0                        . = ALIGN (0x8)
+                0x200007b0                        __end__ = .
+                0x200007b0                        PROVIDE (end = .)
+                0x200007b0                        __HeapBase = .
+                0x20000bb0                        . = (. + HEAP_SIZE)
+ *fill*         0x200007b0      0x400 
+                0x20000bb0                        __HeapLimit = .
+                0x20000bb0                        __heap_limit = .
 
-.stack          0x20000ba8     0x1000 load address 0x0000d54c
-                0x20000ba8                        . = ALIGN (0x8)
-                0x20001ba8                        . = (. + STACK_SIZE)
- *fill*         0x20000ba8     0x1000 
+.stack          0x20000bb0     0x1000 load address 0x0000d6e4
+                0x20000bb0                        . = ALIGN (0x8)
+                0x20001bb0                        . = (. + STACK_SIZE)
+ *fill*         0x20000bb0     0x1000 
                 0x20006000                        __StackTop = (ORIGIN (m_data) + LENGTH (m_data))
                 0x20005000                        __StackLimit = (__StackTop - STACK_SIZE)
                 0x20006000                        PROVIDE (__stack = __StackTop)
@@ -2335,7 +2345,7 @@ LOAD linker stubs
  .debug_line_str
                 0x000002bb       0xf0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strlen.o)
 
-.debug_info     0x00000000    0x17594
+.debug_info     0x00000000    0x17609
  .debug_info    0x00000000      0xfea CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_info    0x00000fea      0x838 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/gcc/startup_MCXA153.S.obj
  .debug_info    0x00001822     0x208f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
@@ -2354,11 +2364,11 @@ LOAD linker stubs
  .debug_info    0x0000f3cb      0xa7a CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
  .debug_info    0x0000fe45     0x1180 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
  .debug_info    0x00010fc5      0x6e6 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
- .debug_info    0x000116ab     0x369b CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .debug_info    0x00014d46     0x273c CMakeFiles/distributed_ecu.dir/link.c.obj
- .debug_info    0x00017482      0x112 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+ .debug_info    0x000116ab     0x3710 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .debug_info    0x00014dbb     0x273c CMakeFiles/distributed_ecu.dir/link.c.obj
+ .debug_info    0x000174f7      0x112 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
-.debug_abbrev   0x00000000     0x2b5a
+.debug_abbrev   0x00000000     0x2b6e
  .debug_abbrev  0x00000000      0x1c8 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_abbrev  0x000001c8       0x26 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/gcc/startup_MCXA153.S.obj
  .debug_abbrev  0x000001ee      0x338 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
@@ -2377,11 +2387,11 @@ LOAD linker stubs
  .debug_abbrev  0x00001b80      0x213 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
  .debug_abbrev  0x00001d93      0x25a CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
  .debug_abbrev  0x00001fed      0x174 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
- .debug_abbrev  0x00002161      0x46e CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .debug_abbrev  0x000025cf      0x4d0 CMakeFiles/distributed_ecu.dir/link.c.obj
- .debug_abbrev  0x00002a9f       0xbb CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+ .debug_abbrev  0x00002161      0x482 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .debug_abbrev  0x000025e3      0x4d0 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .debug_abbrev  0x00002ab3       0xbb CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
-.debug_aranges  0x00000000      0xc70
+.debug_aranges  0x00000000      0xc80
  .debug_aranges
                 0x00000000       0x30 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_aranges
@@ -2419,14 +2429,14 @@ LOAD linker stubs
  .debug_aranges
                 0x00000920       0x28 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
  .debug_aranges
-                0x00000948      0x1d0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x00000948      0x1e0 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .debug_aranges
-                0x00000b18      0x128 CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x00000b28      0x128 CMakeFiles/distributed_ecu.dir/link.c.obj
  .debug_aranges
-                0x00000c40       0x30 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+                0x00000c50       0x30 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
 .debug_rnglists
-                0x00000000      0x97c
+                0x00000000      0x989
  .debug_rnglists
                 0x00000000       0x20 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_rnglists
@@ -2458,13 +2468,13 @@ LOAD linker stubs
  .debug_rnglists
                 0x000006d5       0x19 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
  .debug_rnglists
-                0x000006ee      0x172 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+                0x000006ee      0x17f CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
  .debug_rnglists
-                0x00000860       0xfd CMakeFiles/distributed_ecu.dir/link.c.obj
+                0x0000086d       0xfd CMakeFiles/distributed_ecu.dir/link.c.obj
  .debug_rnglists
-                0x0000095d       0x1f CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+                0x0000096a       0x1f CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
-.debug_line     0x00000000     0xaf32
+.debug_line     0x00000000     0xb013
  .debug_line    0x00000000      0x3d1 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_line    0x000003d1      0x23d CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/gcc/startup_MCXA153.S.obj
  .debug_line    0x0000060e     0x11f1 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
@@ -2483,33 +2493,33 @@ LOAD linker stubs
  .debug_line    0x00007301      0x51f CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
  .debug_line    0x00007820      0x473 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
  .debug_line    0x00007c93      0x379 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
- .debug_line    0x0000800c     0x2029 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .debug_line    0x0000a035      0xcdf CMakeFiles/distributed_ecu.dir/link.c.obj
- .debug_line    0x0000ad14      0x21e CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+ .debug_line    0x0000800c     0x210a CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .debug_line    0x0000a116      0xcdf CMakeFiles/distributed_ecu.dir/link.c.obj
+ .debug_line    0x0000adf5      0x21e CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
-.debug_str      0x00000000     0x9af3
- .debug_str     0x00000000     0x9af3 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
+.debug_str      0x00000000     0x9b36
+ .debug_str     0x00000000     0x9b36 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
                                0x146c (size before relaxing)
- .debug_str     0x00009af3     0x102c CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/gcc/startup_MCXA153.S.obj
- .debug_str     0x00009af3     0x29f6 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
- .debug_str     0x00009af3      0xc32 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
- .debug_str     0x00009af3     0x1aaf CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
- .debug_str     0x00009af3     0x3a86 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
- .debug_str     0x00009af3     0x35cf CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
- .debug_str     0x00009af3     0x122f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
- .debug_str     0x00009af3      0x261 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/assert/fsl_assert.c.obj
- .debug_str     0x00009af3     0x15bb CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/debug_console_lite/fsl_debug_console.c.obj
- .debug_str     0x00009af3      0x229 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_sbrk.c.obj
- .debug_str     0x00009af3       0x8f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_memcpy.S.obj
- .debug_str     0x00009af3       0x8f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_memset.S.obj
- .debug_str     0x00009af3     0x1790 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
- .debug_str     0x00009af3      0xf40 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/board.c.obj
- .debug_str     0x00009af3     0x1000 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
- .debug_str     0x00009af3     0x15b6 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
- .debug_str     0x00009af3      0xbf3 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
- .debug_str     0x00009af3     0x3563 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .debug_str     0x00009af3     0x2f53 CMakeFiles/distributed_ecu.dir/link.c.obj
- .debug_str     0x00009af3      0x23c CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+ .debug_str     0x00009b36     0x102c CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/gcc/startup_MCXA153.S.obj
+ .debug_str     0x00009b36     0x29f6 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
+ .debug_str     0x00009b36      0xc32 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
+ .debug_str     0x00009b36     0x1aaf CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/gpio/fsl_gpio.c.obj
+ .debug_str     0x00009b36     0x3a86 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpi2c/fsl_lpi2c.c.obj
+ .debug_str     0x00009b36     0x35cf CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/lpuart/fsl_lpuart.c.obj
+ .debug_str     0x00009b36     0x122f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/drivers/mcx_spc/fsl_spc.c.obj
+ .debug_str     0x00009b36      0x261 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/assert/fsl_assert.c.obj
+ .debug_str     0x00009b36     0x15bb CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/debug_console_lite/fsl_debug_console.c.obj
+ .debug_str     0x00009b36      0x229 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_sbrk.c.obj
+ .debug_str     0x00009b36       0x8f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_memcpy.S.obj
+ .debug_str     0x00009b36       0x8f CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/misc_utilities/fsl_memset.S.obj
+ .debug_str     0x00009b36     0x1790 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/components/uart/fsl_adapter_lpuart.c.obj
+ .debug_str     0x00009b36      0xf40 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/board.c.obj
+ .debug_str     0x00009b36     0x1000 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
+ .debug_str     0x00009b36     0x15b6 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
+ .debug_str     0x00009b36      0xbf3 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
+ .debug_str     0x00009b36     0x35a6 CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .debug_str     0x00009b36     0x2f53 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .debug_str     0x00009b36      0x23c CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
 .comment        0x00000000       0x45
  .comment       0x00000000       0x45 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
@@ -2532,7 +2542,7 @@ LOAD linker stubs
  .comment       0x00000045       0x46 CMakeFiles/distributed_ecu.dir/link.c.obj
  .comment       0x00000045       0x46 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
 
-.debug_frame    0x00000000     0x3a30
+.debug_frame    0x00000000     0x3a70
  .debug_frame   0x00000000       0x70 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/system_MCXA153.c.obj
  .debug_frame   0x00000070      0x5d8 CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_clock.c.obj
  .debug_frame   0x00000648       0x7c CMakeFiles/distributed_ecu.dir/D_/summer_school/mcuxsdk/mcuxsdk/devices/MCX/MCXA/MCXA153/drivers/fsl_reset.c.obj
@@ -2548,35 +2558,35 @@ LOAD linker stubs
  .debug_frame   0x000021b8       0xe0 CMakeFiles/distributed_ecu.dir/frdmmcxa153/frdmmcxa153/clock_config.c.obj
  .debug_frame   0x00002298       0xc0 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/pin_mux.c.obj
  .debug_frame   0x00002358       0x54 CMakeFiles/distributed_ecu.dir/frdmmcxa153/led_blinky/hardware_init.c.obj
- .debug_frame   0x000023ac      0x7dc CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
- .debug_frame   0x00002b88      0x4e8 CMakeFiles/distributed_ecu.dir/link.c.obj
- .debug_frame   0x00003070       0x68 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
- .debug_frame   0x000030d8       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-exit.o)
- .debug_frame   0x00003100       0x50 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
- .debug_frame   0x00003150       0x30 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
- .debug_frame   0x00003180       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
- .debug_frame   0x000031e4      0x144 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
- .debug_frame   0x00003328       0x7c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-snprintf.o)
- .debug_frame   0x000033a4       0x80 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sscanf.o)
- .debug_frame   0x00003424       0x88 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-stdio.o)
- .debug_frame   0x000034ac       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strncmp.o)
- .debug_frame   0x000034d4       0x38 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reent.o)
- .debug_frame   0x0000350c       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sbrkr.o)
- .debug_frame   0x00003538       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-errno.o)
- .debug_frame   0x00003558       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-init.o)
- .debug_frame   0x00003584       0xb0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
- .debug_frame   0x00003634       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strcmp.o)
- .debug_frame   0x00003654       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strlen.o)
- .debug_frame   0x00003674       0x38 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-freer.o)
- .debug_frame   0x000036ac       0x90 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
- .debug_frame   0x0000373c       0x78 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
- .debug_frame   0x000037b4       0x60 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
- .debug_frame   0x00003814       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
- .debug_frame   0x00003878       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sccl.o)
- .debug_frame   0x000038a4       0x5c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ungetc.o)
- .debug_frame   0x00003900       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memmove.o)
- .debug_frame   0x00003928       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memchr-stub.o)
- .debug_frame   0x00003950       0x3c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reallocr.o)
- .debug_frame   0x0000398c       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
- .debug_frame   0x000039f0       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-msizer.o)
- .debug_frame   0x00003a10       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libnosys.a(_exit.o)
+ .debug_frame   0x000023ac      0x81c CMakeFiles/distributed_ecu.dir/led_blinky.c.obj
+ .debug_frame   0x00002bc8      0x4e8 CMakeFiles/distributed_ecu.dir/link.c.obj
+ .debug_frame   0x000030b0       0x68 CMakeFiles/distributed_ecu.dir/led_blinky/peripherals.c.obj
+ .debug_frame   0x00003118       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-exit.o)
+ .debug_frame   0x00003140       0x50 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mallocr.o)
+ .debug_frame   0x00003190       0x30 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-mlock.o)
+ .debug_frame   0x000031c0       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtoul.o)
+ .debug_frame   0x00003224      0x144 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-findfp.o)
+ .debug_frame   0x00003368       0x7c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-snprintf.o)
+ .debug_frame   0x000033e4       0x80 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sscanf.o)
+ .debug_frame   0x00003464       0x88 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-stdio.o)
+ .debug_frame   0x000034ec       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strncmp.o)
+ .debug_frame   0x00003514       0x38 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reent.o)
+ .debug_frame   0x0000354c       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sbrkr.o)
+ .debug_frame   0x00003578       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-errno.o)
+ .debug_frame   0x00003598       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-init.o)
+ .debug_frame   0x000035c4       0xb0 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-lock.o)
+ .debug_frame   0x00003674       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strcmp.o)
+ .debug_frame   0x00003694       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strlen.o)
+ .debug_frame   0x000036b4       0x38 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-freer.o)
+ .debug_frame   0x000036ec       0x90 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfprintf.o)
+ .debug_frame   0x0000377c       0x78 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-svfscanf.o)
+ .debug_frame   0x000037f4       0x60 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfprintf_i.o)
+ .debug_frame   0x00003854       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-nano-vfscanf_i.o)
+ .debug_frame   0x000038b8       0x2c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-sccl.o)
+ .debug_frame   0x000038e4       0x5c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-ungetc.o)
+ .debug_frame   0x00003940       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memmove.o)
+ .debug_frame   0x00003968       0x28 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-memchr-stub.o)
+ .debug_frame   0x00003990       0x3c C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-reallocr.o)
+ .debug_frame   0x000039cc       0x64 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-strtol.o)
+ .debug_frame   0x00003a30       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libc_nano.a(libc_a-msizer.o)
+ .debug_frame   0x00003a50       0x20 C:/Users/victo/.mcuxpressotools/arm-gnu-toolchain-14.2.rel1-mingw-w64-x86_64-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main/nofp\libnosys.a(_exit.o)

@@ -38,7 +38,8 @@
  * saturation, and ~0.4 to 1.0 W in a TO-92 rated 0.625 W will cook it if you
  * hold it there. Never leave the car pushing against something.
  *
- * DUTY_MAX starts at 70 %. Leave it there until the wiring is proven.
+ * DUTY_MAX is 100 %. It started at 70 while the wiring was unproven, and
+ * the motors ran visibly slow at that cap - which is what it was for.
  *
  * ---------------------------------------------------------------------------
  * COMMANDS  (type, press Enter)
@@ -54,7 +55,7 @@ static const uint8_t  PIN_PWM_L = 9;      /* OC1A -> 470R -> Q1, Q2 bases    */
 static const uint8_t  PIN_PWM_R = 10;     /* OC1B -> 470R -> Q3, Q4 bases    */
 
 static const uint16_t PWM_TOP   = 4000;   /* ICR1: 16e6/(2*1*4000) = 2 kHz   */
-static const uint8_t  DUTY_MAX  = 70;     /* %, cap until the wiring is proven */
+static const uint8_t  DUTY_MAX  = 100;    /* %, was 70 until the wiring was proven */
 static const uint8_t  SLEW_STEP = 4;      /* % per tick, softens the inrush  */
 static const uint16_t SLEW_MS   = 20;
 

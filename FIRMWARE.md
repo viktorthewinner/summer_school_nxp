@@ -125,6 +125,17 @@ for three seconds, then SCL, and the MCX `[diag]` line must switch to `BUSY` for
 the MCX never notices is not on its bus, whatever the pull-up says. The node restarts itself
 after the test so the slave comes back clean.
 
+**Never leave the ESP32 unpowered while it is wired to a powered MCX.** The bus idles at
+3.3 V through the 2 kΩ pull-ups, and with the ESP32's USB unplugged that current flows into
+its GPIO21/22 protection diodes and back-feeds the whole chip through its I/O pins. Powering it
+up in that state is the textbook way to latch up an ESP32, and a latched chip is dead: 3V3 and
+EN read fine, GPIO0 sits at about 0.5 V, the ROM never answers, no AP appears. Two boards on
+this project died with exactly that signature. Rules on the bench: unplug the I²C wires
+*before* pulling either board's USB, plug USB back in *before* reconnecting them, and on the
+car power both boards from the same pack so they come up together. A 470 Ω resistor in series
+with each I²C wire at the ESP32 end keeps any injected current under the latch-up threshold
+and still passes 400 kHz cleanly.
+
 ---
 
 ## Step 1 — prove the car moves

@@ -482,11 +482,26 @@ is in the core, no library to install.
 
 ## 8. GW — the ESP32 gateway
 
-Four wires. I²C to the VCU on **GPIO21 (SDA) / GPIO22 (SCL)**, slave `0x42`, 400 kHz; **VIN**
+Four wires. I²C to the VCU on **GPIO21 (SDA) / GPIO22 (SCL)**, slave `0x42`, 400 kHz, **each
+through a 470 Ω series resistor at the ESP32 end**; **VIN**
 from the 9 V logic pack directly (see §11 — check the regulator, and point the 5 V fan at it)
 with a 470 µF beside it;
 **GND** to the star point. No sensors, no
 display — this node is the route between the laptop and the VCU and nothing else.
+
+**The two 470 Ω are latch-up protection, and they are not optional either.** The bus idles at
+3.3 V through the 2 kΩ pull-ups. Whenever the ESP32 is unpowered while the MCX is not — one USB
+cable out before the other, on the bench — that current flows into GPIO21/22's clamp diodes and
+back-feeds the whole chip through two I/O pins. Re-powering it in that state latches it up, and a
+latched ESP32 is dead: 3V3 and EN read fine, GPIO0 sits near 0.5 V, the ROM never answers, no
+access point appears. Two boards died that way on this project. With 470 Ω in the line the
+injected current stays under 2 mA, below the latch-up threshold, and 400 kHz still passes
+cleanly (the RC with the 2 kΩ pull-up and ~50 pF of bus is well under the rise-time budget).
+
+**Plug order, every time:**
+1. I²C wires **off** the ESP32 before either board's USB comes out.
+2. USB **back in** on both boards before the wires go back on.
+3. On the car, both boards on the **same 9 V pack** so they come up together.
 
 **It is a gateway, not a controller.** Everything the laptop sends arrives at the VCU as a
 *request*, and the VCU decides what to act on. That is what stops a dropped WiFi link being a
@@ -520,6 +535,8 @@ Arduino D5 ----[ 1 kOhm ]----+---- MCX RX
 The MCX→Arduino direction is plain wire: 3.3 V clears the AVR's 3.0 V V<sub>IH</sub>.
 
 **The base resistors and pull-downs.** 4 × 470 Ω and 4 × 10 kΩ. See §7.
+
+**The ESP32 latch-up resistors.** 2 × 470 Ω more, one in each I²C wire at the ESP32 end. See §8.
 
 **The LCD contrast trimpot**, 10 kΩ, and a 220 Ω for its backlight if the module has no
 on-board resistor. See §7b.
@@ -791,8 +808,8 @@ Every wire in the vehicle. Tick them off as you go. `★` = star ground (§11).
 | PERC **D5** | | 1 kΩ → MCX **J2-4** (`P3_14`, marked **D9**); 2 kΩ from the junction to ★ | **Divider** |
 | MCX **J2-20** | `P1_9`, marked **D19** | ACT **D4** | Direct |
 | ACT **D5** | | 1 kΩ → MCX **J2-18** (`P1_8`, marked **D18**); 2 kΩ from the junction to ★ | **Divider** |
-| MCX **J5-5 SCL** | `P3_27`, mikroBUS | ESP32 **GPIO22** *and* MPU6050 **SCL** | Shared, 3.3 V |
-| MCX **J5-6 SDA** | `P3_28`, mikroBUS | ESP32 **GPIO21** *and* MPU6050 **SDA** | Shared, 3.3 V |
+| MCX **J5-5 SCL** | `P3_27`, mikroBUS | **470 Ω** → ESP32 **GPIO22**; MPU6050 **SCL** direct | Shared, 3.3 V. **Series R at the ESP32 end** — see §8 |
+| MCX **J5-6 SDA** | `P3_28`, mikroBUS | **470 Ω** → ESP32 **GPIO21**; MPU6050 **SDA** direct | Shared, 3.3 V. **Series R at the ESP32 end** — see §8 |
 | **J5-5 SCL** | | **2 kΩ** → MCX **J3-8** (3V3) | **Pull-up — not optional** |
 | **J5-6 SDA** | | **2 kΩ** → MCX **J3-8** (3V3) | **Pull-up — not optional** |
 | MCX **J3-12** or **J3-14** | marked **GND** | ★ | |
@@ -885,8 +902,8 @@ Q1, Q2 = left pair (from D9). Q3, Q4 = right pair (from D10).
 
 | From | To |
 |---|---|
-| ESP32 **GPIO22** | MCX **J5-5 SCL** — see A.1 |
-| ESP32 **GPIO21** | MCX **J5-6 SDA** — see A.1 |
+| ESP32 **GPIO22** | **470 Ω** → MCX **J5-5 SCL** — resistor right at the ESP32 pin, see A.1 and §8 |
+| ESP32 **GPIO21** | **470 Ω** → MCX **J5-6 SDA** — resistor right at the ESP32 pin, see A.1 and §8 |
 | ESP32 **VIN** | **LOGIC PACK +** (9 V) directly. **Not** the 3V3 pin, not an Arduino, and **not through a divider** — see §11. Confirm the board has an AMS1117 first, and put the 5 V fan on it |
 | ESP32 **VIN** ↔ **GND** | 470 µF, as close to the board as you can get it |
 | ESP32 **GND** | ★ |

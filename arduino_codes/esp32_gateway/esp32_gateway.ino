@@ -37,6 +37,15 @@
  *                              which is how a board swap ends up with the two
  *                              wires reversed. The boot banner's "verdict"
  *                              line catches that; 'p' on the console proves it.
+ *   470 Ohm IN SERIES with each of those two wires, at the ESP32 end. They
+ *                              limit the current the MCX's 2k pull-ups push
+ *                              into this chip's pins whenever it is unpowered
+ *                              and the MCX is not - which is what latches up
+ *                              an ESP32 and killed two of them here. 400 kHz
+ *                              passes through 470 Ohm without trouble.
+ *   PLUG ORDER: I2C wires off BEFORE either board's USB comes out, USB back in
+ *                              BEFORE the wires go back on. On the car both
+ *                              boards share one pack and come up together.
  *   ESP32 GND           <->  MCX GND    (J3 pin 12 or 14), star point
  *   ESP32 VIN           <-   9 V logic pack DIRECT, 470 uF close by.
  *                              Board must have an AMS1117 (SOT-223), not a

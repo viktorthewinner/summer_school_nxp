@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2520 3040" width="2520" height="3040" font-family="Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2520 2770" width="2520" height="2770" font-family="Helvetica, Arial, sans-serif">
 <defs>
 <marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0B7A75"/></marker>
 <marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B26B00"/></marker>
@@ -8,7 +8,7 @@
 <marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B3FA0"/></marker>
 <marker id="a-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#41546B"/></marker>
 </defs>
-<rect width="2520" height="3040" fill="#ffffff"/>
+<rect width="2520" height="2770" fill="#ffffff"/>
 <text x="1260.0" y="48" font-size="26" fill="#12305B" text-anchor="middle" font-weight="bold">Distributed ECU Car &#8212; Full Electrical Schematic</text>
 <text x="1260.0" y="76" font-size="13" fill="#5A6472" text-anchor="middle">Every component, every terminal, every wire. Five blocks; cross-block wires are labelled at both ends.  Architecture on SCHEMA_SIGNALS.svg, rails on SCHEMA_POWER.svg</text>
 <line x1="460" y1="104" x2="484" y2="104" stroke="#B26B00" stroke-width="3"/>
@@ -29,7 +29,6 @@
 <rect x="40" y="150" width="1180" height="34" fill="#F4F7FA" rx="8"/>
 <rect x="40" y="178" width="1180" height="6" fill="#F4F7FA"/>
 <text x="56" y="173" font-size="14" fill="#12305B" font-weight="bold">A &#8212; VCU</text>
-<text x="1204" y="173" font-size="10.5" fill="#5A6472" text-anchor="end">FRDM-MCXA153 + HW-123 + the two level dividers</text>
 <rect x="300" y="210" width="250" height="300" fill="#ffffff" stroke="#12305B" stroke-width="1.8" rx="5"/>
 <rect x="300" y="210" width="250" height="40" fill="#12305B" rx="5"/>
 <rect x="300" y="244" width="250" height="6" fill="#12305B"/>
@@ -95,14 +94,6 @@
 <circle cx="960" cy="348" r="2.6" fill="#ffffff" stroke="#6B3FA0" stroke-width="1.4"/>
 <line x1="960" y1="348" x2="972" y2="348" stroke="#6B3FA0" stroke-width="1.4"/>
 <text x="950" y="351.5" font-size="9.5" fill="#6B3FA0" text-anchor="end" font-weight="bold">AD0</text>
-<text x="710" y="366" font-size="8.5" fill="#5A6472">module silkscreen &#183; XDA, XCL, INT stay unconnected</text>
-<text x="302" y="524" font-size="9.5" fill="#B03A3E" font-weight="bold">HOW TO READ THESE</text>
-<text x="302" y="538" font-size="8.5" fill="#5A6472">J2-2 means connector J2, pin 2. J1&#8211;J4 are the Arduino-form</text>
-<text x="302" y="550" font-size="8.5" fill="#5A6472">headers and are two-row, so count carefully &#8212; UM12012</text>
-<text x="302" y="562" font-size="8.5" fill="#5A6472">Figures 11&#8211;12 show the numbering. The silkscreen name is</text>
-<text x="302" y="574" font-size="8.5" fill="#5A6472">the quickest check: J2-2 is the pin marked D8 on the board.</text>
-<text x="302" y="594" font-size="8.5" fill="#B03A3E">P1_8 / P1_9 are the Arduino header's I&#178;C pins, but here they</text>
-<text x="302" y="606" font-size="8.5" fill="#B03A3E">are LPUART1. The real I&#178;C is P3_27 / P3_28 on mikroBUS.</text>
 <polyline points="288,268 248,268" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
 <text x="242" y="271.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; PERC D4  (direct)</text>
 <polyline points="288,308 248,308" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
@@ -111,7 +102,6 @@
 <text x="242" y="351.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8594; ACT D4  (direct)</text>
 <polyline points="288,388 248,388" fill="none" stroke="#0B7A75" stroke-width="1.6" stroke-linejoin="round"/>
 <text x="242" y="391.5" font-size="9" fill="#0B7A75" text-anchor="end" font-style="italic">&#8592; ACT D5  (via divider)</text>
-<text x="110" y="640" font-size="10.5" fill="#B03A3E" font-weight="bold">THE TWO DIVIDERS &#8212; build both, one per Arduino</text>
 <text x="110" y="674" font-size="9.5" fill="#B03A3E" font-weight="bold">PERC D5</text>
 <line x1="110" y1="690" x2="150" y2="690" stroke="#B03A3E" stroke-width="1.6"/>
 <rect x="163.0" y="685.5" width="22" height="9" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4" rx="1.5"/>
@@ -144,9 +134,6 @@
 <line x1="227.5" y1="848" x2="232.5" y2="848" stroke="#B03A3E" stroke-width="2"/>
 <text x="268" y="786" font-size="9.5" fill="#B03A3E" font-weight="bold">&#8594; MCX J2-18</text>
 <text x="268" y="799" font-size="8.5" fill="#5A6472">5 V &#215; 2/(1+2) = 3.33 V</text>
-<text x="110" y="858" font-size="9.5" fill="#B03A3E" font-weight="bold">J3-16 (VIN) DOES NOTHING: J22 not populated, path to SYS_5V0 disabled (UM12012).</text>
-<text x="110" y="872" font-size="9.5" fill="#B03A3E" font-weight="bold">The pack reaches the MCX only through the buck module, 5.0 V into J3-10. Never with USB in.</text>
-<text x="110" y="892" font-size="9.5" fill="#B03A3E" font-weight="bold">On the pack alone you lose VCOM: no console, no FreeMASTER, no debugger.</text>
 <line x1="1100" y1="308" x2="1100" y2="900" stroke="#12305B" stroke-width="3"/>
 <text x="1100" y="300" font-size="9.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
 <line x1="1020" y1="584" x2="1020" y2="900" stroke="#6B3FA0" stroke-width="3"/>
@@ -165,8 +152,6 @@
 <line x1="622" y1="260" x2="622" y2="308" stroke="#B03A3E" stroke-width="1.4"/>
 <circle cx="622" cy="308" r="3.2" fill="#6B3FA0"/>
 <text x="631" y="253" font-size="8.5" fill="#B03A3E" font-weight="bold">2 k&#8486;</text>
-<text x="700" y="660" font-size="9" fill="#B03A3E" font-weight="bold">FIT BOTH PULL-UPS. Nothing on this bus can ACK without them, and a floating</text>
-<text x="700" y="672" font-size="9" fill="#B03A3E" font-weight="bold">bus looks exactly like every device on it being dead. They are not on any board here.</text>
 <text x="566" y="383.5" font-size="9" fill="#6B3FA0" font-style="italic">this pair also runs to ESP32 &#8212; block B</text>
 <polyline points="562,348 600,348" fill="none" stroke="#6B3FA0" stroke-width="1.6" stroke-linejoin="round"/>
 <circle cx="600" cy="348" r="3.2" fill="#6B3FA0"/>
@@ -191,26 +176,13 @@
 <text x="1090" y="949.5" font-size="9" fill="#12305B" text-anchor="end" font-style="italic">GND &#8594; star, block E</text>
 <text x="1090" y="961.5" font-size="9" fill="#6B3FA0" text-anchor="end" font-style="italic">9 V &#8592; logic pack, block E</text>
 <text x="690" y="432" font-size="10" fill="#B03A3E" font-weight="bold">MPU6050 &#8212; WHERE EACH PIN GOES</text>
-<text x="690" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">SCL</text>
 <text x="726" y="452" font-size="9" fill="#5A6472">&#8594;</text>
-<text x="742" y="452" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J5-5 SCL</text>
-<text x="838" y="452" font-size="8.5" fill="#5A6472">P3_27 on mikroBUS &#183; shared with the ESP32</text>
-<text x="690" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">SDA</text>
 <text x="726" y="468" font-size="9" fill="#5A6472">&#8594;</text>
-<text x="742" y="468" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J5-6 SDA</text>
-<text x="838" y="468" font-size="8.5" fill="#5A6472">P3_28 on mikroBUS &#183; shared with the ESP32</text>
-<text x="690" y="484" font-size="9" fill="#6B3FA0" font-weight="bold">VCC</text>
 <text x="726" y="484" font-size="9" fill="#5A6472">&#8594;</text>
-<text x="742" y="484" font-size="9" fill="#6B3FA0" font-weight="bold">MCX J3-8</text>
-<text x="838" y="484" font-size="8.5" fill="#5A6472">the pin marked 3V3 &#183; 3.3 V ONLY, never 5 V</text>
-<text x="690" y="500" font-size="9" fill="#12305B" font-weight="bold">GND</text>
 <text x="726" y="500" font-size="9" fill="#5A6472">&#8594;</text>
 <text x="742" y="500" font-size="9" fill="#12305B" font-weight="bold">★ star point</text>
-<text x="838" y="500" font-size="8.5" fill="#5A6472">with every other ground in the car</text>
-<text x="690" y="516" font-size="9" fill="#12305B" font-weight="bold">AD0</text>
 <text x="726" y="516" font-size="9" fill="#5A6472">&#8594;</text>
 <text x="742" y="516" font-size="9" fill="#12305B" font-weight="bold">★ star point</text>
-<text x="838" y="516" font-size="8.5" fill="#5A6472">this is what sets the address to 0x68</text>
 <text x="690" y="548" font-size="8.5" fill="#5A6472">XDA, XCL and INT stay unconnected.</text>
 <rect x="1280" y="150" width="1200" height="800" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
 <rect x="1280" y="150" width="1200" height="34" fill="#F4F7FA" rx="8"/>
@@ -255,38 +227,10 @@
 <circle cx="2320" cy="295" r="3.2" fill="#6B3FA0"/>
 <polyline points="2320,295 2320,900 2320,930" fill="none" stroke="#B03A3E" stroke-width="2.6" stroke-linejoin="round"/>
 <text x="2310" y="965.5" font-size="9" fill="#B03A3E" text-anchor="end" font-style="italic">9 V &#8592; logic pack, block E</text>
-<text x="2288" y="470" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">CHECK THE REGULATOR FIRST</text>
-<text x="2288" y="484" font-size="8" fill="#5A6472" text-anchor="end">9 V on VIN is only safe if the board carries an AMS1117 &#8212; the</text>
-<text x="2288" y="496" font-size="8" fill="#5A6472" text-anchor="end">fat 4-pin SOT-223 next to the USB socket, rated to 15 V in.</text>
-<text x="2288" y="508" font-size="8" fill="#B03A3E" text-anchor="end">Some cheaper DevKits fit a tiny 5-pin SOT-23 instead (ME6211,</text>
-<text x="2288" y="520" font-size="8" fill="#B03A3E" text-anchor="end">RT9013). Those stop at about 6 V and 9 V destroys them.</text>
-<text x="2288" y="532" font-size="8" fill="#B03A3E" text-anchor="end">Look before you connect the pack.</text>
-<text x="2288" y="560" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">AND POINT A FAN AT IT</text>
-<text x="2288" y="574" font-size="8" fill="#5A6472" text-anchor="end">An AMS1117 dropping 9 V to 3.3 V burns 0.68 W at the ESP32's</text>
-<text x="2288" y="586" font-size="8" fill="#5A6472" text-anchor="end">WiFi average &#8212; about +68 &#176;C in still air, the hot end of</text>
-<text x="2288" y="598" font-size="8" fill="#5A6472" text-anchor="end">survivable. Moving air roughly halves it, to +31 &#176;C.</text>
-<text x="2288" y="610" font-size="8" fill="#12305B" text-anchor="end">The 5 V fan in block E is aimed here for that reason.</text>
-<text x="2288" y="638" font-size="9.5" fill="#B03A3E" text-anchor="end" font-weight="bold">NOT A DIVIDER</text>
-<text x="2288" y="652" font-size="8" fill="#5A6472" text-anchor="end">A divider sets voltage by ratio, and the ratio only holds while</text>
-<text x="2288" y="664" font-size="8" fill="#5A6472" text-anchor="end">nothing draws from it. To hold 6 V at 100 mA it needs ~5 &#8486;</text>
-<text x="2288" y="676" font-size="8" fill="#5A6472" text-anchor="end">source resistance: 400 mA burnt continuously, 3.6 W in two</text>
-<text x="2288" y="688" font-size="8" fill="#5A6472" text-anchor="end">resistors &#8212; and a 500 mA WiFi burst still drags it to 3.5 V</text>
-<text x="2288" y="700" font-size="8" fill="#5A6472" text-anchor="end">and resets the board. There is no divider that works here.</text>
-<text x="2288" y="718" font-size="8" fill="#12305B" text-anchor="end">Four 1N4001 in series WOULD drop it neatly to ~6.2 V if you</text>
-<text x="2288" y="730" font-size="8" fill="#12305B" text-anchor="end">ever buy some &#8212; a diode drop barely moves with current.</text>
 <text x="2244" y="283" font-size="8.5" fill="#B03A3E" font-weight="bold">VIN, not 3V3 &#8212;</text>
 <text x="2244" y="296" font-size="8.5" fill="#B03A3E" font-weight="bold">470 &#181;F here</text>
 <polyline points="2380,900 2380,930" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
 <text x="2370" y="949.5" font-size="9" fill="#12305B" text-anchor="end" font-style="italic">GND &#8594; star, block E</text>
-<text x="1300" y="420" font-size="10" fill="#5A6472">Four wires. This node has no sensors and no display: it is the</text>
-<text x="1300" y="436" font-size="10" fill="#5A6472">route between the laptop and the VCU, and nothing else.</text>
-<text x="1300" y="464" font-size="10" fill="#B03A3E" font-weight="bold">It is a GATEWAY, not a controller. Everything from the laptop</text>
-<text x="1300" y="480" font-size="10" fill="#B03A3E" font-weight="bold">arrives at the VCU as a request; the VCU decides what to act on.</text>
-<text x="1300" y="496" font-size="10" fill="#5A6472">That is what stops a dropped WiFi link being a safety problem &#8212;</text>
-<text x="1300" y="512" font-size="10" fill="#5A6472">and it is what makes the fault-injection demo worth watching.</text>
-<text x="1300" y="548" font-size="10" fill="#5A6472">Roughly 30 GPIO are unused here &#8212; by a wide margin the emptiest</text>
-<text x="1300" y="564" font-size="10" fill="#5A6472">board in the project. GPIO6&#8211;11 are the flash, 34&#8211;39 are input</text>
-<text x="1300" y="580" font-size="10" fill="#5A6472">only, and 0, 2, 5, 12, 15 are strapping pins to leave alone.</text>
 <rect x="40" y="990" width="1180" height="1000" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
 <rect x="40" y="990" width="1180" height="34" fill="#F4F7FA" rx="8"/>
 <rect x="40" y="1018" width="1180" height="6" fill="#F4F7FA"/>
@@ -429,8 +373,6 @@
 <polyline points="1090,1940 1090,1966" fill="none" stroke="#12305B" stroke-width="3" stroke-linejoin="round"/>
 <text x="1032" y="1978" font-size="8.5" fill="#B26B00" text-anchor="middle" font-weight="bold">5 V</text>
 <text x="1090" y="1978" font-size="8.5" fill="#12305B" text-anchor="middle" font-weight="bold">GND</text>
-<text x="192" y="1880" font-size="9.5" fill="#5A6472">Everything on this node runs from the Arduino 5 V pin now.</text>
-<text x="192" y="1900" font-size="9.5" fill="#B03A3E" font-weight="bold">Nothing here touches the traction pack &#8212; the servos are gone.</text>
 <rect x="1280" y="990" width="1200" height="1000" fill="#ffffff" stroke="#C3CEDC" stroke-width="1.4" rx="8"/>
 <rect x="1280" y="990" width="1200" height="34" fill="#F4F7FA" rx="8"/>
 <rect x="1280" y="1018" width="1200" height="6" fill="#F4F7FA"/>
@@ -570,13 +512,6 @@
 <line x1="2376" y1="1360" x2="2394" y2="1360" stroke="#B03A3E" stroke-width="2"/>
 <line x1="2379.5" y1="1364" x2="2390.5" y2="1364" stroke="#B03A3E" stroke-width="2"/>
 <line x1="2382.5" y1="1368" x2="2387.5" y2="1368" stroke="#B03A3E" stroke-width="2"/>
-<text x="2312" y="1400" font-size="8.5" fill="#5A6472">10 k&#8486; trimpot. Without it</text>
-<text x="2312" y="1412" font-size="8.5" fill="#5A6472">the screen is blank or all</text>
-<text x="2312" y="1424" font-size="8.5" fill="#5A6472">solid blocks.</text>
-<text x="1900" y="1494" font-size="9" fill="#B03A3E">1602A: RW to GND &#8212; write-only. Leave it floating</text>
-<text x="1900" y="1508" font-size="9" fill="#B03A3E">and the display drives the data bus back at you.</text>
-<text x="1900" y="1522" font-size="9" fill="#5A6472">Backlight needs the 220 &#8486; unless the module already</text>
-<text x="1900" y="1536" font-size="9" fill="#5A6472">has one. DB0&#8211;DB3 stay unconnected in 4-bit mode.</text>
 <text x="1300" y="1656" font-size="10.5" fill="#B03A3E" font-weight="bold">BASE DRIVE &#8212; each PWM pin feeds TWO bases</text>
 <text x="1300" y="1672" font-size="9" fill="#5A6472">470 &#8486; in series, 10 k&#8486; base-to-emitter</text>
 <polyline points="1592,1550 1640,1550 1640,1770" fill="none" stroke="#B03A3E" stroke-width="1.8" stroke-linejoin="round"/>
@@ -647,11 +582,9 @@
 <rect x="40" y="2030" width="2440" height="34" fill="#F4F7FA" rx="8"/>
 <rect x="40" y="2058" width="2440" height="6" fill="#F4F7FA"/>
 <text x="56" y="2053" font-size="14" fill="#12305B" font-weight="bold">E &#8212; DRIVE AND POWER</text>
-<text x="2464" y="2053" font-size="10.5" fill="#5A6472" text-anchor="end">4 &#215; PN2222A low-side channels &#183; 1N4001 flyback &#183; pack &#183; star ground</text>
 <line x1="140" y1="2110" x2="2380" y2="2110" stroke="#B03A3E" stroke-width="3.4"/>
 <text x="140" y="2100" font-size="11" fill="#B03A3E" font-weight="bold">PACK +  (4 &#215; AA NiMH, 4.8 V)</text>
 <line x1="140" y1="2600" x2="2380" y2="2600" stroke="#12305B" stroke-width="5"/>
-<text x="140" y="2624" font-size="11" fill="#12305B" font-weight="bold">STAR GROUND &#8212; traction pack −, logic pack −, USB ground, all four board grounds, all four emitters, every component GND</text>
 <circle cx="260" cy="2190" r="20" fill="#ffffff" stroke="#B03A3E" stroke-width="1.8"/>
 <text x="260" y="2196" font-size="14" fill="#B03A3E" text-anchor="middle" font-weight="bold">M</text>
 <line x1="260" y1="2110" x2="260" y2="2170" stroke="#B03A3E" stroke-width="1.8"/>
@@ -838,38 +771,12 @@
 <line x1="2280" y1="2340" x2="2300" y2="2340" stroke="#12305B" stroke-width="1.6"/>
 <text x="2266" y="2343.5" font-size="11" fill="#12305B" text-anchor="end" font-weight="bold">−</text>
 <text x="2306" y="2343.5" font-size="9" fill="#12305B" font-style="italic">★ star point</text>
-<text x="2060" y="2450" font-size="10" fill="#B03A3E" font-weight="bold">WHY THE FANS ARE NOT DECORATION</text>
-<text x="2060" y="2466" font-size="8.5" fill="#5A6472">A stalled PN2222A dissipates 0.5&#8211;1.0 W in a TO-92 rated 0.625 W.</text>
-<text x="2060" y="2478" font-size="8.5" fill="#5A6472">In still air that is about +150 &#176;C of rise; with air moving over it,</text>
-<text x="2060" y="2490" font-size="8.5" fill="#5A6472">nearer +68 &#176;C. The 12 V fan is what turns the drive stage from</text>
-<text x="2060" y="2502" font-size="8.5" fill="#5A6472">marginal into comfortable, so mount it where it sees all four.</text>
-<text x="2060" y="2520" font-size="8.5" fill="#5A6472">The 5 V fan lets the ESP32 take 9 V on VIN without its regulator</text>
 <text x="2060" y="2532" font-size="8.5" fill="#5A6472">cooking &#8212; see block B.</text>
-<text x="2060" y="2556" font-size="8.5" fill="#12305B">A 12 V fan on 9 V turns at roughly 70 %. Quieter, still plenty.</text>
-<text x="2060" y="2568" font-size="8.5" fill="#12305B">A 5 V fan on 4.8 V is barely slower. Neither is fussy.</text>
-<text x="2060" y="2586" font-size="8.5" fill="#B03A3E">Wire both permanently on. Switching an inductive load needs a</text>
 <text x="2060" y="2598" font-size="8.5" fill="#B03A3E">flyback diode and there are none spare.</text>
-<text x="2060" y="2616" font-size="8.5" fill="#5A6472">Fan wires carry commutation spikes: run them to the pack</text>
-<text x="2060" y="2628" font-size="8.5" fill="#5A6472">terminals, not through a board's supply, and keep them away</text>
-<text x="2060" y="2640" font-size="8.5" fill="#5A6472">from the UART and I&#178;C runs.</text>
-<rect x="40" y="2770" width="2440" height="220" fill="#F4F7FA" stroke="#C3CEDC" stroke-width="1.2" rx="6"/>
-<rect x="40" y="2770" width="4" height="220" fill="#12305B"/>
-<text x="58" y="2795" font-size="13" fill="#12305B" font-weight="bold">BEFORE YOU APPLY POWER</text>
-<text x="62" y="2821" font-size="10.5" fill="#5A6472">1.  Check all four 1N4001 bands point at PACK +. Backwards, each one is a dead short.</text>
-<text x="62" y="2843" font-size="10.5" fill="#5A6472">2.  Motor − goes to a collector, never straight to ground. The transistor is IN the return path.</text>
-<text x="62" y="2865" font-size="10.5" fill="#5A6472">3.  The 10 k&#8486; pull-downs go base-to-emitter, not base-to-supply.</text>
-<text x="62" y="2887" font-size="10.5" fill="#5A6472">4.  Every ground symbol on this sheet is the same net. Run all four emitters to the star</text>
-<text x="62" y="2909" font-size="10.5" fill="#5A6472">     point in thick wire, and keep signal grounds off that run.</text>
-<text x="62" y="2931" font-size="10.5" fill="#5A6472">5.  ESP32 from the logic pack at VIN, never from an Arduino 3.3 V pin &#8212; that gives</text>
-<text x="62" y="2953" font-size="10.5" fill="#5A6472">     30&#8211;150 mA and the ESP32 wants 500 in a burst.</text>
-<text x="62" y="2975" font-size="10.5" fill="#5A6472">6.  Both fans run permanently &#8212; nothing switches them, so neither needs a flyback</text>
-<text x="62" y="2997" font-size="10.5" fill="#5A6472">     diode. Take both feeds from the pack terminals, not through a board.</text>
-<text x="1280" y="2821" font-size="10.5" fill="#5A6472">7.   Only P3_27 / P3_28 are 5 V tolerant on the MCX. Both Arduino TX lines go through the</text>
-<text x="1280" y="2843" font-size="10.5" fill="#5A6472">      1 k&#8486; / 2 k&#8486; dividers in block A. The two MCX TX lines are plain wire.</text>
-<text x="1280" y="2865" font-size="10.5" fill="#5A6472">8.   TX and RX cross: an MCX TX pin always lands on an Arduino D4.</text>
-<text x="1280" y="2887" font-size="10.5" fill="#5A6472">9.   The 1602A is a bare HD44780 on six ACT pins in 4-bit mode: RW to ground and a</text>
-<text x="1280" y="2909" font-size="10.5" fill="#5A6472">      10 k&#8486; trimpot on V0. It is the only display on the car.</text>
-<text x="1280" y="2931" font-size="10.5" fill="#5A6472">10. Three supplies is fine. One shared ground is mandatory &#8212; without it the links have no</text>
-<text x="1280" y="2953" font-size="10.5" fill="#5A6472">      common zero and nothing works properly.</text>
-<text x="1280" y="2975" font-size="10.5" fill="#5A6472">11. Wheels off the floor until duty 0 and a pulled link have both been seen to stop them.</text>
+<g id="esp32-series-r">
+<rect x="1284" y="265" width="28" height="8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1298" y="262" font-size="7.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+<rect x="1284" y="291" width="28" height="8" fill="#ffffff" stroke="#B03A3E" stroke-width="1.4"/>
+<text x="1298" y="288" font-size="7.5" fill="#B03A3E" text-anchor="middle" font-weight="bold">470 &#8486;</text>
+</g>
 </svg>

@@ -50,7 +50,7 @@ static const uint32_t LINK_BAUD   = 38400;  /* must match LINK_BAUDRATE      */
 static const uint32_t USB_BAUD    = 115200;
 
 static const uint16_t PWM_TOP     = 4000;   /* 2 kHz, see act_motor_test.ino */
-static const uint8_t  DUTY_MAX    = 70;
+static const uint8_t  DUTY_MAX    = 100;  /* was 70 while the wiring was unproven */
 static const uint8_t  SLEW_STEP   = 4;
 static const uint16_t SLEW_MS     = 20;
 

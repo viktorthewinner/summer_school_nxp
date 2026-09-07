@@ -104,7 +104,7 @@
 /* Drive command repeat. ACT's timeout is 300 ms; 20 Hz leaves plenty of margin
  * for a dropped line without the motors stuttering. */
 #define DRIVE_REPEAT_MS 50u
-#define DRIVE_DUTY_MAX  70u
+#define DRIVE_DUTY_MAX  100u
 #define LED_BLINK_MS    500u
 
 /* ---------------------------------------------------------------------------
@@ -118,7 +118,7 @@
  * 10 Hz keepalive, so it survives three lost lines before it fires. */
 #define TELEOP_TIMEOUT_MS  400u
 
-#define THROTTLE_MAX       65u   /* under DRIVE_DUTY_MAX, on purpose        */
+#define THROTTLE_MAX       90u   /* under DRIVE_DUTY_MAX, on purpose        */
 #define THROTTLE_RISE       3u   /* per tick: standstill to full in ~1.1 s  */
 #define THROTTLE_COAST      2u   /* per tick with W released - it rolls off */
 
@@ -135,6 +135,15 @@
  * way out. Ignored while PERC is silent; see teleop_guard(). */
 #define GUARD_STOP_CM      25
 #define SENSOR_STALE_MS   500u
+
+/* Rear sonar warning. Nothing is vetoed here - there is no reverse gear to
+ * veto - so the whole feature is a word on ACT's display. It clears further
+ * out than it sets, because a reading sitting exactly on one threshold would
+ * otherwise flap the screen several times a second. A silent PERC and a -1
+ * reading both mean "no alert", which is the reading the front guard takes. */
+#define REAR_ALERT_CM      25
+#define REAR_CLEAR_CM      32
+#define REAR_BLINK_MS     500u   /* half a cycle - on, then off */
 
 #define HORN_REPEAT_MS    250u   /* PERC drops the horn after 500 ms silent */
 #define HEARTBEAT_MS     1000u   /* V, line to BOTH Arduinos, always        */
@@ -186,6 +195,13 @@ static bool     s_teleopLive;       /* true = the browser owns the wheels  */
 static uint32_t s_teleopTickAt;
 static uint8_t  s_throttle;
 static bool     s_guard;            /* front sonar is currently vetoing W  */
+
+/* Rear sonar warning. s_rearShown is which half of the blink is currently on
+ * the display, so the toggle survives a lost line: the phase slips by one and
+ * resynchronises itself on the next. */
+static bool     s_rearAlert;
+static bool     s_rearShown;
+static uint32_t s_rearBlinkAt;
 
 static bool     s_horn;
 static uint32_t s_hornSentAt;
@@ -1380,6 +1396,67 @@ static bool teleop_guard(void)
     return (s_front >= 0) && (s_front < GUARD_STOP_CM);
 }
 
+/* The rear equivalent, and deliberately not a guard: it changes nothing about
+ * how the car drives. Something close behind while you are pivoting is worth
+ * knowing about, and the display is the only place the car can say so to
+ * somebody standing next to it rather than sitting at the laptop.
+ *
+ * Two thresholds, not one. A wall at exactly 25 cm alternates between 24 and
+ * 26 on consecutive pings, and a single threshold would rewrite the display
+ * on every one of them. */
+static bool rear_close(void)
+{
+    if ((now_ms() - s_percAt) > SENSOR_STALE_MS)
+    {
+        return false;                       /* PERC is not talking */
+    }
+    if (s_back < 0)
+    {
+        return false;                       /* no echo - nothing back there */
+    }
+    return s_rearAlert ? (s_back < REAR_CLEAR_CM) : (s_back < REAR_ALERT_CM);
+}
+
+/* Blink ATTENTION on ACT's row 0 while something is behind. Steady text
+ * on a 16x2 is furniture - a bystander walks past it. Something that appears
+ * and vanishes twice a second is the one thing on the car that will actually
+ * pull an eye, and it costs two link lines a second to do.
+ *
+ * When the rear clears the display is left blank and this function stops
+ * sending: row 0 then stays empty until somebody has something to put there.
+ * The car saying nothing is the honest state, and it makes the next real
+ * message unmissable rather than one more line among stale ones. */
+static void rear_service(void)
+{
+    bool warn = rear_close();
+
+    if (warn != s_rearAlert)
+    {
+        s_rearAlert   = warn;
+        s_rearShown   = warn;       /* enter lit, leave blank */
+        s_rearBlinkAt = now_ms();
+        LINK_SendLine(LINK_ARD2, warn ? "M,ATTENTION" : "M,");
+
+        PRINTF("\r\n  [rear] %s (%d cm)\r\n",
+               warn ? "ATTENTION" : "clear", s_back);
+        console_redraw_prompt();
+        return;
+    }
+
+    if (!s_rearAlert)
+    {
+        return;                     /* blank, and nothing to say about it */
+    }
+    if ((now_ms() - s_rearBlinkAt) < REAR_BLINK_MS)
+    {
+        return;
+    }
+
+    s_rearBlinkAt = now_ms();
+    s_rearShown   = !s_rearShown;
+    LINK_SendLine(LINK_ARD2, s_rearShown ? "M,ATTENTION" : "M,");
+}
+
 /* Keys in, two duties out. This is the whole vehicle dynamics model.
  *
  *   W  ramp the throttle up            S  brake - straight to zero
@@ -2067,6 +2144,7 @@ int main(void)
         drive_service();         /* repeat the drive command       */
         imu_service();           /* the only feedback in the car   */
         horn_service();          /* horn repeat while sounding     */
+        rear_service();          /* rear sonar -> ATTENTION on LCD */
         heartbeat_service();     /* V, to both Arduinos, 1 Hz      */
         if (s_raw[LINK_ARD1]) { raw_service(LINK_ARD1); }
         else                  { link_service(LINK_ARD1); }

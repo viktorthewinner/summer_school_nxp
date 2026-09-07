@@ -168,4 +168,11 @@
 <text x="84" y="1176" font-size="11.6" fill="#1B1B1B">5.  The 16&#215;2 LCD goes on Arduino 2 (5 V native), NOT on this I2C bus &#8212; its backpack pulls up to 5 V.</text>
 <text x="84" y="1195" font-size="11.6" fill="#1B1B1B">6.  Each board on its own USB during bring-up.  Motors run from the AA pack, never from a 9 V PP3.</text>
 <text x="84" y="1214" font-size="11.6" font-weight="bold" fill="#C0392B">7.  P3_14, P1_8 and EVERY ESP32 pin are NOT 5 V tolerant.  5 V on any of them destroys the chip.</text>
+<g id="esp32-series-r">
+<rect x="700" y="783" width="40" height="14" rx="2" fill="#ffffff" stroke="#C0392B" stroke-width="2.2"/>
+<text x="720" y="776" text-anchor="middle" font-size="11" font-weight="bold" fill="#C0392B">470 &#8486;</text>
+<rect x="700" y="843" width="40" height="14" rx="2" fill="#ffffff" stroke="#C0392B" stroke-width="2.2"/>
+<text x="720" y="836" text-anchor="middle" font-size="11" font-weight="bold" fill="#C0392B">470 &#8486;</text>
+</g>
+<text x="84" y="1236" font-size="11.6" font-weight="bold" fill="#C0392B">8.  470 &#8486; in series with SCL and SDA at the ESP32 pins (latch-up guard).  Plug order: I&#178;C wires OFF before any USB comes out, USB back IN before they go on.</text>
 </svg>
