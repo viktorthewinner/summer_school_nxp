@@ -9,6 +9,11 @@ in [`FULL_SCHEMA.md`](FULL_SCHEMA.md) and the wiring sheet; if you want to *flas
 [`FIRMWARE.md`](FIRMWARE.md). This document is the map that tells you why those two exist and
 how they fit together.
 
+Three short clips of the prototype actually running are in [`video demo/`](video%20demo/):
+[`dc motors working.mp4`](video%20demo/dc%20motors%20working.mp4),
+[`sensors working.mp4`](video%20demo/sensors%20working.mp4), and
+[`info working.mp4`](video%20demo/info%20working.mp4).
+
 ---
 
 ## 1. What it is, in one paragraph
@@ -443,4 +448,5 @@ wire away from a hang, so every UART and I²C wait is now bounded, and the diagn
 | See the power rails on one sheet | [`SCHEMA_POWER.svg`](SCHEMA_POWER.svg) |
 | Flash it, test it, debug a link | [`FIRMWARE.md`](FIRMWARE.md) |
 | Know the FRDM-MCXA153 pinout and why there is no CAN | [`CONNECTING_THE_BOARDS.md`](CONNECTING_THE_BOARDS.md) §5 |
+| Watch it run | [`video demo/`](video%20demo/) — motors, sensors, and on-car info, three short clips |
 | See where the serial hub came from | [`SERIAL_BRIDGE.md`](SERIAL_BRIDGE.md), [`uart-link-demo/`](uart-link-demo/README.md) |
